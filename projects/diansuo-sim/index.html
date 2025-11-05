@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/icon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/icon.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"154.44.8.95","root":"/","images":"/images","scheme":"Pisces","darkmode":true,"version":"8.25.0","exturl":false,"sidebar":{"position":"left","width_expanded":340,"width_dual_column":260,"display":"always","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="俄钓点锁模拟器              * {             margin: 0;             padding: 0;             box-sizing: border-box;             font-family: &#39;Segoe UI&#39;, &#39;Microsoft YaHei&#39;, sans-serif;">
+<meta property="og:type" content="website">
+<meta property="og:title" content="tev6">
+<meta property="og:url" content="http://154.44.8.95:4000/projects/diansuo-sim/index.html">
+<meta property="og:site_name" content="tev6">
+<meta property="og:description" content="俄钓点锁模拟器              * {             margin: 0;             padding: 0;             box-sizing: border-box;             font-family: &#39;Segoe UI&#39;, &#39;Microsoft YaHei&#39;, sans-serif;">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-11-05T11:52:33.470Z">
+<meta property="article:modified_time" content="2025-11-05T11:52:33.470Z">
+<meta property="article:author" content="Joey Wu">
+<meta property="article:tag" content="C++, Linux, OpenGL, Python, Qt5, Cloud server">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://154.44.8.95:4000/projects/diansuo-sim/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":false,"lang":"en","comments":true,"permalink":"http://154.44.8.95:4000/projects/diansuo-sim/index.html","path":"projects/diansuo-sim/index.html","title":""}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title> | tev6
+</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">tev6</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Thendlessv</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">俄钓点锁模拟器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">操作说明与设置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">2.1.</span> <span class="nav-text">点锁操作说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">2.2.</span> <span class="nav-text">滚轮设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">2.3.</span> <span class="nav-text">练习记录</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Joey Wu"
+      src="/icon.png">
+  <p class="site-author-name" itemprop="name">Joey Wu</p>
+  <div class="site-description" itemprop="description">"Talk is cheap, show me the code."</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/tev6" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;tev6" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://space.bilibili.com/3493087668079584" title="Bilibili → https:&#x2F;&#x2F;space.bilibili.com&#x2F;3493087668079584" rel="noopener me" target="_blank"><i class="fa fa-television fa-fw"></i>Bilibili</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/hackferances" title="CSDN → https:&#x2F;&#x2F;blog.csdn.net&#x2F;hackferances" rel="noopener me" target="_blank"><i class="fa fa-code fa-fw"></i>CSDN</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner page posts-expand">
+
+
+    
+    
+    
+    <div class="post-block" lang="en"><header class="post-header">
+
+<h1 class="post-title" itemprop="name headline">
+</h1>
+
+<div class="post-meta-container">
+  <ul class="breadcrumb">
+            <li><a href="/projects/">PROJECTS</a></li>
+          <li>DIANSUO-SIM</li>
+  </ul>
+</div>
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+          <!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>俄钓点锁模拟器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow: hidden;
+        }
+        
+        .container {
+            display: flex;
+            max-width: 900px;
+            width: 100%;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transform: scale(0.75);
+            transform-origin: top center;
+        }
+        
+        .practice-area {
+            flex: 1;
+            padding: 30px;
+            border-right: 1px solid #eaeaea;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .info-area {
+            flex: 1;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            text-align: center;
+        }
+        
+        .wheel-container {
+            margin: 30px 0;
+            position: relative;
+        }
+        
+        .wheel {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e0e0e0, #f5f5f5);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), inset 0 0 10px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+            border: 6px solid #ddd;
+            transition: transform 0.2s ease;
+        }
+        
+        .wheel::before {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background-color: #3498db;
+            border-radius: 50%;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+        }
+        
+        .wheel-position {
+            font-size: 48px;
+            font-weight: bold;
+            color: #2c3e50;
+            transition: all 0.2s ease;
+        }
+        
+        .position-label {
+            font-size: 16px;
+            margin-top: 8px;
+            color: #7f8c8d;
+        }
+        
+        .status {
+            text-align: center;
+            font-size: 18px;
+            margin: 20px 0;
+            padding: 12px;
+            border-radius: 6px;
+            background-color: #f8f9fa;
+            width: 100%;
+        }
+        
+        .feedback {
+            text-align: center;
+            font-size: 16px;
+            margin: 15px 0;
+            min-height: 24px;
+            font-weight: 500;
+        }
+        
+        .success {
+            color: #27ae60;
+        }
+        
+        .warning {
+            color: #f39c12;
+        }
+        
+        .fail {
+            color: #e74c3c;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .stat-box {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .stat-value {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 8px 0;
+            color: #3498db;
+        }
+        
+        .instructions {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 6px;
+            margin-top: 20px;
+        }
+        
+        .instructions h2 {
+            margin-bottom: 12px;
+            font-size: 18px;
+            color: #2c3e50;
+        }
+        
+        .instructions ol {
+            padding-left: 20px;
+            line-height: 1.6;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+            color: #555;
+        }
+        
+        .history {
+            margin-top: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .history h2 {
+            margin-bottom: 12px;
+            font-size: 18px;
+            color: #2c3e50;
+        }
+        
+        .history-list {
+            flex-grow: 1;
+            overflow-y: auto;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            padding: 10px;
+            max-height: 200px;
+        }
+        
+        .history-item {
+            padding: 8px 10px;
+            border-bottom: 1px solid #eaeaea;
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+        }
+        
+        .history-item:last-child {
+            border-bottom: none;
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            background-color: #3498db;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        .reset-btn {
+            background-color: #95a5a6;
+        }
+        
+        .reset-btn:hover {
+            background-color: #7f8c8d;
+        }
+        
+        .active {
+            background-color: #2ecc71;
+        }
+        
+        .active:hover {
+            background-color: #27ae60;
+        }
+        
+        .settings {
+            margin-top: 20px;
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 6px;
+        }
+        
+        .settings h2 {
+            margin-bottom: 12px;
+            font-size: 18px;
+            color: #2c3e50;
+        }
+        
+        .setting-item {
+            margin-bottom: 15px;
+        }
+        
+        .setting-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .sensitivity-slider {
+            width: 100%;
+            margin: 10px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                transform: scale(0.9);
+            }
+            
+            .practice-area {
+                border-right: none;
+                border-bottom: 1px solid #eaeaea;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="practice-area">
+            <h1>俄钓点锁模拟器</h1>
+            
+            <div class="wheel-container">
+                <div class="wheel">
+                    <div class="wheel-position" id="wheelPosition">29</div>
+                    <div class="position-label" id="positionLabel">摩擦片</div>
+                </div>
+            </div>
+            
+            <div class="status" id="status">准备开始 - 锁住摩擦片</div>
+            
+            <div class="feedback" id="feedback"></div>
+            
+            <div class="stats">
+                <div class="stat-box">
+                    <div>当前时间</div>
+                    <div class="stat-value" id="currentTime">0 ms</div>
+                </div>
+                <div class="stat-box">
+                    <div>最佳时间</div>
+                    <div class="stat-value" id="bestTime">0 ms</div>
+                </div>
+                <div class="stat-box">
+                    <div>平均时间</div>
+                    <div class="stat-value" id="averageTime">0 ms</div>
+                </div>
+                <div class="stat-box">
+                    <div>练习次数</div>
+                    <div class="stat-value" id="attemptCount">0</div>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <button id="startBtn">开始练习</button>
+                <button id="resetBtn" class="reset-btn">重置数据</button>
+            </div>
+        </div>
+        
+        <div class="info-area">
+            <h1>操作说明与设置</h1>
+            
+            <div class="instructions">
+                <h2>点锁操作说明</h2>
+                <ol>
+                    <li>点击"开始练习"按钮开始</li>
+                    <li>使用鼠标滚轮进行操作</li>
+                    <li><strong>正确操作</strong>: 从摩擦状态切换到∞状态(锁轮)，然后立即切换回摩擦状态</li>
+                    <li>程序会自动计算点锁用时并评估</li>
+                    <li>每次点锁完成后自动重置，等待下一次操作</li>
+                    <li>如果操作太慢导致炸轮，需要重新开始</li>
+                </ol>
+            </div>
+            
+            <div class="settings">
+                <h2>滚轮设置</h2>
+                
+                <div class="setting-item">
+                    <label class="setting-label">滚轮方向:</label>
+                    <button id="reverseBtn">正常方向</button>
+                </div>
+                
+                <div class="setting-item">
+                    <label class="setting-label">滚轮灵敏度:</label>
+                    <input type="range" min="1" max="10" value="5" class="sensitivity-slider" id="sensitivitySlider">
+                    <div id="sensitivityValue">中等</div>
+                </div>
+            </div>
+            
+            <div class="history">
+                <h2>练习记录</h2>
+                <div class="history-list" id="historyList">
+                    <!-- 历史记录将在这里显示 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 状态变量
+        let isActive = false;
+        let startTime = 0;
+        let currentState = '29'; // 初始状态为29(摩擦片)
+        let lastState = null;
+        let attempts = [];
+        let bestTime = 0;
+        let totalAttempts = 0;
+        let isInPointLockSequence = false;
+        let reverseWheel = false;
+        let wheelSensitivity = 5;
+        
+        // DOM 元素
+        const wheelPosition = document.getElementById('wheelPosition');
+        const positionLabel = document.getElementById('positionLabel');
+        const status = document.getElementById('status');
+        const feedback = document.getElementById('feedback');
+        const currentTimeDisplay = document.getElementById('currentTime');
+        const bestTimeDisplay = document.getElementById('bestTime');
+        const averageTimeDisplay = document.getElementById('averageTime');
+        const attemptCountDisplay = document.getElementById('attemptCount');
+        const historyList = document.getElementById('historyList');
+        const startBtn = document.getElementById('startBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const reverseBtn = document.getElementById('reverseBtn');
+        const sensitivitySlider = document.getElementById('sensitivitySlider');
+        const sensitivityValue = document.getElementById('sensitivityValue');
+        
+        // 初始化
+        function init() {
+            updateDisplay();
+            loadFromStorage();
+            
+            // 添加事件监听器
+            document.addEventListener('wheel', handleWheel, { passive: false });
+            startBtn.addEventListener('click', togglePractice);
+            resetBtn.addEventListener('click', resetData);
+            reverseBtn.addEventListener('click', toggleWheelDirection);
+            sensitivitySlider.addEventListener('input', updateSensitivity);
+            
+            // 初始化灵敏度显示
+            updateSensitivity();
+        }
+        
+        // 处理滚轮事件
+        function handleWheel(event) {
+            if (!isActive) return;
+            
+            // 阻止默认滚动行为
+            event.preventDefault();
+            
+            // 根据灵敏度调整滚动检测
+            const sensitivityThreshold = 50 - (wheelSensitivity * 5);
+            if (Math.abs(event.deltaY) < sensitivityThreshold) return;
+            
+            // 检测滚轮方向（考虑反转设置）
+            let direction = event.deltaY > 0 ? 'down' : 'up';
+            if (reverseWheel) {
+                direction = direction === 'up' ? 'down' : 'up';
+            }
+            
+            // 更新状态
+            if (direction === 'up' && currentState === '29') {
+                // 向上滚动，从29切换到∞ - 开始点锁序列
+                currentState = '∞';
+                positionLabel.textContent = '锁轮';
+                status.textContent = '∞状态(锁轮) - 马上切换摩擦片！';
+                startTime = Date.now();
+                lastState = '29';
+                
+                // 清除之前的反馈
+                feedback.textContent = '';
+            } else if (direction === 'down' && currentState === '∞') {
+                // 向下滚动，从∞切换回29 - 完成点锁序列
+                currentState = '29';
+                positionLabel.textContent = '摩擦片';
+                
+                // 计算时间间隔
+                const endTime = Date.now();
+                const timeTaken = endTime - startTime;
+                
+                // 更新状态和反馈
+                updateStats(timeTaken);
+                addHistoryItem(timeTaken, true);
+                feedback.textContent = getFeedback(timeTaken);
+                feedback.className = 'feedback ' + getFeedbackClass(timeTaken);
+                
+                // 重置点锁序列，等待下一次操作
+                isInPointLockSequence = false;
+                status.textContent = '点锁完成！等待下一次操作';
+                
+                // 如果炸轮了，需要重新开始
+                if (timeTaken >= 400) {
+                    feedback.textContent = '太慢了！你炸轮了！需要重新开始';
+                    feedback.className = 'feedback fail';
+                    isActive = false;
+                    startBtn.textContent = '开始练习';
+                    startBtn.classList.remove('active');
+                }
+            }
+            updateDisplay();
+        }
+        
+        // 更新显示
+        function updateDisplay() {
+            wheelPosition.textContent = currentState;
+            
+            // 更新统计数据
+            currentTimeDisplay.textContent = attempts.length > 0 ? 
+                `${attempts[attempts.length-1]} ms` : '0 ms';
+                
+            bestTimeDisplay.textContent = bestTime > 0 ? `${bestTime} ms` : '0 ms';
+            
+            const avg = attempts.length > 0 ? 
+                Math.round(attempts.reduce((a, b) => a + b, 0) / attempts.length) : 0;
+            averageTimeDisplay.textContent = `${avg} ms`;
+            
+            attemptCountDisplay.textContent = totalAttempts;
+        }
+        
+        // 更新统计数据
+        function updateStats(time) {
+            attempts.push(time);
+            totalAttempts++;
+            
+            if (bestTime === 0 || time < bestTime) {
+                bestTime = time;
+            }
+            
+            saveToStorage();
+            updateDisplay();
+        }
+        
+        // 添加历史记录
+        function addHistoryItem(time, success) {
+            const item = document.createElement('div');
+            item.className = 'history-item';
+            
+            const now = new Date();
+            const timeString = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+            
+            const feedbackClass = getFeedbackClass(time);
+            
+            item.innerHTML = `
+                <span>${timeString}</span>
+                <span class="${feedbackClass}">${success ? `${time} ms` : '操作错误'}</span>
+            `;
+            
+            historyList.prepend(item);
+            
+            // 限制历史记录数量
+            if (historyList.children.length > 10) {
+                historyList.removeChild(historyList.lastChild);
+            }
+        }
+        
+        // 获取反馈信息
+        function getFeedback(time) {
+            if (time < 50) return '太快了！点锁操作几乎没用';
+            if (time < 200) return '正常速度！优秀操作';
+            if (time < 400) return '有点慢，可能炸轮';
+            return '太慢了！你炸轮了！';
+        }
+        
+        // 获取反馈类别
+        function getFeedbackClass(time) {
+            if (time < 50) return 'fail';
+            if (time < 200) return 'success';
+            if (time < 400) return 'warning';
+            return 'fail';
+        }
+        
+        // 切换练习状态
+        function togglePractice() {
+            isActive = !isActive;
+            
+            if (isActive) {
+                startBtn.textContent = '停止练习';
+                startBtn.classList.add('active');
+                status.textContent = '练习中 - 当前状态: 29 (摩擦片)';
+                feedback.textContent = '';
+                currentState = '29';
+                positionLabel.textContent = '摩擦片';
+                lastState = null;
+                isInPointLockSequence = false;
+            } else {
+                startBtn.textContent = '开始练习';
+                startBtn.classList.remove('active');
+                status.textContent = '练习已停止';
+            }
+            
+            updateDisplay();
+        }
+        
+        // 切换滚轮方向
+        function toggleWheelDirection() {
+            reverseWheel = !reverseWheel;
+            reverseBtn.textContent = reverseWheel ? '反转方向' : '正常方向';
+        }
+        
+        // 更新灵敏度
+        function updateSensitivity() {
+            wheelSensitivity = parseInt(sensitivitySlider.value);
+            const sensitivityLabels = ['极低', '较低', '低', '中低', '中等', '中高', '高', '较高', '很高', '极高'];
+            sensitivityValue.textContent = sensitivityLabels[wheelSensitivity - 1];
+        }
+        
+        // 重置数据
+        function resetData() {
+            if (confirm('确定要重置所有数据吗？')) {
+                attempts = [];
+                bestTime = 0;
+                totalAttempts = 0;
+                historyList.innerHTML = '';
+                updateDisplay();
+                saveToStorage();
+            }
+        }
+        
+        // 保存到本地存储
+        function saveToStorage() {
+            const data = {
+                attempts: attempts,
+                bestTime: bestTime,
+                totalAttempts: totalAttempts
+            };
+            localStorage.setItem('fishingPracticeData', JSON.stringify(data));
+        }
+        
+        // 从本地存储加载
+        function loadFromStorage() {
+            const data = JSON.parse(localStorage.getItem('fishingPracticeData'));
+            if (data) {
+                attempts = data.attempts || [];
+                bestTime = data.bestTime || 0;
+                totalAttempts = data.totalAttempts || 0;
+                
+                // 更新显示
+                updateDisplay();
+                
+                // 添加历史记录
+                attempts.forEach(time => {
+                    addHistoryItem(time, true);
+                });
+            }
+        }
+        
+        // 初始化应用
+        init();
+    </script>
+</body>
+</html>
+
+      </div>
+      
+      
+      
+    </div>
+  <ul class="breadcrumb">
+            <li><a href="/projects/">PROJECTS</a></li>
+          <li>DIANSUO-SIM</li>
+  </ul>
+
+    
+    
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Joey Wu</span>
+  </div>
+
+
+
+<div>
+<span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("10/18/2025 00:00:00");
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
