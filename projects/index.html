@@ -1,38 +1,34 @@
-<div class="projects-page">
-  <h1 class="projects-title"><%= page.title || "项目展示" %></h1>
+<!DOCTYPE html>
+<html>
+<head>
+  <%- partial('_partial/head') %>
+</head>
+<body>
+  <%- partial('_partial/header') %>
   
-  <% if (page.content) { %>
-    <div class="projects-description">
-      <%- page.content %>
-    </div>
-  <% } %>
-  
-  <div class="projects-grid">
-    <% site.pages.forEach(function(page) { %>
-      <% if (page.path.includes('projects/') && page.path !== 'projects/index.md' && page.layout === 'project') { %>
-        <div class="project-card">
-          <a href="<%= url_for(page.path) %>" class="project-link">
-            <% if (page.preview_image) { %>
-              <div class="project-image">
-                <img src="<%= page.preview_image %>" alt="<%= page.title %>" loading="lazy">
-              </div>
-            <% } %>
-            <div class="project-content">
-              <h3 class="project-title"><%= page.title %></h3>
-              <% if (page.description) { %>
-                <p class="project-description"><%= page.description %></p>
-              <% } %>
-              <% if (page.tags) { %>
-                <div class="project-tags">
-                  <% page.tags.forEach(function(tag) { %>
-                    <span class="project-tag"><%= tag %></span>
-                  <% }); %>
-                </div>
-              <% } %>
+  <main class="content">
+    <div class="projects-container">
+      <h1><%= page.title %></h1>
+      <p><%= page.content %></p>
+      
+      <div class="projects-grid">
+        <% site.pages.forEach(function(page) { %>
+          <% if (page.path.includes('projects/') && page.path !== 'projects/index.md' && page.layout === 'project') { %>
+            <div class="project-card">
+              <a href="<%= url_for(page.path) %>">
+                <% if (page.preview) { %>
+                  <img src="<%= page.preview %>" alt="<%= page.title %>" class="project-preview">
+                <% } %>
+                <h3><%= page.title %></h3>
+                <p><%= page.description || '' %></p>
+              </a>
             </div>
-          </a>
-        </div>
-      <% } %>
-    <% }); %>
-  </div>
-</div>
+          <% } %>
+        <% }) %>
+      </div>
+    </div>
+  </main>
+  
+  <%- partial('_partial/footer') %>
+</body>
+</html>
