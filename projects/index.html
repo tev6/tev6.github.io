@@ -1,0 +1,38 @@
+<div class="projects-page">
+  <h1 class="projects-title"><%= page.title || "项目展示" %></h1>
+  
+  <% if (page.content) { %>
+    <div class="projects-description">
+      <%- page.content %>
+    </div>
+  <% } %>
+  
+  <div class="projects-grid">
+    <% site.pages.forEach(function(page) { %>
+      <% if (page.path.includes('projects/') && page.path !== 'projects/index.md' && page.layout === 'project') { %>
+        <div class="project-card">
+          <a href="<%= url_for(page.path) %>" class="project-link">
+            <% if (page.preview_image) { %>
+              <div class="project-image">
+                <img src="<%= page.preview_image %>" alt="<%= page.title %>" loading="lazy">
+              </div>
+            <% } %>
+            <div class="project-content">
+              <h3 class="project-title"><%= page.title %></h3>
+              <% if (page.description) { %>
+                <p class="project-description"><%= page.description %></p>
+              <% } %>
+              <% if (page.tags) { %>
+                <div class="project-tags">
+                  <% page.tags.forEach(function(tag) { %>
+                    <span class="project-tag"><%= tag %></span>
+                  <% }); %>
+                </div>
+              <% } %>
+            </div>
+          </a>
+        </div>
+      <% } %>
+    <% }); %>
+  </div>
+</div>
