@@ -21,28 +21,32 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"154.44.8.95","root":"/","images":"/images","scheme":"Pisces","darkmode":true,"version":"8.25.0","exturl":false,"sidebar":{"position":"right","width_expanded":320,"width_dual_column":240,"display":"hide","padding":22,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"default"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":true,"color":"#9ed048","save":"auto"},"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":250,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":true}}</script><script src="/js/config.js" defer></script>
 
-    <meta name="description" content="关于我 我是 Joey aka TheEndlessV  喜欢写代码。 会一点，但不多。 我的轨迹 怎么说呢...什么都体验过，又什么都不会 2021年 —— 莫名其妙入了编程的坑 C++是我的第一门认真投入的语言 EGE的简单图形界面程序是激发我兴趣的一个重要节点 2022年 —— 后来用windows API写了写脚本，做了各种低级小游戏（还是EGE） GPT 3.5出现了 —— 对我影响深刻">
-<meta property="og:type" content="website">
-<meta property="og:title" content="关于">
-<meta property="og:url" content="http://154.44.8.95/about/index.html">
+    <meta name="description" content="在学校经常被数学老师布置的IXL作业所困扰，于是我推出了IXL的辅助答题工具——EasyXL，通过读取网页内容并发送给AI以获取IXL题目的答案。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="EasyXL - 让AI帮你完成数学作业">
+<meta property="og:url" content="http://154.44.8.95/2026/04/02/easyxl-tutorial/index.html">
 <meta property="og:site_name" content="TheEndlessV">
-<meta property="og:description" content="关于我 我是 Joey aka TheEndlessV  喜欢写代码。 会一点，但不多。 我的轨迹 怎么说呢...什么都体验过，又什么都不会 2021年 —— 莫名其妙入了编程的坑 C++是我的第一门认真投入的语言 EGE的简单图形界面程序是激发我兴趣的一个重要节点 2022年 —— 后来用windows API写了写脚本，做了各种低级小游戏（还是EGE） GPT 3.5出现了 —— 对我影响深刻">
+<meta property="og:description" content="在学校经常被数学老师布置的IXL作业所困扰，于是我推出了IXL的辅助答题工具——EasyXL，通过读取网页内容并发送给AI以获取IXL题目的答案。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-10-21T04:23:54.000Z">
-<meta property="article:modified_time" content="2026-03-28T16:16:54.747Z">
+<meta property="og:image" content="http://154.44.8.95/">
+<meta property="article:published_time" content="2026-04-02T11:17:20.140Z">
+<meta property="article:modified_time" content="2026-04-02T11:33:24.447Z">
 <meta property="article:author" content="Joey Wu">
-<meta property="article:tag" content="C++, Linux, OpenGL, Python, Javascript, AI">
+<meta property="article:tag" content="工具">
+<meta property="article:tag" content="项目">
+<meta property="article:tag" content="脚本">
+<meta property="article:tag" content="Javascript">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://154.44.8.95/">
 
 
-<link rel="canonical" href="http://154.44.8.95/about/">
+<link rel="canonical" href="http://154.44.8.95/2026/04/02/easyxl-tutorial/">
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":false,"lang":"zh-CN","comments":true,"permalink":"http://154.44.8.95/about/index.html","path":"about/index.html","title":"关于"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://154.44.8.95/2026/04/02/easyxl-tutorial/","path":"2026/04/02/easyxl-tutorial/","title":"EasyXL - 让AI帮你完成数学作业"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>关于 | TheEndlessV
-</title>
+<title>EasyXL - 让AI帮你完成数学作业 | TheEndlessV</title>
   
 
 
@@ -164,7 +168,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E6%88%91"><span class="nav-number">1.</span> <span class="nav-text">关于我</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%88%91%E7%9A%84%E8%BD%A8%E8%BF%B9"><span class="nav-number">2.</span> <span class="nav-text">我的轨迹</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%86%99%E4%BD%9C%E6%96%B9%E5%90%91"><span class="nav-number">3.</span> <span class="nav-text">写作方向</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BF%9E%E6%8E%A5%E5%BD%BC%E6%AD%A4"><span class="nav-number">4.</span> <span class="nav-text">连接彼此</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BC%80%E5%8F%91%E8%BF%99%E4%B8%AA%E5%B7%A5%E5%85%B7%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">为什么开发这个工具？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8"><span class="nav-number">2.</span> <span class="nav-text">如何使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#API%E8%AE%BE%E7%BD%AE"><span class="nav-number">2.1.</span> <span class="nav-text">API设置</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8A%9F%E8%83%BD%E7%89%B9%E7%82%B9"><span class="nav-number">3.</span> <span class="nav-text">功能特点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8A%80%E6%9C%AF%E5%8E%9F%E7%90%86"><span class="nav-number">4.</span> <span class="nav-text">技术原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%93%E8%AF%AD"><span class="nav-number">5.</span> <span class="nav-text">结语</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -224,73 +228,157 @@
 
     </div>
 
-    <div class="main-inner page posts-expand">
+    <div class="main-inner post posts-expand">
 
 
-    
-    
-    
-    <div class="post-block" lang="zh-CN"><header class="post-header">
+  
 
-<h1 class="post-title" itemprop="name headline">关于
-</h1>
 
-<div class="post-meta-container">
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://154.44.8.95/2026/04/02/easyxl-tutorial/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/icon.png">
+      <meta itemprop="name" content="Joey Wu">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="TheEndlessV">
+      <meta itemprop="description" content=""Use logic not used logic."">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="EasyXL - 让AI帮你完成数学作业 | TheEndlessV">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          EasyXL - 让AI帮你完成数学作业
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-04-02 11:17:20 / 修改时间：11:33:24" itemprop="dateCreated datePublished" datetime="2026-04-02T11:17:20+00:00">2026-04-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/JS%E8%84%9A%E6%9C%AC/" itemprop="url" rel="index"><span itemprop="name">JS脚本</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
 </div>
 
-</header>
+        </div>
+      </header>
 
-      
-      
-      
-      <div class="post-body">
-          <h1 id="关于我"><a href="#关于我" class="headerlink" title="关于我"></a>关于我</h1><p>我是 <code>Joey</code> <em>aka</em> <code>TheEndlessV </code></p>
-<p>喜欢写代码。</p>
-<p>会一点，但不多。</p>
-<h1 id="我的轨迹"><a href="#我的轨迹" class="headerlink" title="我的轨迹"></a>我的轨迹</h1><p><em>怎么说呢…什么都体验过，又什么都不会</em></p>
-<p><strong>2021年</strong> —— 莫名其妙入了编程的坑</p>
-<p>C++是我第一门认真投入的语言</p>
-<p>EGE的简单图形界面程序激发起我兴趣</p>
-<p><strong>2022年</strong> —— 后来用windows API写了写脚本，做了各种低级小游戏（还是EGE）</p>
-<p>GPT 3.5出现了 —— 对我影响深刻，标志着AI时代的来临</p>
-<p><strong>2023年</strong> Ubuntu 20.04 —— 第一次尝试安装双系统</p>
-<p>不知为何迷上了Linux</p>
-<p>期间一直使用Ubuntu开发，Windows系统吃灰了</p>
-<p>期间学习Linux，写脚本</p>
-<p>迷上了OpenGL，创造简单的第一人称场景</p>
-<p><strong>2024年</strong> —— 迷上了渗透测试，找网站漏洞</p>
-<p>学习了C51单片机与Qt</p>
-<p>编写了许多博客</p>
-<p><strong>2025年</strong> —— Ubuntu吃灰了，又重新开始用Windows了</p>
-<p>购买了自己的云服务器</p>
-<p>制作了许多项目，部署了Hexo博客。</p>
-<p><strong>2026年</strong> —— 目前主要在做点小项目、每天逛逛github、写写博客。</p>
-<h1 id="写作方向"><a href="#写作方向" class="headerlink" title="写作方向"></a>写作方向</h1><p>在这里，你会看到：</p>
-<ul>
-<li>通俗易懂的实践教程</li>
-<li>开发中遇到的问题与解决方案</li>
-<li>开发项目分享</li>
-<li>偶尔的 <del>抽象艺术</del>、<del>整活项目</del> 以及 <del>水内容</del></li>
-</ul>
-<h1 id="连接彼此"><a href="#连接彼此" class="headerlink" title="连接彼此"></a>连接彼此</h1><p>技术之路从不孤单，我期待与你有思想的碰撞：</p>
-<ul>
-<li>📧 邮箱：<em><a href="mailto:&#x6a;&#117;&#x6e;&#121;&#105;&#x2e;&#119;&#117;&#49;&#50;&#50;&#49;&#x31;&#45;&#98;&#x69;&#x67;&#122;&#64;&#x62;&#x61;&#x73;&#105;&#x73;&#99;&#104;&#x69;&#x6e;&#97;&#x2e;&#99;&#x6f;&#109;">&#x6a;&#117;&#x6e;&#121;&#105;&#x2e;&#119;&#117;&#49;&#50;&#50;&#49;&#x31;&#45;&#98;&#x69;&#x67;&#122;&#64;&#x62;&#x61;&#x73;&#105;&#x73;&#99;&#104;&#x69;&#x6e;&#97;&#x2e;&#99;&#x6f;&#109;</a></em></li>
-<li>💼 Bilibili: <a target="_blank" rel="noopener" href="https://space.bilibili.com/3493087668079584"><a target="_blank" rel="noopener" href="https://space.bilibili.com/3493087668079584">TheEndlessV的空间</a></a></li>
-<li>💻 GitHub：<a target="_blank" rel="noopener" href="https://github.com/tev6">TheEndlessV</a></li>
-<li>📱 CSDN： <a target="_blank" rel="noopener" href="https://blog.csdn.net/hackferances">hackferances</a>](<a target="_blank" rel="noopener" href="https://blog.csdn.net/hackferances">https://blog.csdn.net/hackferances</a>)</li>
-</ul>
-<p>感谢你的停留，希望这里的某篇文章能帮到你</p>
-<hr>
-<p><em><strong>Use logic not used logic</strong></em></p>
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>在学校经常被数学老师布置的IXL作业所困扰，于是我推出了IXL的辅助答题工具——EasyXL，通过读取网页内容并发送给AI以获取IXL题目的答案。</p>
+<span id="more"></span>
 
-      </div>
-      
-      
-      
+<h1 id="为什么开发这个工具？"><a href="#为什么开发这个工具？" class="headerlink" title="为什么开发这个工具？"></a>为什么开发这个工具？</h1><p>完成IXL作业十分繁琐费事，也有不少学生被IXL的题目困扰过——答对得2分、答错扣10分的机制是许多人憎恨IXL的主要原因，而我也这么认为。</p>
+<p>许多学生急需一个辅助解题的方式，以此解放我们在IXL上<del>浪费的</del>时间，而在当今AI的加持下，这种渴望成为了现实！</p>
+<h1 id="如何使用"><a href="#如何使用" class="headerlink" title="如何使用"></a>如何使用</h1><p>Github源址：<a target="_blank" rel="noopener" href="https://github.com/tev6/EasyXL">https://github.com/tev6/EasyXL</a></p>
+<p>使用该工具需要用到油猴 <a target="_blank" rel="noopener" href="https://github.com/Tampermonkey/tampermonkey">Tampermonkey</a> 插件，请将其下载到你的游览器，然后使用以下步骤：</p>
+<ol>
+<li>从仓库中复制<code>easyxl.js</code>的源代码</li>
+<li>打开Tampermonkey的面板，点击：添加新脚本</li>
+<li>全选编辑器中已有的代码，并<code>Ctrl+V</code>将刚才复制的<code>js</code>代码覆盖到脚本中</li>
+<li><code>Ctrl+S</code>保存更改</li>
+<li>退出Tampermonkey的页面，你现在可以打开IXL网页进行测试了</li>
+</ol>
+<h2 id="API设置"><a href="#API设置" class="headerlink" title="API设置"></a>API设置</h2><p>该工具需要使用到API，这里支持Deepseek, Openai, Anthropic，Kouri AI的API供应商，你也可以自定义<code>Base URL</code>。</p>
+<p>在EasyXL窗口右上角的设置图标中进行操作，选择你的供应商，并提供你的API Key（这会在本地保存）和模型选择。</p>
+<p>如果这一切都设置正确，那么你就可以在IXL答题页面上测试了，点击”Parse and Solve”按钮就能将题目发送请求给AI进行解决，他会返回题目的答案。</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/tev6/EasyXL/blob/main/image/README/1774577431317.png">IXL示例图片</a></p>
+<h1 id="功能特点"><a href="#功能特点" class="headerlink" title="功能特点"></a>功能特点</h1><ul>
+<li>可拖拽的 IXL 页面悬浮窗，含有半透明模糊玻璃样式效果</li>
+<li>单独按下并松开 Ctrl 可隐藏&#x2F;显示窗口（不会影响 Ctrl+C 等组合键）</li>
+<li>单一主脚本内集成 OpenAI、Anthropic、Google、DeepSeek、Kouri 多供应商切换</li>
+<li><strong>用户注释功能</strong>：允许在解析前添加自定义提示或解题要求的备注，这些备注将会发送给 AI。</li>
+<li>使用 <code>GM_xmlhttpRequest</code> 发送跨域请求以绕过页面 CSP 限制</li>
+<li>支持在结果框中渲染富文本 Markdown 和数学公式（基于 KaTeX）</li>
+<li>右上角齿轮按钮可打开设置面板，支持退出按钮、ESC、点击遮罩关闭</li>
+<li>为每个供应商分别保存 API Key、模型、基础 URL 和用户注释</li>
+<li>请求失败或配置无效时，会在设置面板中给出提示并引导重新配置</li>
+</ul>
+<p><img src="/"></p>
+<h1 id="技术原理"><a href="#技术原理" class="headerlink" title="技术原理"></a>技术原理</h1><p>程序直接将题目范围内的HTML内容发送，并使AI提取其中的题目内容后再进行作答，程序会要求AI给出解题思路（此步可以提高正确率），但是强制要求将最终的精简答案输出于<code>&lt;answer&gt;...&lt;/answer&gt;</code>当中，这样程序之后提取当中的内容并反馈给客户。</p>
+<h1 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h1><p>如果你对此项目感兴趣，欢迎参与开发，提交Issues与Pull Requests</p>
+
     </div>
 
     
     
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>Joey Wu
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://154.44.8.95/2026/04/02/easyxl-tutorial/" title="EasyXL - 让AI帮你完成数学作业">http://154.44.8.95/2026/04/02/easyxl-tutorial/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E5%B7%A5%E5%85%B7/" rel="tag"># 工具</a>
+              <a href="/tags/%E9%A1%B9%E7%9B%AE/" rel="tag"># 项目</a>
+              <a href="/tags/%E8%84%9A%E6%9C%AC/" rel="tag"># 脚本</a>
+              <a href="/tags/Javascript/" rel="tag"># Javascript</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/12/17/rfnoter-tutorial/" rel="prev" title="RFNoter使用说明书">
+                  <i class="fa fa-angle-left"></i> RFNoter使用说明书
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
 
 
 </div>

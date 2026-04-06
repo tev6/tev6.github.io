@@ -1,0 +1,2620 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>快速笔记 | Quick Notes</title>
+    <!-- Tailwind CSS v3 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- 统一的 Tailwind 配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3b82f6',
+                        danger: '#ef4444',
+                        success: '#10b981',
+                        ai: '#8b5cf6',
+                        note1: '#3b82f6', // 蓝色
+                        note2: '#10b981', // 绿色
+                        note3: '#f59e0b', // 橙色
+                        note4: '#ef4444', // 红色
+                        note5: '#8b5cf6'  // 紫色
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.2s ease-in-out',
+                        'fade-out': 'fadeOut 0.2s ease-in-out',
+                        'slide-in': 'slideIn 0.25s ease-out',
+                        'slide-up': 'slideUp 0.25s ease-out',
+                        'bounce-in': 'bounceIn 0.3s ease-out',
+                        'pulse': 'pulse 1.5s ease-in-out infinite',
+                        'drag-pulse': 'dragPulse 1s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        fadeOut: {
+                            '0%': { opacity: '1' },
+                            '100%': { opacity: '0' },
+                        },
+                        slideIn: {
+                            '0%': { transform: 'translateY(-10px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        bounceIn: {
+                            '0%': { transform: 'scale(0.95)', opacity: '0' },
+                            '70%': { transform: 'scale(1.02)', opacity: '1' },
+                            '100%': { transform: 'scale(1)', opacity: '1' },
+                        },
+                        dragPulse: {
+                            '0%, 100%': { transform: 'scale(1)', opacity: '1' },
+                            '50%': { transform: 'scale(1.03)', opacity: '0.8' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .note-card {
+                @apply relative p-4 rounded-lg shadow-md transition-all duration-200 hover:shadow-lg border-l-4 cursor-pointer touch-none;
+            }
+            .note-card.selected {
+                @apply ring-2 ring-ai ring-opacity-50 bg-ai/5;
+            }
+            .note-card.dragging {
+                @apply opacity-60 scale-105 shadow-xl z-50 animate-drag-pulse;
+            }
+            .note-card.drag-over {
+                @apply border-t-2 border-t-primary border-dashed;
+            }
+            .btn {
+                @apply px-4 py-2 rounded-md font-medium transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white active:scale-95;
+            }
+            .btn-primary {
+                @apply bg-primary text-white hover:bg-primary/90 focus:ring-primary/50;
+            }
+            .btn-secondary {
+                @apply bg-gray-200 text-gray-800 hover:bg-gray-300 focus:ring-gray-400;
+            }
+            .btn-ai {
+                @apply bg-ai text-white hover:bg-ai/90 focus:ring-ai/50;
+            }
+            .input-field {
+                @apply w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary transition-colors duration-150;
+            }
+            .textarea-field {
+                @apply w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary resize-none transition-colors duration-150;
+            }
+            .quick-input-row {
+                @apply grid grid-cols-12 gap-2 items-center w-full;
+            }
+            .note-row-layout {
+                @apply grid grid-cols-12 gap-2 items-center w-full;
+            }
+            .expand-btn {
+                @apply text-gray-600 hover:text-primary transition-all duration-150 active:scale-95;
+            }
+            .tag {
+                @apply inline-block px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-800 transition-all duration-150;
+            }
+            .ai-tag {
+                @apply inline-block px-2 py-1 text-xs font-medium rounded-full bg-ai/10 text-ai border border-ai/20 transition-all duration-150;
+            }
+            .selected-count-badge {
+                @apply fixed top-20 right-4 bg-ai text-white px-3 py-1 rounded-full text-sm font-medium shadow-lg z-40 animate-bounce-in;
+            }
+            .color-dot {
+                @apply w-6 h-6 rounded-full cursor-pointer border-2 border-white shadow-md transition-all duration-150 hover:scale-110 active:scale-95;
+            }
+            .date-header {
+                @apply transition-all duration-200 active:scale-[0.995];
+            }
+            .date-header.selected {
+                @apply ring-2 ring-ai ring-opacity-50 bg-ai/5;
+            }
+            .duration-badge {
+                @apply inline-block px-1.5 py-0.5 text-xs font-medium rounded-full bg-gray-100 text-gray-700 ml-1;
+            }
+            
+            /* 手机版布局调整 */
+            @media (max-width: 640px) {
+                .quick-input-row {
+                    @apply grid-cols-1 gap-3;
+                }
+                .note-row-layout {
+                    @apply grid-cols-1 gap-2;
+                }
+                .note-card {
+                    @apply p-3;
+                }
+                .date-header h3 {
+                    @apply text-sm;
+                }
+                .quick-input-time-group {
+                    @apply flex-col;
+                }
+                .quick-input-time-group span {
+                    @apply hidden;
+                }
+            }
+            
+            /* 平板布局调整 */
+            @media (min-width: 641px) and (max-width: 768px) {
+                .quick-input-row {
+                    @apply grid-cols-6 gap-2;
+                }
+                .note-row-layout {
+                    @apply grid-cols-6 gap-2;
+                }
+            }
+            
+            /* 修复底部输入区域在小屏幕下的重叠问题 */
+            @media (max-width: 480px) {
+                .quick-input-row {
+                    @apply grid-cols-1 gap-2;
+                }
+                .quick-input-time-group {
+                    @apply flex-col;
+                }
+                .quick-input-time-group span {
+                    @apply hidden;
+                }
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 min-h-screen">
+    <!-- 顶部导航栏 -->
+    <header class="sticky top-0 z-50 bg-white/70 backdrop-blur-md border-b border-gray-200 shadow-sm">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <i class="fa fa-sticky-note text-primary text-2xl"></i>
+                <h1 class="text-xl font-bold">快速笔记</h1>
+            </div>
+            <div class="flex items-center space-x-4">
+                <!-- 选择/确认按钮 -->
+                <button id="selection-toggle-btn" class="btn btn-secondary text-sm transition-all duration-150">
+                    <i class="fa fa-check-square-o mr-2"></i>选择笔记
+                </button>
+                <div id="selection-info" class="hidden items-center space-x-4">
+                    <span id="selected-count" class="text-sm font-medium text-ai"></span>
+                    <button id="clear-selection-btn" class="text-sm text-gray-500 hover:text-gray-700 transition-colors duration-150">
+                        <i class="fa fa-times mr-1"></i>清空选择
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 选择模式提示条 -->
+        <div id="selection-mode-hint" class="hidden bg-blue-50 border-b border-blue-200 py-2 px-4 animate-slide-up">
+            <div class="container mx-auto flex items-center justify-between">
+                <p class="text-sm text-blue-800">
+                    <i class="fa fa-info-circle mr-2"></i>
+                    <span class="font-medium">选择模式已开启：</span>
+                    <span>左键勾选单个笔记，左键单击集合则勾选或取消勾选集合中的所有笔记</span>
+                </p>
+                <button id="close-selection-hint-btn" class="text-blue-600 hover:text-blue-800 transition-colors duration-150">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="container mx-auto px-4 py-6">
+        <!-- 笔记列表 -->
+        <div id="notes-container" class="grid grid-cols-1 gap-3 mb-6">
+            <!-- 笔记卡片将通过 JavaScript 动态生成 -->
+        </div>
+        
+        <!-- 空状态提示 -->
+        <div id="empty-state" class="hidden flex flex-col items-center justify-center py-16 text-center animate-fade-in">
+            <div class="w-24 h-24 mb-4 text-gray-400">
+                <i class="fa fa-sticky-note-o text-6xl"></i>
+            </div>
+            <h2 class="text-xl font-semibold mb-2">还没有笔记</h2>
+            <p class="text-gray-500 mb-6 max-w-md">使用底部的快速输入框开始记录，支持快速添加时间间隔和笔记内容</p>
+        </div>
+    </main>
+
+    <!-- AI总结浮动按钮 -->
+    <div id="ai-summary-float-btn" class="fixed bottom-24 right-6 z-30 hidden animate-slide-up">
+        <button class="btn btn-ai shadow-lg hover:shadow-xl transform transition-all duration-200">
+            <i class="fa fa-magic mr-2"></i>
+            <span>AI 总结</span>
+            <span id="selected-notes-count" class="ml-2 bg-white/20 px-2 py-0.5 rounded-full text-xs">0</span>
+        </button>
+    </div>
+
+    <!-- 底部快速输入区域 -->
+    <div class="sticky bottom-0 z-40 bg-white/90 backdrop-blur-md border-t border-gray-200 py-3 shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="bg-gray-100 rounded-lg p-3 shadow-sm">
+                <h3 class="text-sm font-medium text-gray-700 mb-2">快速添加笔记</h3>
+                <form id="quick-add-form" class="quick-input-row">
+                    <!-- 日期（固定） -->
+                    <div class="col-span-2 md:col-span-2 lg:col-span-2">
+                        <input type="text" id="quick-date" class="input-field text-center" readonly>
+                    </div>
+                    
+                    <!-- 时间间隔 -->
+                    <div class="col-span-4 md:col-span-3 lg:col-span-3 flex gap-1 quick-input-time-group">
+                        <input type="time" id="quick-time-start" class="input-field" required>
+                        <span class="flex items-center justify-center px-1 text-gray-500">~</span>
+                        <input type="time" id="quick-time-end" class="input-field" required>
+                    </div>
+                    
+                    <!-- 标题内容 -->
+                    <div class="col-span-4 md:col-span-4 lg:col-span-4">
+                        <input type="text" id="quick-content" class="input-field" placeholder="输入笔记标题" required>
+                    </div>
+                    
+                    <!-- 标签输入 -->
+                    <div class="col-span-1 md:col-span-2 lg:col-span-2">
+                        <input type="text" id="quick-tag" class="input-field" placeholder="标签" maxlength="5">
+                    </div>
+                    
+                    <!-- 提交按钮 -->
+                    <div class="col-span-1">
+                        <button type="submit" class="btn btn-primary w-full transition-all duration-150 active:scale-95">
+                            <i class="fa fa-plus"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI 总结配置模态框 -->
+    <div id="ai-summary-modal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+            <!-- 背景遮罩 -->
+            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+                <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+            </div>
+            
+            <!-- 模态框内容 -->
+            <div class="inline-block overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full animate-slide-up">
+                <div class="px-4 pt-5 pb-4 bg-white sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="text-lg font-medium leading-6 text-gray-900">AI 笔记总结</h3>
+                                <span class="text-sm text-ai font-medium">
+                                    <i class="fa fa-magic mr-1"></i>
+                                    选中 <span id="modal-selected-count">0</span> 条笔记
+                                </span>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                <!-- 左侧：选中的笔记预览 -->
+                                <div>
+                                    <h4 class="text-sm font-medium text-gray-700 mb-3">选中的笔记</h4>
+                                    <div id="selected-notes-preview" class="space-y-2 max-h-96 overflow-y-auto p-2 border border-gray-200 rounded-md">
+                                        <!-- 选中的笔记将通过 JS 动态生成 -->
+                                    </div>
+                                    <p class="text-xs text-gray-500 mt-2">
+                                        <i class="fa fa-info-circle mr-1"></i>
+                                        点击笔记右侧的 <i class="fa fa-times text-red-500"></i> 可以取消选择
+                                    </p>
+                                </div>
+                                
+                                <!-- 右侧：总结配置 -->
+                                <div>
+                                    <h4 class="text-sm font-medium text-gray-700 mb-3">总结配置</h4>
+                                    <div class="space-y-4">
+                                        <!-- 总结风格 -->
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">总结风格</label>
+                                            <div class="grid grid-cols-2 gap-2">
+                                                <label class="flex items-center p-2 border rounded cursor-pointer hover:bg-gray-50 transition-colors duration-150">
+                                                    <input type="radio" name="summary-style" value="简洁摘要" class="mr-2" checked>
+                                                    <span class="text-sm">简洁摘要</span>
+                                                </label>
+                                                <label class="flex items-center p-2 border rounded cursor-pointer hover:bg-gray-50 transition-colors duration-150">
+                                                    <input type="radio" name="summary-style" value="详细报告" class="mr-2">
+                                                    <span class="text-sm">详细报告</span>
+                                                </label>
+                                                <label class="flex items-center p-2 border rounded cursor-pointer hover:bg-gray-50 transition-colors duration-150">
+                                                    <input type="radio" name="summary-style" value="要点列表" class="mr-2">
+                                                    <span class="text-sm">要点列表</span>
+                                                </label>
+                                                <label class="flex items-center p-2 border rounded cursor-pointer hover:bg-gray-50 transition-colors duration-150">
+                                                    <input type="radio" name="summary-style" value="时间线整理" class="mr-2">
+                                                    <span class="text-sm">时间线整理</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- 输出格式 -->
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">输出格式</label>
+                                            <div class="flex space-x-2">
+                                                <label class="flex items-center p-2 border rounded cursor-pointer hover:bg-gray-50 flex-1 transition-colors duration-150">
+                                                    <input type="radio" name="output-format" value="纯文本" class="mr-2" checked>
+                                                    <span class="text-sm">纯文本</span>
+                                                </label>
+                                                <label class="flex items-center p-2 border rounded cursor-pointer hover:bg-gray-50 flex-1 transition-colors duration-150">
+                                                    <input type="radio" name="output-format" value="Markdown格式" class="mr-2">
+                                                    <span class="text-sm">Markdown</span>
+                                                </label>
+                                                <label class="flex items-center p-2 border rounded cursor-pointer hover:bg-gray-50 flex-1 transition-colors duration-150">
+                                                    <input type="radio" name="output-format" value="HTML格式" class="mr-2">
+                                                    <span class="text-sm">HTML</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- 自定义提示词 -->
+                                        <div>
+                                            <label for="custom-prompt" class="block text-sm font-medium text-gray-700 mb-1">
+                                                自定义提示词
+                                                <span class="text-gray-500 font-normal">（可选）</span>
+                                            </label>
+                                            <textarea id="custom-prompt" rows="3" class="textarea-field" placeholder="例如：请重点关注时间安排和任务优先级..."></textarea>
+                                        </div>
+                                        
+                                        <!-- API 配置（可折叠） -->
+                                        <div>
+                                            <button type="button" id="toggle-api-config" class="text-sm text-gray-600 hover:text-gray-800 mb-2 transition-colors duration-150">
+                                                <i class="fa fa-cog mr-1"></i>
+                                                高级设置 <i class="fa fa-chevron-down ml-1"></i>
+                                            </button>
+                                            <div id="api-config-section" class="hidden space-y-3 p-3 border border-gray-200 rounded-md">
+                                                <div>
+                                                    <label for="api-key" class="block text-xs font-medium text-gray-700 mb-1">
+                                                        DeepSeek API 密钥
+                                                        <span class="text-red-500">*</span>
+                                                    </label>
+                                                    <div class="flex space-x-2">
+                                                        <input type="password" id="api-key" class="input-field flex-1" placeholder="sk-...">
+                                                        <button type="button" id="toggle-api-key" class="btn btn-secondary text-xs transition-colors duration-150">
+                                                            <i class="fa fa-eye"></i>
+                                                        </button>
+                                                    </div>
+                                                    <p class="text-xs text-gray-500 mt-1">
+                                                        密钥仅保存在本地，不会发送到其他服务器
+                                                    </p>
+                                                </div>
+                                                
+                                                <div class="grid grid-cols-2 gap-3">
+                                                    <div>
+                                                        <label for="model" class="block text-xs font-medium text-gray-700 mb-1">模型</label>
+                                                        <select id="model" class="input-field text-sm">
+                                                            <option value="deepseek-chat">deepseek-chat</option>
+                                                            <option value="deepseek-coder">deepseek-coder</option>
+                                                        </select>
+                                                    </div>
+                                                    <div>
+                                                        <label for="temperature" class="block text-xs font-medium text-gray-700 mb-1">
+                                                            温度: <span id="temp-value">0.7</span>
+                                                        </label>
+                                                        <input type="range" id="temperature" min="0" max="1" step="0.1" value="0.7" class="w-full">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 模态框底部按钮 -->
+                <div class="px-4 py-3 bg-gray-50 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="button" id="generate-summary-btn" class="btn btn-ai transition-all duration-150">
+                        <i class="fa fa-magic mr-2"></i>
+                        生成总结
+                    </button>
+                    <button type="button" id="cancel-summary-btn" class="btn btn-secondary ml-3 transition-all duration-150">
+                        取消
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI 总结结果模态框 -->
+    <div id="ai-result-modal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+            <!-- 背景遮罩 -->
+            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+                <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+            </div>
+            
+            <!-- 模态框内容 -->
+            <div class="inline-block overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full animate-slide-up">
+                <div class="px-4 pt-5 pb-4 bg-white sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                            <div class="flex justify-between items-center mb-4">
+                                <div>
+                                    <h3 class="text-lg font-medium leading-6 text-gray-900">AI 总结结果</h3>
+                                    <p class="text-sm text-gray-500">基于 <span id="result-note-count">0</span> 条笔记生成</p>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <span id="summary-stats" class="text-xs text-gray-500"></span>
+                                    <span class="ai-tag">
+                                        <i class="fa fa-magic mr-1"></i>AI 总结
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <!-- 加载状态 -->
+                            <div id="summary-loading" class="hidden flex flex-col items-center justify-center py-8 animate-pulse">
+                                <div class="mb-4">
+                                    <i class="fa fa-magic text-4xl text-ai"></i>
+                                </div>
+                                <p class="text-gray-600">AI 正在思考中，请稍候...</p>
+                                <p class="text-sm text-gray-500 mt-2">这可能需要几秒钟时间</p>
+                            </div>
+                            
+                            <!-- 结果内容 -->
+                            <div id="summary-content" class="hidden animate-fade-in">
+                                <div class="prose max-w-none">
+                                    <div id="summary-text" class="p-4 border border-gray-200 rounded-md bg-gray-50 max-h-96 overflow-y-auto">
+                                        <!-- AI 总结内容将通过 JS 动态填充 -->
+                                    </div>
+                                </div>
+                                
+                                <!-- 操作按钮 -->
+                                <div class="mt-6 flex flex-wrap gap-2">
+                                    <button id="copy-summary-btn" class="btn btn-secondary transition-all duration-150">
+                                        <i class="fa fa-copy mr-2"></i>复制到剪贴板
+                                    </button>
+                                    <button id="save-as-note-btn" class="btn btn-primary transition-all duration-150">
+                                        <i class="fa fa-save mr-2"></i>保存为新笔记
+                                    </button>
+                                    <button id="regenerate-summary-btn" class="btn btn-secondary transition-all duration-150">
+                                        <i class="fa fa-refresh mr-2"></i>重新生成
+                                    </button>
+                                    <button id="adjust-config-btn" class="btn btn-secondary transition-all duration-150">
+                                        <i class="fa fa-cog mr-2"></i>调整配置
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- 错误状态 -->
+                            <div id="summary-error" class="hidden flex flex-col items-center justify-center py-8 animate-fade-in">
+                                <div class="text-red-500 mb-4">
+                                    <i class="fa fa-exclamation-triangle text-4xl"></i>
+                                </div>
+                                <h4 class="text-lg font-medium text-gray-900 mb-2">生成失败</h4>
+                                <p id="error-message" class="text-gray-600 mb-4"></p>
+                                <div class="flex space-x-3">
+                                    <button id="retry-summary-btn" class="btn btn-primary transition-all duration-150">
+                                        <i class="fa fa-refresh mr-2"></i>重试
+                                    </button>
+                                    <button id="back-to-config-btn" class="btn btn-secondary transition-all duration-150">
+                                        <i class="fa fa-arrow-left mr-2"></i>返回配置
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 编辑笔记模态框 -->
+    <div id="note-modal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+            <!-- 背景遮罩 -->
+            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+                <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+            </div>
+            
+            <!-- 模态框内容 -->
+            <div class="inline-block overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-lg sm:w-full animate-slide-up">
+                <div class="px-4 pt-5 pb-4 bg-white sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                            <h3 id="modal-title" class="text-lg font-medium leading-6 text-gray-900 mb-4">编辑笔记</h3>
+                            
+                            <form id="note-form" class="space-y-4">
+                                <!-- 日期 -->
+                                <div>
+                                    <label for="note-date" class="block text-sm font-medium text-gray-700 mb-1">
+                                        日期 <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="date" id="note-date" class="input-field" required>
+                                </div>
+                                
+                                <!-- 时间间隔 -->
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div>
+                                        <label for="note-time-start" class="block text-sm font-medium text-gray-700 mb-1">
+                                            开始时间 <span class="text-red-500">*</span>
+                                        </label>
+                                        <input type="time" id="note-time-start" class="input-field" required>
+                                    </div>
+                                    <div>
+                                        <label for="note-time-end" class="block text-sm font-medium text-gray-700 mb-1">
+                                            结束时间 <span class="text-red-500">*</span>
+                                        </label>
+                                        <input type="time" id="note-time-end" class="input-field" required>
+                                    </div>
+                                </div>
+                                
+                                <!-- 标题 -->
+                                <div>
+                                    <label for="note-content" class="block text-sm font-medium text-gray-700 mb-1">
+                                        标题 <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="text" id="note-content" class="input-field" placeholder="笔记标题" required>
+                                </div>
+                                
+                                <!-- 标签 -->
+                                <div>
+                                    <label for="note-tag" class="block text-sm font-medium text-gray-700 mb-1">
+                                        标签
+                                    </label>
+                                    <input type="text" id="note-tag" class="input-field" placeholder="标签（最多5个字）" maxlength="5">
+                                </div>
+                                
+                                <!-- 颜色标记 -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        颜色标记
+                                    </label>
+                                    <div class="flex space-x-2">
+                                        <div class="color-dot bg-note1 border-note1" data-color="note1" title="蓝色"></div>
+                                        <div class="color-dot bg-note2 border-note2" data-color="note2" title="绿色"></div>
+                                        <div class="color-dot bg-note3 border-note3" data-color="note3" title="橙色"></div>
+                                        <div class="color-dot bg-note4 border-note4" data-color="note4" title="红色"></div>
+                                        <div class="color-dot bg-note5 border-note5" data-color="note5" title="紫色"></div>
+                                        <div class="color-dot bg-gray-300 border-gray-300" data-color="" title="默认（无颜色）"></div>
+                                    </div>
+                                    <input type="hidden" id="note-color" value="">
+                                </div>
+                                
+                                <!-- 详情 -->
+                                <div>
+                                    <label for="note-details" class="block text-sm font-medium text-gray-700 mb-1">
+                                        详细信息
+                                    </label>
+                                    <textarea id="note-details" rows="4" class="textarea-field" placeholder="笔记详情..."></textarea>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 模态框底部按钮 -->
+                <div class="px-4 py-3 bg-gray-50 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="button" id="save-note-btn" class="btn btn-primary transition-all duration-150">
+                        保存
+                    </button>
+                    <button type="button" id="cancel-note-btn" class="btn btn-secondary ml-3 transition-all duration-150">
+                        取消
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 右键菜单 -->
+    <div id="context-menu" class="hidden fixed z-50 w-48 bg-white/70 backdrop-blur-md rounded-md shadow-lg py-1 animate-slide-in">
+        <button class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-150" id="edit-note-menu-btn">
+            <i class="fa fa-pencil mr-2"></i> 编辑
+        </button>
+        <button class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-150" id="duplicate-note-menu-btn">
+            <i class="fa fa-clone mr-2"></i> 复制
+        </button>
+        
+        <!-- 颜色标记子菜单 -->
+        <div class="relative group">
+            <button class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-150 flex items-center justify-between" id="color-menu-btn">
+                <span><i class="fa fa-tag mr-2"></i> 颜色标记</span>
+                <i class="fa fa-chevron-right text-xs"></i>
+            </button>
+            <div id="color-submenu" class="hidden absolute left-full top-0 ml-1 w-32 bg-white/70 backdrop-blur-md rounded-md shadow-lg p-2">
+                <div class="grid grid-cols-3 gap-2">
+                    <div class="color-dot bg-note1 border-note1 mx-auto" data-color="note1" title="蓝色"></div>
+                    <div class="color-dot bg-note2 border-note2 mx-auto" data-color="note2" title="绿色"></div>
+                    <div class="color-dot bg-note3 border-note3 mx-auto" data-color="note3" title="橙色"></div>
+                    <div class="color-dot bg-note4 border-note4 mx-auto" data-color="note4" title="红色"></div>
+                    <div class="color-dot bg-note5 border-note5 mx-auto" data-color="note5" title="紫色"></div>
+                    <div class="color-dot bg-gray-300 border-gray-300 mx-auto" data-color="" title="默认"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="border-t border-gray-200"></div>
+        <button class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 transition-colors duration-150" id="delete-note-menu-btn">
+            <i class="fa fa-trash mr-2"></i> 删除
+        </button>
+    </div>
+
+    <!-- 确认删除模态框 -->
+    <div id="delete-modal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+            <!-- 背景遮罩 -->
+            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+                <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+            </div>
+            
+            <!-- 模态框内容 -->
+            <div class="inline-block overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-lg sm:w-full animate-slide-up">
+                <div class="px-4 pt-5 pb-4 bg-white sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                            <i class="fa fa-exclamation-triangle text-red-600"></i>
+                        </div>
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                            <h3 class="text-lg font-medium leading-6 text-gray-900">删除笔记</h3>
+                            <div class="mt-2">
+                                <p class="text-sm text-gray-500">确定要删除这条笔记吗？此操作无法撤销。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="px-4 py-3 bg-gray-50 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="button" id="confirm-delete-btn" class="btn bg-red-600 text-white hover:bg-red-700 transition-all duration-150">
+                        删除
+                    </button>
+                    <button type="button" id="cancel-delete-btn" class="btn btn-secondary ml-3 transition-all duration-150">
+                        取消
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 保存状态提示 -->
+    <div id="save-indicator" class="fixed bottom-20 right-4 bg-white/70 backdrop-blur-md px-4 py-2 rounded-md shadow-lg flex items-center space-x-2 transform translate-y-10 opacity-0 transition-all duration-300 z-40">
+        <i class="fa fa-check-circle text-green-500"></i>
+        <span>已保存</span>
+    </div>
+
+    <!-- 操作提示 -->
+    <div id="selection-hint" class="fixed bottom-20 left-4 bg-white/70 backdrop-blur-md px-4 py-2 rounded-md shadow-lg text-sm hidden animate-slide-up z-40">
+        <p class="text-gray-700">
+            <span class="font-medium">选择笔记：</span>
+            <span class="text-gray-600">Ctrl+点击选择单个，Shift+点击选择区间，拖动可重新排序</span>
+        </p>
+    </div>
+
+    <!-- 拖放指示器 -->
+    <div id="drag-indicator" class="hidden fixed top-0 left-0 w-full h-1 bg-primary z-50"></div>
+
+    <!-- JavaScript -->
+    <script>
+        // 全局变量
+        let notes = [];
+        let currentNoteId = null;
+        let lastEndTime = null;
+        
+        // AI 总结相关全局变量
+        let selectedNotes = new Set(); // 选中的笔记ID集合
+        let lastClickedNoteId = null; // 最后点击的笔记ID（用于区间选择）
+        let currentSummaryConfig = {}; // 当前总结配置
+        let currentSummaryResult = null; // 当前总结结果
+        
+        // 拖放相关变量
+        let draggedNote = null;
+        let dragOverNote = null;
+        let dragStartIndex = -1;
+        
+        // 新增加：选择模式状态
+        let selectionMode = false; // 是否处于选择模式
+        let dateGroupNotesMap = new Map(); // 存储每个日期分组下的笔记ID
+        
+        // 颜色选项映射
+        const colorMap = {
+            'note1': '#3b82f6', // 蓝色
+            'note2': '#10b981', // 绿色
+            'note3': '#f59e0b', // 橙色
+            'note4': '#ef4444', // 红色
+            'note5': '#8b5cf6', // 紫色
+            '': '#3b82f6' // 默认蓝色
+        };
+        
+        // DOM 元素
+        const notesContainer = document.getElementById('notes-container');
+        const emptyState = document.getElementById('empty-state');
+        const noteModal = document.getElementById('note-modal');
+        const contextMenu = document.getElementById('context-menu');
+        const deleteModal = document.getElementById('delete-modal');
+        const saveIndicator = document.getElementById('save-indicator');
+        const quickAddForm = document.getElementById('quick-add-form');
+        const colorSubmenu = document.getElementById('color-submenu');
+        
+        // 新增加：选择相关DOM元素
+        const selectionToggleBtn = document.getElementById('selection-toggle-btn');
+        const selectionModeHint = document.getElementById('selection-mode-hint');
+        const closeSelectionHintBtn = document.getElementById('close-selection-hint-btn');
+        
+        // AI 总结相关 DOM 元素
+        const aiSummaryFloatBtn = document.getElementById('ai-summary-float-btn');
+        const selectionInfo = document.getElementById('selection-info');
+        const selectedCount = document.getElementById('selected-count');
+        const clearSelectionBtn = document.getElementById('clear-selection-btn');
+        const selectedNotesCount = document.getElementById('selected-notes-count');
+        const aiSummaryModal = document.getElementById('ai-summary-modal');
+        const aiResultModal = document.getElementById('ai-result-modal');
+        const modalSelectedCount = document.getElementById('modal-selected-count');
+        const selectedNotesPreview = document.getElementById('selected-notes-preview');
+        const generateSummaryBtn = document.getElementById('generate-summary-btn');
+        const cancelSummaryBtn = document.getElementById('cancel-summary-btn');
+        const summaryLoading = document.getElementById('summary-loading');
+        const summaryContent = document.getElementById('summary-content');
+        const summaryText = document.getElementById('summary-text');
+        const resultNoteCount = document.getElementById('result-note-count');
+        const summaryStats = document.getElementById('summary-stats');
+        const summaryError = document.getElementById('summary-error');
+        const errorMessage = document.getElementById('error-message');
+        const selectionHint = document.getElementById('selection-hint');
+        const dragIndicator = document.getElementById('drag-indicator');
+        
+        // 初始化应用
+        document.addEventListener('DOMContentLoaded', () => {
+            initUserIdentity();
+            initQuickInput();
+            loadNotes();
+            renderNotes();
+            bindEventListeners();
+            bindAIEventListeners();
+            bindDragEvents();
+            loadApiConfig();
+            
+            // 移除原有的选择提示显示
+            // 不再显示选择提示
+        });
+        
+        // ============ 新增加：选择模式功能 ============
+        
+        // 初始化选择模式相关事件
+        function initSelectionMode() {
+            // 选择按钮点击事件
+            selectionToggleBtn.addEventListener('click', toggleSelectionMode);
+            
+            // 关闭提示按钮
+            if (closeSelectionHintBtn) {
+                closeSelectionHintBtn.addEventListener('click', () => {
+                    selectionModeHint.classList.add('hidden');
+                });
+            }
+        }
+        
+        // 切换选择模式
+        function toggleSelectionMode() {
+            if (!selectionMode) {
+                // 进入选择模式
+                enterSelectionMode();
+            } else {
+                // 退出选择模式，进入AI总结
+                if (selectedNotes.size === 0) {
+                    alert('请先选择至少一条笔记');
+                    return;
+                }
+                
+                if (selectedNotes.size > 100) {
+                    alert('最多只能选择100条笔记进行AI总结，请减少选择数量');
+                    return;
+                }
+                
+                // 打开AI总结模态框
+                openAISummaryModal();
+                // 注意：这里我们不退出选择模式，直到用户完成或取消AI总结
+            }
+        }
+        
+        // 进入选择模式
+        function enterSelectionMode() {
+            selectionMode = true;
+            
+            // 更新按钮文本和样式
+            selectionToggleBtn.innerHTML = '<i class="fa fa-check-circle mr-2"></i>确认，开始AI总结';
+            selectionToggleBtn.classList.remove('btn-secondary');
+            selectionToggleBtn.classList.add('btn-ai');
+            
+            // 显示选择模式提示
+            selectionModeHint.classList.remove('hidden');
+            
+            // 清除之前的选择
+            clearSelection();
+            
+            // 禁用拖放功能
+            document.querySelectorAll('.note-card').forEach(card => {
+                card.draggable = false;
+            });
+            
+            // 为日期分组添加点击事件
+            bindDateGroupSelectionEvents();
+            
+            // 更新选择UI
+            updateSelectionUI();
+        }
+        
+        // 退出选择模式
+        function exitSelectionMode() {
+            selectionMode = false;
+            
+            // 恢复按钮文本和样式
+            selectionToggleBtn.innerHTML = '<i class="fa fa-check-square-o mr-2"></i>选择笔记';
+            selectionToggleBtn.classList.remove('btn-ai');
+            selectionToggleBtn.classList.add('btn-secondary');
+            
+            // 隐藏选择模式提示
+            selectionModeHint.classList.add('hidden');
+            
+            // 清除选择
+            clearSelection();
+            
+            // 启用拖放功能
+            document.querySelectorAll('.note-card').forEach(card => {
+                card.draggable = true;
+            });
+            
+            // 移除日期分组点击事件
+            removeDateGroupSelectionEvents();
+            
+            // 更新选择UI
+            updateSelectionUI();
+        }
+        
+        // 绑定日期分组选择事件
+        function bindDateGroupSelectionEvents() {
+            const dateGroups = document.querySelectorAll('.date-group');
+            dateGroups.forEach(group => {
+                // 存储该分组下的笔记ID
+                const noteIds = [];
+                let nextElement = group.nextElementSibling;
+                
+                while (nextElement && !nextElement.classList.contains('date-group')) {
+                    if (nextElement.classList.contains('note-card')) {
+                        noteIds.push(nextElement.dataset.noteId);
+                    }
+                    nextElement = nextElement.nextElementSibling;
+                }
+                
+                dateGroupNotesMap.set(group, noteIds);
+                
+                // 添加点击事件
+                const dateHeader = group.querySelector('.date-header');
+                dateHeader.addEventListener('click', handleDateGroupClick);
+                dateHeader.style.cursor = 'pointer';
+                
+                // 更新日期分组的选中状态
+                updateDateGroupSelectionUI(group, noteIds);
+            });
+        }
+        
+        // 移除日期分组选择事件
+        function removeDateGroupSelectionEvents() {
+            const dateHeaders = document.querySelectorAll('.date-header');
+            dateHeaders.forEach(header => {
+                header.removeEventListener('click', handleDateGroupClick);
+                header.style.cursor = '';
+                // 移除选中样式
+                header.classList.remove('selected');
+            });
+            
+            dateGroupNotesMap.clear();
+        }
+        
+        // 更新日期分组选择UI
+        function updateDateGroupSelectionUI(dateGroup, noteIds) {
+            if (!dateGroup || !noteIds || noteIds.length === 0) return;
+            
+            const dateHeader = dateGroup.querySelector('.date-header');
+            if (!dateHeader) return;
+            
+            // 检查该分组下的所有笔记是否都已选中
+            const allSelected = noteIds.every(id => selectedNotes.has(id));
+            
+            if (allSelected && noteIds.length > 0) {
+                dateHeader.classList.add('selected');
+            } else {
+                dateHeader.classList.remove('selected');
+            }
+        }
+        
+        // 处理日期分组点击
+        function handleDateGroupClick(e) {
+            e.stopPropagation();
+            
+            // 查找对应的日期分组
+            let group = e.target.closest('.date-group');
+            if (!group) return;
+            
+            // 获取该分组下的笔记ID
+            const noteIds = dateGroupNotesMap.get(group);
+            if (!noteIds || noteIds.length === 0) return;
+            
+            // 检查该分组下的所有笔记是否都已选中
+            const allSelected = noteIds.every(id => selectedNotes.has(id));
+            
+            if (allSelected) {
+                // 如果都已选中，则全部取消选中
+                noteIds.forEach(id => {
+                    selectedNotes.delete(id);
+                    updateNoteSelectionUI(id, false);
+                });
+            } else {
+                // 如果未全部选中，则选中所有未选中的笔记
+                // 检查是否超过100条限制
+                const newSelections = noteIds.filter(id => !selectedNotes.has(id));
+                if (selectedNotes.size + newSelections.length > 100) {
+                    alert(`最多只能选择100条笔记，当前已选择${selectedNotes.size}条，无法再选择${newSelections.length}条`);
+                    return;
+                }
+                
+                noteIds.forEach(id => {
+                    selectedNotes.add(id);
+                    updateNoteSelectionUI(id, true);
+                });
+            }
+            
+            // 更新日期分组UI
+            updateDateGroupSelectionUI(group, noteIds);
+            updateSelectionUI();
+        }
+        
+        // ============ 新增加：计算时间间隔功能 ============
+        
+        // 计算时间间隔（分钟）
+        function calculateTimeDuration(startTime, endTime) {
+            if (!startTime || !endTime) return 0;
+            
+            const [startHour, startMinute] = startTime.split(':').map(Number);
+            const [endHour, endMinute] = endTime.split(':').map(Number);
+            
+            const startTotalMinutes = startHour * 60 + startMinute;
+            const endTotalMinutes = endHour * 60 + endMinute;
+            
+            // 处理跨天的情况（结束时间小于开始时间）
+            let duration = endTotalMinutes - startTotalMinutes;
+            if (duration < 0) {
+                duration += 24 * 60; // 加上一天的时间
+            }
+            
+            return duration;
+        }
+        
+        // 格式化时间间隔显示
+        function formatDuration(minutes) {
+            if (minutes < 60) {
+                return `${minutes}分钟`;
+            } else {
+                const hours = Math.floor(minutes / 60);
+                const remainingMinutes = minutes % 60;
+                if (remainingMinutes === 0) {
+                    return `${hours}小时`;
+                } else {
+                    return `${hours}小时${remainingMinutes}分钟`;
+                }
+            }
+        }
+        
+        // ============ 修改后的笔记选择功能 ============
+        
+        // 笔记选择功能（修改为仅在选择模式下工作）
+        function handleNoteSelection(event, noteId) {
+            // 阻止默认行为
+            event.preventDefault();
+            event.stopPropagation();
+            
+            // 如果是拖放操作，不触发选择
+            if (draggedNote || isDragging) return;
+            
+            // 只有选择模式下才允许选择笔记
+            if (!selectionMode) {
+                // 非选择模式下，双击打开编辑
+                if (event.detail === 2) {
+                    openEditModal(noteId);
+                }
+                return;
+            }
+            
+            // 检查是否超过100条限制
+            if (!selectedNotes.has(noteId) && selectedNotes.size >= 100) {
+                alert('最多只能选择100条笔记，请先取消选择一些笔记');
+                return;
+            }
+            
+            // 选择模式下的简单点击选择/取消选择
+            toggleNoteSelection(noteId);
+            
+            // 更新相关日期分组的UI
+            updateAllDateGroupSelectionUI();
+        }
+        
+        // 更新所有日期分组的选择UI
+        function updateAllDateGroupSelectionUI() {
+            dateGroupNotesMap.forEach((noteIds, dateGroup) => {
+                updateDateGroupSelectionUI(dateGroup, noteIds);
+            });
+        }
+        
+        // ============ 拖放功能 ============
+        
+        function bindDragEvents() {
+            // 全局拖放事件
+            document.addEventListener('dragstart', handleDragStart);
+            document.addEventListener('dragover', handleDragOver);
+            document.addEventListener('dragenter', handleDragEnter);
+            document.addEventListener('dragleave', handleDragLeave);
+            document.addEventListener('drop', handleDrop);
+            document.addEventListener('dragend', handleDragEnd);
+            
+            // 移动端触摸事件
+            document.addEventListener('touchstart', handleTouchStart, { passive: false });
+            document.addEventListener('touchmove', handleTouchMove, { passive: false });
+            document.addEventListener('touchend', handleTouchEnd);
+        }
+        
+        function handleDragStart(e) {
+            if (!e.target.closest('.note-card')) return;
+            
+            // 选择模式下禁用拖放
+            if (selectionMode) return;
+            
+            draggedNote = e.target.closest('.note-card');
+            dragStartIndex = Array.from(notesContainer.children).indexOf(draggedNote);
+            
+            // 设置拖动效果
+            draggedNote.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', draggedNote.dataset.noteId);
+            
+            // 显示拖放指示器
+            dragIndicator.classList.remove('hidden');
+        }
+        
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            
+            // 查找当前悬停的笔记卡片
+            const noteCard = e.target.closest('.note-card');
+            if (noteCard && noteCard !== draggedNote) {
+                dragOverNote = noteCard;
+                noteCard.classList.add('drag-over');
+            }
+        }
+        
+        function handleDragEnter(e) {
+            e.preventDefault();
+        }
+        
+        function handleDragLeave(e) {
+            if (!e.target.closest('.note-card')) return;
+            
+            const noteCard = e.target.closest('.note-card');
+            if (noteCard && noteCard !== draggedNote) {
+                noteCard.classList.remove('drag-over');
+            }
+        }
+        
+        function handleDrop(e) {
+            e.preventDefault();
+            
+            if (!draggedNote || !dragOverNote) return;
+            
+            const draggedId = draggedNote.dataset.noteId;
+            const targetId = dragOverNote.dataset.noteId;
+            
+            // 交换笔记位置
+            swapNotes(draggedId, targetId);
+            
+            // 清除样式
+            dragOverNote.classList.remove('drag-over');
+            draggedNote.classList.remove('dragging');
+            
+            // 隐藏指示器
+            dragIndicator.classList.add('hidden');
+            
+            // 重置变量
+            draggedNote = null;
+            dragOverNote = null;
+        }
+        
+        function handleDragEnd() {
+            // 清除所有拖放相关样式
+            document.querySelectorAll('.note-card').forEach(card => {
+                card.classList.remove('dragging', 'drag-over');
+            });
+            
+            // 隐藏指示器
+            dragIndicator.classList.add('hidden');
+            
+            draggedNote = null;
+            dragOverNote = null;
+        }
+        
+        // 移动端触摸事件处理
+        let touchStartY = 0;
+        let touchStartElement = null;
+        let isDragging = false;
+        let dragTimeout = null;
+        
+        function handleTouchStart(e) {
+            if (!e.target.closest('.note-card')) return;
+            
+            // 选择模式下禁用拖放
+            if (selectionMode) return;
+            
+            const noteCard = e.target.closest('.note-card');
+            touchStartElement = noteCard;
+            touchStartY = e.touches[0].clientY;
+            
+            // 设置长按开始拖放
+            dragTimeout = setTimeout(() => {
+                startTouchDrag(noteCard);
+            }, 300);
+        }
+        
+        function handleTouchMove(e) {
+            if (!isDragging || !touchStartElement) return;
+            
+            e.preventDefault();
+            const touchY = e.touches[0].clientY;
+            const deltaY = touchY - touchStartY;
+            
+            // 移动元素
+            touchStartElement.style.transform = `translateY(${deltaY}px)`;
+            
+            // 检测与其他笔记的碰撞
+            const noteCards = Array.from(document.querySelectorAll('.note-card'));
+            const currentIndex = noteCards.indexOf(touchStartElement);
+            
+            noteCards.forEach((card, index) => {
+                if (card === touchStartElement) return;
+                
+                const rect = card.getBoundingClientRect();
+                const draggedRect = touchStartElement.getBoundingClientRect();
+                
+                // 如果拖动的笔记与当前笔记重叠超过50%，则视为可交换位置
+                if (Math.abs(draggedRect.top - rect.top) < draggedRect.height * 0.5) {
+                    card.classList.add('drag-over');
+                    
+                    // 交换位置
+                    if (index < currentIndex) {
+                        notesContainer.insertBefore(touchStartElement, card);
+                    } else {
+                        notesContainer.insertBefore(touchStartElement, card.nextSibling);
+                    }
+                    
+                    // 更新笔记顺序
+                    updateNoteOrder();
+                } else {
+                    card.classList.remove('drag-over');
+                }
+            });
+        }
+        
+        function handleTouchEnd() {
+            clearTimeout(dragTimeout);
+            
+            if (isDragging && touchStartElement) {
+                // 结束拖放
+                touchStartElement.style.transform = '';
+                touchStartElement.classList.remove('dragging');
+                
+                // 清除拖放样式
+                document.querySelectorAll('.note-card').forEach(card => {
+                    card.classList.remove('drag-over');
+                });
+                
+                // 隐藏指示器
+                dragIndicator.classList.add('hidden');
+            }
+            
+            isDragging = false;
+            touchStartElement = null;
+        }
+        
+        function startTouchDrag(noteCard) {
+            isDragging = true;
+            draggedNote = noteCard;
+            dragStartIndex = Array.from(notesContainer.children).indexOf(noteCard);
+            
+            // 设置拖动效果
+            noteCard.classList.add('dragging');
+            
+            // 显示拖放指示器
+            dragIndicator.classList.remove('hidden');
+        }
+        
+        function swapNotes(draggedId, targetId) {
+            // 获取笔记索引
+            const draggedIndex = notes.findIndex(note => note.id === draggedId);
+            const targetIndex = notes.findIndex(note => note.id === targetId);
+            
+            if (draggedIndex === -1 || targetIndex === -1) return;
+            
+            // 交换笔记在数组中的位置
+            [notes[draggedIndex], notes[targetIndex]] = [notes[targetIndex], notes[draggedIndex]];
+            
+            // 保存并重新渲染
+            saveNotes();
+            
+            // 使用动画重新排序
+            animateNoteReorder(draggedId, targetId);
+        }
+        
+        function animateNoteReorder(draggedId, targetId) {
+            // 获取DOM元素
+            const draggedElement = document.querySelector(`[data-note-id="${draggedId}"]`);
+            const targetElement = document.querySelector(`[data-note-id="${targetId}"]`);
+            
+            if (!draggedElement || !targetElement) return;
+            
+            // 添加交换动画
+            draggedElement.classList.add('animate-fade-in');
+            targetElement.classList.add('animate-fade-in');
+            
+            // 短暂延迟后移除动画类
+            setTimeout(() => {
+                draggedElement.classList.remove('animate-fade-in');
+                targetElement.classList.remove('animate-fade-in');
+            }, 300);
+        }
+        
+        function updateNoteOrder() {
+            // 从DOM获取当前顺序
+            const noteElements = Array.from(notesContainer.querySelectorAll('.note-card'));
+            const orderedNoteIds = noteElements.map(el => el.dataset.noteId);
+            
+            // 重新排序notes数组
+            const newNotesOrder = [];
+            orderedNoteIds.forEach(id => {
+                const note = notes.find(n => n.id === id);
+                if (note) newNotesOrder.push(note);
+            });
+            
+            notes = newNotesOrder;
+            saveNotes();
+        }
+        
+        // ============ AI 总结功能 ============
+        
+        // 绑定 AI 相关事件监听器
+        function bindAIEventListeners() {
+            // AI 总结浮动按钮
+            aiSummaryFloatBtn.addEventListener('click', openAISummaryModal);
+            
+            // 清空选择按钮
+            clearSelectionBtn.addEventListener('click', clearSelection);
+            
+            // AI 总结模态框
+            cancelSummaryBtn.addEventListener('click', () => {
+                closeAISummaryModal();
+                // 退出选择模式
+                exitSelectionMode();
+            });
+            generateSummaryBtn.addEventListener('click', generateSummary);
+            
+            // API 配置切换
+            document.getElementById('toggle-api-config').addEventListener('click', toggleApiConfig);
+            document.getElementById('toggle-api-key').addEventListener('click', toggleApiKeyVisibility);
+            document.getElementById('temperature').addEventListener('input', updateTemperatureValue);
+            
+            // 结果模态框按钮
+            document.getElementById('copy-summary-btn').addEventListener('click', copySummaryToClipboard);
+            document.getElementById('save-as-note-btn').addEventListener('click', saveSummaryAsNote);
+            document.getElementById('regenerate-summary-btn').addEventListener('click', regenerateSummary);
+            document.getElementById('adjust-config-btn').addEventListener('click', backToConfig);
+            document.getElementById('retry-summary-btn').addEventListener('click', retrySummary);
+            document.getElementById('back-to-config-btn').addEventListener('click', backToConfig);
+            
+            // 关闭模态框
+            aiSummaryModal.addEventListener('click', (e) => {
+                if (e.target === aiSummaryModal) {
+                    closeAISummaryModal();
+                    // 退出选择模式
+                    exitSelectionMode();
+                }
+            });
+            aiResultModal.addEventListener('click', (e) => {
+                if (e.target === aiResultModal) {
+                    closeAIResultModal();
+                    // 退出选择模式
+                    exitSelectionMode();
+                }
+            });
+        }
+        
+        // 加载 API 配置
+        function loadApiConfig() {
+            const savedApiKey = localStorage.getItem('deepseek_api_key');
+            if (savedApiKey) {
+                document.getElementById('api-key').value = savedApiKey;
+            }
+        }
+        
+        // 切换 API 配置显示
+        function toggleApiConfig() {
+            const section = document.getElementById('api-config-section');
+            const icon = this.querySelector('i.fa-chevron-down');
+            section.classList.toggle('hidden');
+            icon.classList.toggle('fa-chevron-down');
+            icon.classList.toggle('fa-chevron-up');
+        }
+        
+        // 切换 API 密钥显示
+        function toggleApiKeyVisibility() {
+            const apiKeyInput = document.getElementById('api-key');
+            const icon = this.querySelector('i');
+            if (apiKeyInput.type === 'password') {
+                apiKeyInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                apiKeyInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+        
+        // 更新温度值显示
+        function updateTemperatureValue() {
+            document.getElementById('temp-value').textContent = this.value;
+        }
+        
+        // 切换单个笔记选择状态
+        function toggleNoteSelection(noteId) {
+            if (selectedNotes.has(noteId)) {
+                selectedNotes.delete(noteId);
+                updateNoteSelectionUI(noteId, false);
+            } else {
+                selectedNotes.add(noteId);
+                updateNoteSelectionUI(noteId, true);
+            }
+            updateSelectionUI();
+        }
+        
+        // 更新笔记选择 UI
+        function updateNoteSelectionUI(noteId, isSelected) {
+            const noteElement = document.querySelector(`.note-card[data-note-id="${noteId}"]`);
+            if (noteElement) {
+                if (isSelected) {
+                    noteElement.classList.add('selected');
+                } else {
+                    noteElement.classList.remove('selected');
+                }
+            }
+        }
+        
+        // 更新选择 UI
+        function updateSelectionUI() {
+            const count = selectedNotes.size;
+            
+            // 更新计数显示
+            selectedCount.textContent = `已选中 ${count} 条笔记`;
+            selectedNotesCount.textContent = count;
+            
+            // 显示/隐藏相关元素
+            if (count > 0) {
+                selectionInfo.classList.remove('hidden');
+                aiSummaryFloatBtn.classList.remove('hidden');
+                
+                // 如果不在选择模式，禁用快速输入框
+                if (!selectionMode) {
+                    quickAddForm.querySelectorAll('input, button').forEach(el => {
+                        el.style.opacity = '0.6';
+                        el.style.pointerEvents = 'none';
+                    });
+                }
+            } else {
+                selectionInfo.classList.add('hidden');
+                aiSummaryFloatBtn.classList.add('hidden');
+                
+                // 启用快速输入框
+                quickAddForm.querySelectorAll('input, button').forEach(el => {
+                    el.style.opacity = '1';
+                    el.style.pointerEvents = 'auto';
+                });
+            }
+            
+            // 更新选择按钮上的计数
+            if (selectionMode) {
+                selectionToggleBtn.innerHTML = `<i class="fa fa-check-circle mr-2"></i>确认，开始AI总结 (${count})`;
+            }
+        }
+        
+        // 清空选择
+        function clearSelection() {
+            selectedNotes.forEach(noteId => {
+                updateNoteSelectionUI(noteId, false);
+            });
+            selectedNotes.clear();
+            
+            // 更新所有日期分组的UI
+            updateAllDateGroupSelectionUI();
+            updateSelectionUI();
+        }
+        
+        // 打开 AI 总结模态框
+        function openAISummaryModal() {
+            if (selectedNotes.size === 0) return;
+            
+            if (selectedNotes.size > 100) {
+                alert('最多只能选择100条笔记进行AI总结，请减少选择数量');
+                return;
+            }
+            
+            // 更新计数
+            modalSelectedCount.textContent = selectedNotes.size;
+            
+            // 清空预览区域
+            selectedNotesPreview.innerHTML = '';
+            
+            // 获取选中的笔记并排序
+            const selectedNoteList = Array.from(selectedNotes)
+                .map(id => notes.find(note => note.id === id))
+                .filter(note => note)
+                .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            
+            // 添加选中的笔记到预览区域
+            selectedNoteList.forEach(note => {
+                const noteElement = document.createElement('div');
+                noteElement.className = 'flex items-center justify-between p-2 border border-gray-200 rounded hover:bg-gray-50 transition-colors duration-150';
+                noteElement.innerHTML = `
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center space-x-2 mb-1">
+                            <span class="text-xs text-gray-500">${formatDateForDisplay(note.date)}</span>
+                            <span class="text-xs text-gray-700">${note.timeStart} ~ ${note.timeEnd}</span>
+                            ${note.tag ? `<span class="tag">${note.tag}</span>` : ''}
+                        </div>
+                        <p class="text-sm text-gray-800 truncate">${note.content}</p>
+                    </div>
+                    <button class="ml-2 text-gray-400 hover:text-red-500 transition-colors duration-150 active:scale-95" data-note-id="${note.id}">
+                        <i class="fa fa-times"></i>
+                    </button>
+                `;
+                
+                // 绑定取消选择按钮事件
+                const removeBtn = noteElement.querySelector('button');
+                removeBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const noteId = removeBtn.dataset.noteId;
+                    selectedNotes.delete(noteId);
+                    updateNoteSelectionUI(noteId, false);
+                    updateSelectionUI();
+                    openAISummaryModal(); // 重新打开模态框刷新显示
+                });
+                
+                selectedNotesPreview.appendChild(noteElement);
+            });
+            
+            aiSummaryModal.classList.remove('hidden');
+        }
+        
+        // 关闭 AI 总结模态框
+        function closeAISummaryModal() {
+            aiSummaryModal.classList.add('hidden');
+        }
+        
+        // 生成总结
+        async function generateSummary() {
+            // 验证 API 密钥
+            const apiKey = document.getElementById('api-key').value.trim();
+            if (!apiKey) {
+                alert('请输入 DeepSeek API 密钥');
+                document.getElementById('api-key').focus();
+                return;
+            }
+            
+            // 保存 API 密钥
+            localStorage.setItem('deepseek_api_key', apiKey);
+            
+            // 收集配置
+            const style = document.querySelector('input[name="summary-style"]:checked').value;
+            const format = document.querySelector('input[name="output-format"]:checked').value;
+            const customPrompt = document.getElementById('custom-prompt').value.trim();
+            const model = document.getElementById('model').value;
+            const temperature = parseFloat(document.getElementById('temperature').value);
+            
+            // 获取选中的笔记
+            const selectedNoteList = Array.from(selectedNotes)
+                .map(id => notes.find(note => note.id === id))
+                .filter(note => note)
+                .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)); // 按时间正序排序
+            
+            // 构建请求数据
+            const requestData = {
+                selectedNotes: selectedNoteList.map(note => ({
+                    date: note.date,
+                    timeRange: `${note.timeStart} ~ ${note.timeEnd}`,
+                    content: note.content,
+                    tag: note.tag,
+                    details: note.details || ''
+                })),
+                summaryConfig: {
+                    style: style,
+                    format: format,
+                    customPrompt: customPrompt,
+                    mergeMethod: "time"
+                },
+                apiConfig: {
+                    model: model,
+                    temperature: temperature,
+                    maxTokens: 2000
+                }
+            };
+            
+            // 保存配置
+            currentSummaryConfig = {
+                requestData,
+                selectedNotes: Array.from(selectedNotes)
+            };
+            
+            // 显示结果模态框的加载状态
+            closeAISummaryModal();
+            aiResultModal.classList.remove('hidden');
+            summaryLoading.classList.remove('hidden');
+            summaryContent.classList.add('hidden');
+            summaryError.classList.add('hidden');
+            
+            resultNoteCount.textContent = selectedNoteList.length;
+            
+            try {
+                // 构建提示词
+                const prompt = buildPrompt(requestData);
+                
+                // 调用 DeepSeek API
+                const summary = await callDeepSeekAPI(apiKey, model, prompt, temperature);
+                
+                // 显示结果
+                showSummaryResult(summary, selectedNoteList.length);
+            } catch (error) {
+                showSummaryError(error);
+            }
+        }
+        
+        // 构建提示词
+        function buildPrompt(requestData) {
+            const { selectedNotes, summaryConfig } = requestData;
+            const { style, format, customPrompt } = summaryConfig;
+            
+            let prompt = `你是一个专业的笔记总结助手，擅长将分散的笔记信息整理成有结构的总结。
+
+以下是${selectedNotes.length}条笔记，按时间顺序排序：
+
+`;
+            
+            // 添加笔记内容
+            selectedNotes.forEach((note, index) => {
+                prompt += `\n${index + 1}. 【${note.date} ${note.timeRange}】${note.tag ? ` [标签：${note.tag}]` : ''}
+标题：${note.content}
+${note.details ? `详情：${note.details}\n` : ''}`;
+            });
+            
+            prompt += `\n总结要求：
+1. 总结风格：${style}
+2. 输出格式：${format}
+3. ${customPrompt || '请对以上笔记进行系统性的总结，突出关键信息和主题'}
+4. 保持原始信息的准确性
+5. 如有矛盾信息，请注明
+6. 用中文输出
+
+请直接给出总结内容，不需要额外的说明文字。`;
+            
+            return prompt;
+        }
+        
+        // 调用 DeepSeek API
+        async function callDeepSeekAPI(apiKey, model, prompt, temperature) {
+            const maxRetries = 3;
+            let lastError;
+            
+            for (let attempt = 1; attempt <= maxRetries; attempt++) {
+                try {
+                    const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${apiKey}`
+                        },
+                        body: JSON.stringify({
+                            model: model,
+                            messages: [
+                                {
+                                    role: 'system',
+                                    content: '你是一个专业的笔记总结助手，请根据用户提供的笔记内容生成高质量的总结。'
+                                },
+                                {
+                                    role: 'user',
+                                    content: prompt
+                                }
+                            ],
+                            temperature: temperature,
+                            max_tokens: 2000,
+                            stream: false
+                        }),
+                        signal: AbortSignal.timeout(30000) // 30秒超时
+                    });
+                    
+                    if (!response.ok) {
+                        const errorData = await response.json().catch(() => ({}));
+                        throw new Error(`API错误: ${response.status} - ${errorData.error?.message || response.statusText}`);
+                    }
+                    
+                    const data = await response.json();
+                    return data.choices[0].message.content;
+                    
+                } catch (error) {
+                    lastError = error;
+                    console.warn(`API调用失败 (尝试 ${attempt}/${maxRetries}):`, error);
+                    
+                    if (attempt < maxRetries) {
+                        // 等待指数退避
+                        await new Promise(resolve => setTimeout(resolve, 1000 * Math.pow(2, attempt - 1)));
+                        continue;
+                    }
+                }
+            }
+            
+            throw lastError;
+        }
+        
+        // 显示总结结果
+        function showSummaryResult(summary, noteCount) {
+            summaryLoading.classList.add('hidden');
+            summaryContent.classList.remove('hidden');
+            
+            // 根据格式显示内容
+            if (currentSummaryConfig.requestData.summaryConfig.format === 'Markdown格式') {
+                // 简单Markdown渲染
+                summaryText.innerHTML = summary
+                    .replace(/\n/g, '<br>')
+                    .replace(/#{1,6}\s+(.+)/g, '<strong>$1</strong>')
+                    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/\*(.+?)\*/g, '<em>$1</em>');
+            } else if (currentSummaryConfig.requestData.summaryConfig.format === 'HTML格式') {
+                summaryText.innerHTML = summary;
+            } else {
+                summaryText.textContent = summary;
+            }
+            
+            // 更新统计信息
+            const charCount = summary.length;
+            const wordCount = summary.split(/\s+/).length;
+            summaryStats.textContent = `${charCount}字 ${wordCount}词`;
+            
+            // 保存结果
+            currentSummaryResult = summary;
+            
+            // 退出选择模式
+            exitSelectionMode();
+        }
+        
+        // 显示错误信息
+        function showSummaryError(error) {
+            summaryLoading.classList.add('hidden');
+            summaryError.classList.remove('hidden');
+            
+            let userFriendlyMessage = '生成总结时发生错误';
+            
+            if (error.message.includes('401')) {
+                userFriendlyMessage = 'API密钥无效，请检查并重新输入';
+            } else if (error.message.includes('429')) {
+                userFriendlyMessage = '请求过于频繁，请稍后再试';
+            } else if (error.message.includes('500')) {
+                userFriendlyMessage = 'AI服务暂时不可用，请稍后重试';
+            } else if (error.message.includes('timeout')) {
+                userFriendlyMessage = '请求超时，请检查网络连接后重试';
+            } else if (error.message.includes('network') || error.message.includes('Network')) {
+                userFriendlyMessage = '网络连接失败，请检查网络连接';
+            } else {
+                userFriendlyMessage = error.message;
+            }
+            
+            errorMessage.textContent = userFriendlyMessage;
+        }
+        
+        // 复制总结到剪贴板
+        async function copySummaryToClipboard() {
+            try {
+                await navigator.clipboard.writeText(currentSummaryResult);
+                showSaveIndicator('已复制到剪贴板');
+            } catch (err) {
+                alert('复制失败，请手动选择文本复制');
+            }
+        }
+        
+        // 保存总结为新笔记
+        function saveSummaryAsNote() {
+            const today = new Date();
+            const dateStr = getCurrentDateString();
+            const timeStr = today.toTimeString().slice(0, 5);
+            
+            const newNote = {
+                id: generateUUID(),
+                date: dateStr,
+                timeStart: timeStr,
+                timeEnd: timeStr,
+                content: `${dateStr} 笔记总结`,
+                tag: 'AI总结',
+                color: 'ai',
+                details: `基于 ${currentSummaryConfig.selectedNotes.length} 条笔记的AI总结：\n\n${currentSummaryResult}\n\n来源笔记ID: ${currentSummaryConfig.selectedNotes.join(', ')}`,
+                expanded: false,
+                createdAt: Date.now(),
+                updatedAt: Date.now()
+            };
+            
+            notes.unshift(newNote);
+            saveNotes();
+            renderNotes();
+            
+            // 清空选择
+            clearSelection();
+            closeAIResultModal();
+            
+            showSaveIndicator('已保存为新笔记');
+        }
+        
+        // 重新生成总结
+        function regenerateSummary() {
+            // 使用相同的配置重新生成
+            aiResultModal.classList.add('hidden');
+            openAISummaryModal();
+        }
+        
+        // 返回配置界面
+        function backToConfig() {
+            aiResultModal.classList.add('hidden');
+            openAISummaryModal();
+        }
+        
+        // 重试总结
+        function retrySummary() {
+            // 直接重新调用API
+            summaryError.classList.add('hidden');
+            summaryLoading.classList.remove('hidden');
+            
+            // 重新调用API
+            generateSummaryFromConfig();
+        }
+        
+        // 从配置重新生成
+        async function generateSummaryFromConfig() {
+            try {
+                const apiKey = localStorage.getItem('deepseek_api_key');
+                const { requestData } = currentSummaryConfig;
+                const { model, temperature } = requestData.apiConfig;
+                
+                const prompt = buildPrompt(requestData);
+                const summary = await callDeepSeekAPI(apiKey, model, prompt, temperature);
+                
+                showSummaryResult(summary, requestData.selectedNotes.length);
+            } catch (error) {
+                showSummaryError(error);
+            }
+        }
+        
+        // 关闭 AI 结果模态框
+        function closeAIResultModal() {
+            aiResultModal.classList.add('hidden');
+            // 退出选择模式
+            exitSelectionMode();
+        }
+        
+        // 格式化日期显示
+        function formatDateForDisplay(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('zh-CN', {
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+        
+        // ============ 核心功能（新增和修改） ============
+        
+        // 创建笔记元素（添加时间间隔显示）
+        function createNoteElement(note) {
+            const noteDiv = document.createElement('div');
+            noteDiv.className = `note-card animate-fade-in ${selectedNotes.has(note.id) ? 'selected' : ''}`;
+            
+            // 设置左侧边框颜色
+            const color = note.color || 'note1';
+            noteDiv.style.borderLeftColor = colorMap[color] || colorMap['note1'];
+            
+            noteDiv.dataset.noteId = note.id;
+            noteDiv.draggable = !selectionMode; // 选择模式下禁用拖放
+            
+            // 添加点击事件监听器（支持选择）
+            noteDiv.addEventListener('click', (e) => {
+                handleNoteSelection(e, note.id);
+            });
+            
+            // 格式化日期（移除了年份）
+            const date = new Date(note.date);
+            const formattedDate = date.toLocaleDateString('zh-CN', {
+                month: 'short',
+                day: 'numeric'
+            });
+            
+            // 计算时间间隔
+            const durationMinutes = calculateTimeDuration(note.timeStart, note.timeEnd);
+            const durationText = formatDuration(durationMinutes);
+            
+            noteDiv.innerHTML = `
+                <div class="note-row-layout mb-2 items-center">
+                    <!-- 1. 日期（固定） -->
+                    <div class="col-span-3 md:col-span-2 lg:col-span-2 text-center text-sm font-medium text-gray-500">
+                        ${formattedDate}
+                    </div>
+                    
+                    <!-- 2. 时间间隔 -->
+                    <div class="col-span-4 md:col-span-2 lg:col-span-2 text-center text-sm">
+                        ${note.timeStart} ~ ${note.timeEnd}
+                        <span class="duration-badge">${durationText}</span>
+                    </div>
+                    
+                    <!-- 3. 标题内容 -->
+                    <div class="col-span-3 md:col-span-4 lg:col-span-4 truncate text-sm font-medium">
+                        ${note.content}
+                    </div>
+                    
+                    <!-- 4. 标签显示 -->
+                    <div class="col-span-1 md:col-span-2 lg:col-span-2 flex justify-center">
+                        ${note.tag ? `<span class="tag">${note.tag}</span>` : ''}
+                    </div>
+                    
+                    <!-- 5. 修改详情按钮 -->
+                    <div class="col-span-1 flex justify-center">
+                        <button class="text-xs text-primary hover:text-primary/80 edit-btn px-2 py-1 rounded hover:bg-primary/10 transition-all duration-150 active:scale-95">
+                            修改详情
+                        </button>
+                    </div>
+                    
+                    <!-- 6. 下拉展开按钮 -->
+                    <div class="col-span-1 flex justify-center">
+                        <button class="details-btn flex items-center justify-center p-1">
+                            <i class="fa fa-chevron-down expand-btn text-lg ${note.expanded ? 'rotate-180' : ''}"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 展开详情区域 -->
+                <div class="note-details-expand mt-3 pt-3 border-t border-gray-200 ${note.expanded ? '' : 'hidden'}">
+                    <div class="bg-gray-50 rounded-md p-3 mb-2">
+                        <h4 class="text-sm font-medium text-gray-700 mb-2">详细信息</h4>
+                        <p class="text-sm text-gray-600 whitespace-pre-wrap break-words">
+                            ${note.details || '无详细信息'}
+                        </p>
+                    </div>
+                    
+                    <div class="flex justify-between items-center text-xs text-gray-500">
+                        <span>创建于 ${formatRelativeTime(note.createdAt)}</span>
+                        <div class="flex items-center space-x-2">
+                            <button class="text-primary hover:underline edit-btn transition-colors duration-150">编辑</button>
+                            <button class="text-red-500 hover:underline delete-btn transition-colors duration-150">删除</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            bindNoteEvents(noteDiv, note);
+            return noteDiv;
+        }
+        
+        // 绑定笔记卡片事件（修改，避免与选择事件冲突）
+        function bindNoteEvents(noteElement, note) {
+            // 双击编辑（非选择模式下）
+            noteElement.addEventListener('dblclick', (e) => {
+                if (e.target.closest('button') || selectionMode) return;
+                openEditModal(note.id);
+            });
+            
+            // 右键菜单
+            noteElement.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                // 选择模式下禁用右键菜单
+                if (selectionMode) return;
+                openContextMenu(e, note.id);
+            });
+            
+            // 详情按钮点击
+            const detailsBtn = noteElement.querySelector('.details-btn');
+            const expandIcon = detailsBtn.querySelector('i');
+            
+            detailsBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                // 选择模式下禁用详情展开
+                if (selectionMode) return;
+                
+                const noteIndex = notes.findIndex(n => n.id === note.id);
+                if (noteIndex !== -1) {
+                    notes[noteIndex].expanded = !notes[noteIndex].expanded;
+                    
+                    if (notes[noteIndex].expanded) {
+                        expandIcon.classList.add('rotate-180');
+                        noteElement.querySelector('.note-details-expand').classList.remove('hidden');
+                    } else {
+                        expandIcon.classList.remove('rotate-180');
+                        noteElement.querySelector('.note-details-expand').classList.add('hidden');
+                    }
+                    
+                    saveNotes();
+                }
+            });
+            
+            // 编辑按钮点击
+            const editBtns = noteElement.querySelectorAll('.edit-btn');
+            editBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    // 选择模式下禁用编辑
+                    if (selectionMode) return;
+                    openEditModal(note.id);
+                });
+            });
+            
+            // 删除按钮点击
+            const deleteBtn = noteElement.querySelector('.delete-btn');
+            deleteBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                // 选择模式下禁用删除
+                if (selectionMode) return;
+                openDeleteModal(note.id);
+            });
+        }
+        
+        // 更新保存指示器
+        function showSaveIndicator(message = '已保存') {
+            const indicator = document.getElementById('save-indicator');
+            indicator.querySelector('span').textContent = message;
+            indicator.classList.remove('translate-y-10', 'opacity-0');
+            setTimeout(() => {
+                indicator.classList.add('translate-y-10', 'opacity-0');
+            }, 2000);
+        }
+        
+        // ============ 原有功能（修改部分） ============
+        
+        // 初始化用户身份
+        function initUserIdentity() {
+            let userId = localStorage.getItem('userId');
+            if (!userId) {
+                userId = generateUUID() + '-' + Date.now();
+                localStorage.setItem('userId', userId);
+            }
+        }
+        
+        // 生成UUID
+        function generateUUID() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                const r = Math.random() * 16 | 0;
+                const v = c === 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+        
+        // 初始化快速输入区域
+        function initQuickInput() {
+            // 设置当前日期
+            const today = new Date();
+            const formattedDate = today.toLocaleDateString('zh-CN', {
+                month: 'long',
+                day: 'numeric'
+            });
+            document.getElementById('quick-date').value = formattedDate;
+            
+            // 设置默认时间
+            const now = new Date();
+            let startTime;
+            
+            if (lastEndTime) {
+                startTime = new Date(lastEndTime);
+            } else {
+                startTime = new Date(now);
+                const minutes = startTime.getMinutes();
+                const nextFiveMinute = Math.ceil(minutes / 5) * 5;
+                startTime.setMinutes(nextFiveMinute);
+                startTime.setSeconds(0);
+                startTime.setMilliseconds(0);
+            }
+            
+            const endTime = new Date(startTime.getTime() + 40 * 60000);
+            
+            const startHour = String(startTime.getHours()).padStart(2, '0');
+            const startMinute = String(startTime.getMinutes()).padStart(2, '0');
+            const endHour = String(endTime.getHours()).padStart(2, '0');
+            const endMinute = String(endTime.getMinutes()).padStart(2, '0');
+            
+            document.getElementById('quick-time-start').value = `${startHour}:${startMinute}`;
+            document.getElementById('quick-time-end').value = `${endHour}:${endMinute}`;
+            
+            document.getElementById('quick-content').focus();
+        }
+        
+        // 加载笔记
+        function loadNotes() {
+            const userId = localStorage.getItem('userId');
+            const savedNotes = localStorage.getItem(`notes_${userId}`);
+            
+            if (savedNotes) {
+                notes = JSON.parse(savedNotes);
+                if (notes.length > 0) {
+                    const lastNote = notes[0];
+                    const [hours, minutes] = lastNote.timeEnd.split(':');
+                    const today = new Date();
+                    const endTime = new Date(today);
+                    endTime.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+                    lastEndTime = endTime.getTime();
+                }
+            } else {
+                notes = [];
+            }
+        }
+        
+        // 保存笔记
+        function saveNotes() {
+            const userId = localStorage.getItem('userId');
+            localStorage.setItem(`notes_${userId}`, JSON.stringify(notes));
+            showSaveIndicator('已保存');
+        }
+        
+        // 渲染笔记
+        function renderNotes() {
+            notesContainer.innerHTML = '';
+            
+            if (notes.length === 0) {
+                emptyState.classList.remove('hidden');
+                notesContainer.classList.add('hidden');
+                return;
+            }
+            
+            emptyState.classList.add('hidden');
+            notesContainer.classList.remove('hidden');
+            
+            notes.sort((a, b) => b.createdAt - a.createdAt);
+            
+            // 按日期分组笔记
+            const notesByDate = groupNotesByDate(notes);
+            
+            // 渲染每个日期的笔记组
+            Object.keys(notesByDate).sort((a, b) => new Date(b) - new Date(a)).forEach(date => {
+                const dateNotes = notesByDate[date];
+                const isToday = isTodayDate(date);
+                
+                // 创建日期组标题
+                const dateGroupElement = createDateGroupElement(date, dateNotes.length, isToday);
+                notesContainer.appendChild(dateGroupElement);
+                
+                // 创建该日期下的所有笔记
+                dateNotes.forEach(note => {
+                    const noteElement = createNoteElement(note);
+                    notesContainer.appendChild(noteElement);
+                    
+                    // 如果不是今天，则折叠该日期组
+                    if (!isToday) {
+                        dateGroupElement.classList.add('collapsed');
+                        const toggleIcon = dateGroupElement.querySelector('.toggle-icon');
+                        toggleIcon.classList.remove('fa-chevron-down');
+                        toggleIcon.classList.add('fa-chevron-right');
+                        noteElement.classList.add('hidden');
+                    } else {
+                        // 如果是今天且笔记有详细信息，自动展开
+                        if (note.details && note.details.trim() !== '') {
+                            note.expanded = true;
+                            const detailsBtn = noteElement.querySelector('.details-btn i');
+                            const detailsSection = noteElement.querySelector('.note-details-expand');
+                            if (detailsBtn && detailsSection) {
+                                detailsBtn.classList.add('rotate-180');
+                                detailsSection.classList.remove('hidden');
+                            }
+                        }
+                    }
+                });
+            });
+            
+            // 如果处于选择模式，重新绑定日期分组事件
+            if (selectionMode) {
+                bindDateGroupSelectionEvents();
+            }
+        }
+        
+        // 按日期分组笔记
+        function groupNotesByDate(notes) {
+            const groups = {};
+            
+            notes.forEach(note => {
+                if (!groups[note.date]) {
+                    groups[note.date] = [];
+                }
+                groups[note.date].push(note);
+            });
+            
+            return groups;
+        }
+        
+        // 检查日期是否为今天
+        function isTodayDate(dateString) {
+            const today = new Date();
+            const noteDate = new Date(dateString);
+            
+            return today.toDateString() === noteDate.toDateString();
+        }
+        
+        // 创建日期组元素
+        function createDateGroupElement(date, noteCount, isToday) {
+            const dateGroupDiv = document.createElement('div');
+            dateGroupDiv.className = 'date-group mt-4 first:mt-0';
+            
+            const dateObj = new Date(date);
+            const formattedDate = dateObj.toLocaleDateString('zh-CN', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                weekday: 'long'
+            });
+            
+            dateGroupDiv.innerHTML = `
+                <div class="date-header flex items-center justify-between p-3 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200 transition-colors duration-200">
+                    <div class="flex items-center">
+                        <h3 class="font-semibold text-gray-800">${formattedDate}</h3>
+                        <span class="ml-2 px-2 py-1 text-xs bg-primary text-white rounded-full">${noteCount} 条笔记</span>
+                        ${isToday ? '<span class="ml-2 px-2 py-1 text-xs bg-green-500 text-white rounded-full">今日</span>' : ''}
+                    </div>
+                    <div class="flex items-center">
+                        <i class="toggle-icon fa fa-chevron-down text-gray-500 transition-transform duration-300"></i>
+                    </div>
+                </div>
+            `;
+            
+            // 绑定日期组点击事件（非选择模式下）
+            const dateHeader = dateGroupDiv.querySelector('.date-header');
+            if (!selectionMode) {
+                dateHeader.addEventListener('click', () => {
+                    dateGroupDiv.classList.toggle('collapsed');
+                    const toggleIcon = dateGroupDiv.querySelector('.toggle-icon');
+                    
+                    if (dateGroupDiv.classList.contains('collapsed')) {
+                        toggleIcon.classList.remove('fa-chevron-down');
+                        toggleIcon.classList.add('fa-chevron-right');
+                        // 隐藏该日期组下的所有笔记
+                        let nextElement = dateGroupDiv.nextElementSibling;
+                        while (nextElement && !nextElement.classList.contains('date-group')) {
+                            nextElement.classList.add('hidden');
+                            nextElement = nextElement.nextElementSibling;
+                        }
+                    } else {
+                        toggleIcon.classList.remove('fa-chevron-right');
+                        toggleIcon.classList.add('fa-chevron-down');
+                        // 显示该日期组下的所有笔记
+                        let nextElement = dateGroupDiv.nextElementSibling;
+                        while (nextElement && !nextElement.classList.contains('date-group')) {
+                            nextElement.classList.remove('hidden');
+                            nextElement = nextElement.nextElementSibling;
+                        }
+                        
+                        // 展开所有有详细信息的笔记
+                        let currentElement = dateGroupDiv.nextElementSibling;
+                        while (currentElement && !currentElement.classList.contains('date-group')) {
+                            const noteId = currentElement.dataset.noteId;
+                            const note = notes.find(n => n.id === noteId);
+                            if (note && note.details && note.details.trim() !== '') {
+                                note.expanded = true;
+                                const detailsBtn = currentElement.querySelector('.details-btn i');
+                                const detailsSection = currentElement.querySelector('.note-details-expand');
+                                if (detailsBtn && detailsSection) {
+                                    detailsBtn.classList.add('rotate-180');
+                                    detailsSection.classList.remove('hidden');
+                                }
+                            }
+                            currentElement = currentElement.nextElementSibling;
+                        }
+                    }
+                    
+                    saveNotes();
+                });
+            }
+            
+            return dateGroupDiv;
+        }
+        
+        // 快速添加笔记
+        function quickAddNote(e) {
+            e.preventDefault();
+            
+            // 选择模式下禁用快速添加
+            if (selectionMode) {
+                alert('选择模式下无法添加新笔记，请先退出选择模式');
+                return;
+            }
+            
+            const date = getCurrentDateString();
+            const timeStart = document.getElementById('quick-time-start').value;
+            const timeEnd = document.getElementById('quick-time-end').value;
+            const content = document.getElementById('quick-content').value.trim();
+            const tag = document.getElementById('quick-tag').value.trim();
+            
+            if (!timeStart || !timeEnd || !content) {
+                alert('请填写完整信息');
+                return;
+            }
+            
+            const newNote = {
+                id: generateUUID(),
+                date: date,
+                timeStart: timeStart,
+                timeEnd: timeEnd,
+                content: content,
+                tag: tag,
+                color: 'note1', // 默认颜色
+                details: '',
+                expanded: false,
+                createdAt: Date.now(),
+                updatedAt: Date.now()
+            };
+            
+            notes.unshift(newNote);
+            saveNotes();
+            renderNotes();
+            
+            // 记录结束时间，用于下一个笔记的开始时间
+            const [hours, minutes] = timeEnd.split(':');
+            const today = new Date();
+            const endTime = new Date(today);
+            endTime.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+            lastEndTime = endTime.getTime();
+            
+            document.getElementById('quick-content').value = '';
+            document.getElementById('quick-tag').value = '';
+            initQuickInput();
+            document.getElementById('quick-content').focus();
+        }
+        
+        // 打开编辑笔记模态框
+        function openEditModal(noteId) {
+            // 选择模式下禁用编辑
+            if (selectionMode) {
+                alert('选择模式下无法编辑笔记，请先退出选择模式');
+                return;
+            }
+            
+            const noteIndex = notes.findIndex(note => note.id === noteId);
+            
+            if (noteIndex !== -1) {
+                const note = notes[noteIndex];
+                
+                document.getElementById('modal-title').textContent = '编辑笔记';
+                document.getElementById('note-date').value = note.date;
+                document.getElementById('note-time-start').value = note.timeStart;
+                document.getElementById('note-time-end').value = note.timeEnd;
+                document.getElementById('note-content').value = note.content;
+                document.getElementById('note-tag').value = note.tag || '';
+                document.getElementById('note-details').value = note.details || '';
+                document.getElementById('note-color').value = note.color || 'note1';
+                
+                // 设置选中的颜色
+                document.querySelectorAll('.color-dot').forEach(dot => {
+                    dot.classList.remove('border-4');
+                    if (dot.dataset.color === (note.color || 'note1')) {
+                        dot.classList.add('border-4');
+                    }
+                });
+                
+                currentNoteId = noteId;
+                noteModal.classList.remove('hidden');
+            }
+        }
+        
+        // 关闭笔记模态框
+        function closeNoteModal() {
+            noteModal.classList.add('hidden');
+        }
+        
+        // 打开删除模态框
+        function openDeleteModal(noteId) {
+            // 选择模式下禁用删除
+            if (selectionMode) {
+                alert('选择模式下无法删除笔记，请先退出选择模式');
+                return;
+            }
+            
+            currentNoteId = noteId;
+            deleteModal.classList.remove('hidden');
+        }
+        
+        // 关闭删除模态框
+        function closeDeleteModal() {
+            deleteModal.classList.add('hidden');
+        }
+        
+        // 打开右键菜单
+        function openContextMenu(event, noteId) {
+            // 选择模式下禁用右键菜单
+            if (selectionMode) return;
+            
+            currentNoteId = noteId;
+            contextMenu.style.top = `${event.clientY}px`;
+            contextMenu.style.left = `${event.clientX}px`;
+            contextMenu.classList.remove('hidden');
+            
+            // 显示颜色子菜单按钮
+            const colorMenuBtn = document.getElementById('color-menu-btn');
+            colorMenuBtn.addEventListener('mouseenter', showColorSubmenu);
+            colorMenuBtn.addEventListener('click', showColorSubmenu);
+        }
+        
+        // 关闭右键菜单
+        function closeContextMenu() {
+            contextMenu.classList.add('hidden');
+            colorSubmenu.classList.add('hidden');
+        }
+        
+        // 显示颜色子菜单
+        function showColorSubmenu(e) {
+            e.stopPropagation();
+            colorSubmenu.classList.toggle('hidden');
+        }
+        
+        // 保存笔记（修改日期后重新分组）
+        function saveNote() {
+            const date = document.getElementById('note-date').value;
+            const timeStart = document.getElementById('note-time-start').value;
+            const timeEnd = document.getElementById('note-time-end').value;
+            const content = document.getElementById('note-content').value.trim();
+            const tag = document.getElementById('note-tag').value.trim();
+            const details = document.getElementById('note-details').value.trim();
+            const color = document.getElementById('note-color').value;
+            
+            if (!date || !timeStart || !timeEnd || !content) {
+                alert('请填写所有必填字段');
+                return;
+            }
+            
+            const noteData = {
+                date,
+                timeStart,
+                timeEnd,
+                content,
+                tag,
+                color: color || 'note1',
+                details,
+                updatedAt: Date.now()
+            };
+            
+            if (currentNoteId) {
+                const noteIndex = notes.findIndex(note => note.id === currentNoteId);
+                
+                if (noteIndex !== -1) {
+                    // 保存原始日期以检查是否更改
+                    const originalDate = notes[noteIndex].date;
+                    
+                    notes[noteIndex] = {
+                        ...notes[noteIndex],
+                        ...noteData
+                    };
+                    
+                    // 如果日期已更改，需要重新渲染以重新分组
+                    if (originalDate !== date) {
+                        closeNoteModal();
+                        setTimeout(() => {
+                            renderNotes();
+                        }, 100);
+                    }
+                }
+            }
+            
+            saveNotes();
+            renderNotes();
+            closeNoteModal();
+        }
+        
+        // 删除笔记
+        function deleteNote() {
+            if (currentNoteId) {
+                const noteIndex = notes.findIndex(note => note.id === currentNoteId);
+                
+                if (noteIndex !== -1) {
+                    // 如果笔记被选中，也从选中集中移除
+                    if (selectedNotes.has(currentNoteId)) {
+                        selectedNotes.delete(currentNoteId);
+                        updateSelectionUI();
+                    }
+                    
+                    // 添加删除动画
+                    const noteElement = document.querySelector(`[data-note-id="${currentNoteId}"]`);
+                    if (noteElement) {
+                        noteElement.classList.add('animate-fade-out');
+                        setTimeout(() => {
+                            notes.splice(noteIndex, 1);
+                            saveNotes();
+                            renderNotes();
+                        }, 200);
+                    } else {
+                        notes.splice(noteIndex, 1);
+                        saveNotes();
+                        renderNotes();
+                    }
+                }
+                
+                closeDeleteModal();
+                closeContextMenu();
+            }
+        }
+        
+        // 复制笔记（修改开始时间为原笔记结束时间）
+        function duplicateNote() {
+            if (currentNoteId) {
+                const noteIndex = notes.findIndex(note => note.id === currentNoteId);
+                
+                if (noteIndex !== -1) {
+                    const originalNote = notes[noteIndex];
+                    
+                    // 计算新的开始和结束时间
+                    const [hours, minutes] = originalNote.timeEnd.split(':');
+                    const startTime = new Date();
+                    startTime.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+                    
+                    const endTime = new Date(startTime.getTime() + 40 * 60000);
+                    const newStartHour = String(startTime.getHours()).padStart(2, '0');
+                    const newStartMinute = String(startTime.getMinutes()).padStart(2, '0');
+                    const newEndHour = String(endTime.getHours()).padStart(2, '0');
+                    const newEndMinute = String(endTime.getMinutes()).padStart(2, '0');
+                    
+                    const duplicatedNote = {
+                        ...originalNote,
+                        id: generateUUID(),
+                        timeStart: `${newStartHour}:${newStartMinute}`,
+                        timeEnd: `${newEndHour}:${newEndMinute}`,
+                        content: originalNote.content + ' (复制)',
+                        createdAt: Date.now(),
+                        updatedAt: Date.now()
+                    };
+                    
+                    notes.unshift(duplicatedNote);
+                    saveNotes();
+                    renderNotes();
+                }
+                
+                closeContextMenu();
+            }
+        }
+        
+        // 更改笔记颜色
+        function changeNoteColor(color) {
+            if (currentNoteId) {
+                const noteIndex = notes.findIndex(note => note.id === currentNoteId);
+                
+                if (noteIndex !== -1) {
+                    notes[noteIndex].color = color || 'note1';
+                    notes[noteIndex].updatedAt = Date.now();
+                    
+                    saveNotes();
+                    renderNotes();
+                }
+                
+                closeContextMenu();
+            }
+        }
+        
+        // 获取当前日期字符串 (YYYY-MM-DD)
+        function getCurrentDateString() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            
+            return `${year}-${month}-${day}`;
+        }
+        
+        // 格式化相对时间
+        function formatRelativeTime(timestamp) {
+            const now = Date.now();
+            const diff = now - timestamp;
+            
+            if (diff < 60000) return '刚刚';
+            if (diff < 3600000) return `${Math.floor(diff / 60000)}分钟前`;
+            if (diff < 86400000) return `${Math.floor(diff / 3600000)}小时前`;
+            if (diff < 2592000000) return `${Math.floor(diff / 86400000)}天前`;
+            
+            const date = new Date(timestamp);
+            return date.toLocaleDateString('zh-CN', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+        
+        // 绑定事件监听器
+        function bindEventListeners() {
+            // 初始化选择模式事件
+            initSelectionMode();
+            
+            // 快速添加表单
+            quickAddForm.addEventListener('submit', quickAddNote);
+            
+            // 编辑模态框
+            document.getElementById('save-note-btn').addEventListener('click', saveNote);
+            document.getElementById('cancel-note-btn').addEventListener('click', closeNoteModal);
+            
+            // 删除模态框
+            document.getElementById('confirm-delete-btn').addEventListener('click', deleteNote);
+            document.getElementById('cancel-delete-btn').addEventListener('click', closeDeleteModal);
+            
+            // 右键菜单
+            document.getElementById('edit-note-menu-btn').addEventListener('click', () => {
+                closeContextMenu();
+                openEditModal(currentNoteId);
+            });
+            
+            document.getElementById('duplicate-note-menu-btn').addEventListener('click', duplicateNote);
+            
+            document.getElementById('delete-note-menu-btn').addEventListener('click', () => {
+                closeContextMenu();
+                openDeleteModal(currentNoteId);
+            });
+            
+            // 颜色选择
+            document.querySelectorAll('.color-dot').forEach(dot => {
+                dot.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const color = dot.dataset.color;
+                    
+                    // 更新颜色选择UI
+                    document.querySelectorAll('.color-dot').forEach(d => {
+                        d.classList.remove('border-4');
+                    });
+                    dot.classList.add('border-4');
+                    
+                    // 如果是编辑模态框中的颜色选择
+                    if (noteModal.classList.contains('hidden')) {
+                        // 右键菜单中的颜色选择
+                        changeNoteColor(color);
+                    } else {
+                        // 编辑模态框中的颜色选择
+                        document.getElementById('note-color').value = color;
+                    }
+                });
+            });
+            
+            // 点击页面其他地方关闭右键菜单
+            document.addEventListener('click', (e) => {
+                if (!contextMenu.contains(e.target)) {
+                    closeContextMenu();
+                }
+            });
+            
+            // 模态框外部点击关闭
+            noteModal.addEventListener('click', (e) => {
+                if (e.target === noteModal) closeNoteModal();
+            });
+            
+            deleteModal.addEventListener('click', (e) => {
+                if (e.target === deleteModal) closeDeleteModal();
+            });
+            
+            // 键盘快捷键
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    // ESC键退出选择模式
+                    if (selectionMode) {
+                        exitSelectionMode();
+                    } else {
+                        closeNoteModal();
+                        closeDeleteModal();
+                        closeContextMenu();
+                        closeAISummaryModal();
+                        closeAIResultModal();
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

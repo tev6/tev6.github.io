@@ -8,7 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome -->
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <!-- Unified Tailwind Configuration -->
+    <!-- 统一的 Tailwind 配置 -->
     <script>
         tailwind.config = {
             theme: {
@@ -73,62 +73,62 @@
     </style>
 </head>
 <body class="bg-gray-50 text-gray-900 min-h-screen">
-    <!-- Top Navigation Bar -->
+    <!-- 顶部导航栏 -->
     <header class="sticky top-0 z-50 bg-white/70 backdrop-blur-md border-b border-gray-200 shadow-sm">
         <div class="container mx-auto px-4 py-3 flex items-center justify-between">
             <div class="flex items-center space-x-2">
                 <i class="fa fa-sticky-note text-primary text-2xl"></i>
-                <h1 class="text-xl font-bold">Real Fast Noter</h1>
+                <h1 class="text-xl font-bold">快速笔记</h1>
             </div>
         </div>
     </header>
 
-    <!-- Main Content Area -->
+    <!-- 主内容区 -->
     <main class="container mx-auto px-4 py-6">
-        <!-- Notes List -->
+        <!-- 笔记列表 -->
         <div id="notes-container" class="grid grid-cols-1 gap-3 mb-6">
-            <!-- Note cards will be dynamically generated via JavaScript -->
+            <!-- 笔记卡片将通过 JavaScript 动态生成 -->
         </div>
         
-        <!-- Empty State Prompt -->
+        <!-- 空状态提示 -->
         <div id="empty-state" class="hidden flex flex-col items-center justify-center py-16 text-center">
             <div class="w-24 h-24 mb-4 text-gray-400">
                 <i class="fa fa-sticky-note-o text-6xl"></i>
             </div>
-            <h2 class="text-xl font-semibold mb-2">No Notes Yet</h2>
-            <p class="text-gray-500 mb-6 max-w-md">Start recording using the quick input box below, supporting quick addition of time intervals and note content</p>
+            <h2 class="text-xl font-semibold mb-2">还没有笔记</h2>
+            <p class="text-gray-500 mb-6 max-w-md">使用底部的快速输入框开始记录，支持快速添加时间间隔和笔记内容</p>
         </div>
     </main>
 
-    <!-- Bottom Quick Input Area -->
+    <!-- 底部快速输入区域 -->
     <div class="sticky bottom-0 z-40 bg-white/90 backdrop-blur-md border-t border-gray-200 py-3 shadow-lg">
         <div class="container mx-auto px-4">
             <div class="bg-gray-100 rounded-lg p-3 shadow-sm">
-                <h3 class="text-sm font-medium text-gray-700 mb-2">Quick Add Note</h3>
+                <h3 class="text-sm font-medium text-gray-700 mb-2">快速添加笔记</h3>
                 <form id="quick-add-form" class="quick-input-row">
-                    <!-- Date (Fixed) -->
+                    <!-- 日期（固定） -->
                     <div class="col-span-3 md:col-span-2">
                         <input type="text" id="quick-date" class="input-field text-center" readonly>
                     </div>
                     
-                    <!-- Time Interval -->
+                    <!-- 时间间隔 -->
                     <div class="col-span-4 md:col-span-3 flex gap-1">
                         <input type="time" id="quick-time-start" class="input-field" required>
                         <span class="flex items-center justify-center px-1">~</span>
                         <input type="time" id="quick-time-end" class="input-field" required>
                     </div>
                     
-                    <!-- Title Content -->
+                    <!-- 标题内容 -->
                     <div class="col-span-3 md:col-span-4">
-                        <input type="text" id="quick-content" class="input-field" placeholder="Enter note title" required>
+                        <input type="text" id="quick-content" class="input-field" placeholder="输入笔记标题" required>
                     </div>
                     
-                    <!-- Tag Input -->
+                    <!-- 标签输入 -->
                     <div class="col-span-1 md:col-span-2">
-                        <input type="text" id="quick-tag" class="input-field" placeholder="Tag" maxlength="5">
+                        <input type="text" id="quick-tag" class="input-field" placeholder="标签" maxlength="5">
                     </div>
                     
-                    <!-- Submit Button -->
+                    <!-- 提交按钮 -->
                     <div class="col-span-1">
                         <button type="submit" class="btn btn-primary w-full">
                             <i class="fa fa-plus"></i>
@@ -139,95 +139,95 @@
         </div>
     </div>
 
-    <!-- Edit Note Modal -->
+    <!-- 编辑笔记模态框 -->
     <div id="note-modal" class="fixed inset-0 z-50 hidden overflow-y-auto">
         <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-            <!-- Background Overlay -->
+            <!-- 背景遮罩 -->
             <div class="fixed inset-0 transition-opacity" aria-hidden="true">
                 <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
             </div>
             
-            <!-- Modal Content -->
+            <!-- 模态框内容 -->
             <div class="inline-block overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
                 <div class="px-4 pt-5 pb-4 bg-white sm:p-6 sm:pb-4">
                     <div class="sm:flex sm:items-start">
                         <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
-                            <h3 class="text-lg font-medium leading-6 text-gray-900" id="modal-title">Edit Note</h3>
+                            <h3 class="text-lg font-medium leading-6 text-gray-900" id="modal-title">编辑笔记</h3>
                             <div class="mt-4 space-y-4">
-                                <!-- Date Selection (Read-only) -->
+                                <!-- 日期选择（只读） -->
                                 <div>
-                                    <label for="note-date" class="block text-sm font-medium text-gray-700 mb-1">Date</label>
+                                    <label for="note-date" class="block text-sm font-medium text-gray-700 mb-1">日期</label>
                                     <input type="date" id="note-date" class="input-field" readonly>
                                 </div>
                                 
-                                <!-- Time Interval -->
+                                <!-- 时间间隔 -->
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Time Interval</label>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">时间间隔</label>
                                     <div class="flex gap-2">
                                         <input type="time" id="note-time-start" class="input-field flex-1" required>
-                                        <span class="flex items-center justify-center px-2">to</span>
+                                        <span class="flex items-center justify-center px-2">至</span>
                                         <input type="time" id="note-time-end" class="input-field flex-1" required>
                                     </div>
                                 </div>
                                 
-                                <!-- Content Input -->
+                                <!-- 内容输入 -->
                                 <div>
-                                    <label for="note-content" class="block text-sm font-medium text-gray-700 mb-1">Title Content</label>
-                                    <input type="text" id="note-content" class="input-field" placeholder="Enter note title" required>
+                                    <label for="note-content" class="block text-sm font-medium text-gray-700 mb-1">标题内容</label>
+                                    <input type="text" id="note-content" class="input-field" placeholder="输入笔记标题" required>
                                 </div>
                                 
-                                <!-- Tag Input -->
+                                <!-- 标签输入 -->
                                 <div>
-                                    <label for="note-tag" class="block text-sm font-medium text-gray-700 mb-1">Tag (Up to 5 characters)</label>
-                                    <input type="text" id="note-tag" class="input-field" placeholder="Enter tag" maxlength="5">
+                                    <label for="note-tag" class="block text-sm font-medium text-gray-700 mb-1">标签 (最多5个中文字符)</label>
+                                    <input type="text" id="note-tag" class="input-field" placeholder="输入标签" maxlength="5">
                                 </div>
                                 
-                                <!-- Detailed Notes -->
+                                <!-- 详细注释 -->
                                 <div>
-                                    <label for="note-details" class="block text-sm font-medium text-gray-700 mb-1">Detailed Notes (Optional)</label>
-                                    <textarea id="note-details" rows="3" class="textarea-field" placeholder="Add more details..."></textarea>
+                                    <label for="note-details" class="block text-sm font-medium text-gray-700 mb-1">详细注释 (可选)</label>
+                                    <textarea id="note-details" rows="3" class="textarea-field" placeholder="添加更多详细信息..."></textarea>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Modal Bottom Buttons -->
+                <!-- 模态框底部按钮 -->
                 <div class="px-4 py-3 bg-gray-50 sm:px-6 sm:flex sm:flex-row-reverse">
                     <button type="button" id="save-note-btn" class="btn btn-primary">
-                        Save
+                        保存
                     </button>
                     <button type="button" id="cancel-note-btn" class="btn btn-secondary ml-3">
-                        Cancel
+                        取消
                     </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Right-click Menu -->
+    <!-- 右键菜单 -->
     <div id="context-menu" class="hidden fixed z-50 w-48 bg-white/70 backdrop-blur-md rounded-md shadow-lg py-1">
         <button class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" id="edit-note-menu-btn">
-            <i class="fa fa-pencil mr-2"></i> Edit
+            <i class="fa fa-pencil mr-2"></i> 编辑
         </button>
         <button class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" id="duplicate-note-menu-btn">
-            <i class="fa fa-clone mr-2"></i> Duplicate
+            <i class="fa fa-clone mr-2"></i> 复制
         </button>
         <div class="border-t border-gray-200"></div>
         <button class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100" id="delete-note-menu-btn">
-            <i class="fa fa-trash mr-2"></i> Delete
+            <i class="fa fa-trash mr-2"></i> 删除
         </button>
     </div>
 
-    <!-- Confirm Delete Modal -->
+    <!-- 确认删除模态框 -->
     <div id="delete-modal" class="fixed inset-0 z-50 hidden overflow-y-auto">
         <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-            <!-- Background Overlay -->
+            <!-- 背景遮罩 -->
             <div class="fixed inset-0 transition-opacity" aria-hidden="true">
                 <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
             </div>
             
-            <!-- Modal Content -->
+            <!-- 模态框内容 -->
             <div class="inline-block overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-md sm:w-full">
                 <div class="px-4 pt-5 pb-4 bg-white sm:p-6">
                     <div class="sm:flex sm:items-start">
@@ -235,43 +235,43 @@
                             <i class="fa fa-exclamation-triangle text-red-600"></i>
                         </div>
                         <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                            <h3 class="text-lg leading-6 font-medium text-gray-900">Confirm Delete</h3>
+                            <h3 class="text-lg leading-6 font-medium text-gray-900">确认删除</h3>
                             <div class="mt-2">
                                 <p class="text-sm text-gray-500">
-                                    Are you sure you want to delete this note? This action cannot be undone.
+                                    你确定要删除这条笔记吗？此操作无法撤销。
                                 </p>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Modal Bottom Buttons -->
+                <!-- 模态框底部按钮 -->
                 <div class="px-4 py-3 bg-gray-50 sm:px-6 sm:flex sm:flex-row-reverse">
                     <button type="button" id="confirm-delete-btn" class="btn bg-red-600 text-white hover:bg-red-700 focus:ring-red-500">
-                        Delete
+                        删除
                     </button>
                     <button type="button" id="cancel-delete-btn" class="btn btn-secondary ml-3">
-                        Cancel
+                        取消
                     </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Save Status Indicator -->
+    <!-- 保存状态提示 -->
     <div id="save-indicator" class="fixed bottom-20 right-4 bg-white/70 backdrop-blur-md px-4 py-2 rounded-md shadow-lg flex items-center space-x-2 transform translate-y-10 opacity-0 transition-all duration-300">
         <i class="fa fa-check-circle text-green-500"></i>
-        <span>Saved</span>
+        <span>已保存</span>
     </div>
 
     <!-- JavaScript -->
     <script>
-        // Global Variables
+        // 全局变量
         let notes = [];
         let currentNoteId = null;
         let lastEndTime = null;
         
-        // DOM Elements
+        // DOM 元素
         const notesContainer = document.getElementById('notes-container');
         const emptyState = document.getElementById('empty-state');
         const noteModal = document.getElementById('note-modal');
@@ -280,7 +280,7 @@
         const saveIndicator = document.getElementById('save-indicator');
         const quickAddForm = document.getElementById('quick-add-form');
         
-        // Initialize Application
+        // 初始化应用
         document.addEventListener('DOMContentLoaded', () => {
             initUserIdentity();
             initQuickInput();
@@ -289,7 +289,7 @@
             bindEventListeners();
         });
         
-        // Initialize User Identity
+        // 初始化用户身份
         function initUserIdentity() {
             let userId = localStorage.getItem('userId');
             if (!userId) {
@@ -298,7 +298,7 @@
             }
         }
         
-        // Generate UUID
+        // 生成UUID
         function generateUUID() {
             return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
                 const r = Math.random() * 16 | 0;
@@ -307,17 +307,17 @@
             });
         }
         
-        // Initialize Quick Input Area
+        // 初始化快速输入区域
         function initQuickInput() {
-            // Set current date (without year)
+            // 设置当前日期（移除了年份）
             const today = new Date();
-            const formattedDate = today.toLocaleDateString('en-US', {
+            const formattedDate = today.toLocaleDateString('zh-CN', {
                 month: 'long',
                 day: 'numeric'
             });
             document.getElementById('quick-date').value = formattedDate;
             
-            // Set default time
+            // 设置默认时间
             const now = new Date();
             let startTime;
             
@@ -345,7 +345,7 @@
             document.getElementById('quick-content').focus();
         }
         
-        // Load Notes
+        // 加载笔记
         function loadNotes() {
             const userId = localStorage.getItem('userId');
             const savedNotes = localStorage.getItem(`notes_${userId}`);
@@ -365,14 +365,14 @@
             }
         }
         
-        // Save Notes
+        // 保存笔记
         function saveNotes() {
             const userId = localStorage.getItem('userId');
             localStorage.setItem(`notes_${userId}`, JSON.stringify(notes));
             showSaveIndicator();
         }
         
-        // Show Save Indicator
+        // 显示保存指示器
         function showSaveIndicator() {
             saveIndicator.classList.remove('translate-y-10', 'opacity-0');
             setTimeout(() => {
@@ -380,7 +380,7 @@
             }, 2000);
         }
         
-        // Render Notes
+        // 渲染笔记
         function renderNotes() {
             notesContainer.innerHTML = '';
             
@@ -395,24 +395,24 @@
             
             notes.sort((a, b) => b.createdAt - a.createdAt);
             
-            // Group notes by date
+            // 按日期分组笔记
             const notesByDate = groupNotesByDate(notes);
             
-            // Render each date's note groups
+            // 渲染每个日期的笔记组
             Object.keys(notesByDate).sort((a, b) => new Date(b) - new Date(a)).forEach(date => {
                 const dateNotes = notesByDate[date];
                 const isToday = isTodayDate(date);
                 
-                // Create date group header
+                // 创建日期组标题
                 const dateGroupElement = createDateGroupElement(date, dateNotes.length, isToday);
                 notesContainer.appendChild(dateGroupElement);
                 
-                // Create all notes for this date
+                // 创建该日期下的所有笔记
                 dateNotes.forEach(note => {
                     const noteElement = createNoteElement(note);
                     notesContainer.appendChild(noteElement);
                     
-                    // If not today, collapse the date group
+                    // 如果不是今天，则折叠该日期组
                     if (!isToday) {
                         dateGroupElement.classList.add('collapsed');
                         const toggleIcon = dateGroupElement.querySelector('.toggle-icon');
@@ -424,7 +424,7 @@
             });
         }
         
-        // Group Notes by Date
+        // 按日期分组笔记
         function groupNotesByDate(notes) {
             const groups = {};
             
@@ -438,7 +438,7 @@
             return groups;
         }
         
-        // Check if date is today
+        // 检查日期是否为今天
         function isTodayDate(dateString) {
             const today = new Date();
             const noteDate = new Date(dateString);
@@ -446,13 +446,13 @@
             return today.toDateString() === noteDate.toDateString();
         }
         
-        // Create Date Group Element
+        // 创建日期组元素
         function createDateGroupElement(date, noteCount, isToday) {
             const dateGroupDiv = document.createElement('div');
             dateGroupDiv.className = 'date-group mt-4 first:mt-0';
             
             const dateObj = new Date(date);
-            const formattedDate = dateObj.toLocaleDateString('en-US', {
+            const formattedDate = dateObj.toLocaleDateString('zh-CN', {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric',
@@ -463,8 +463,8 @@
                 <div class="date-header flex items-center justify-between p-3 bg-gray-100 rounded-lg cursor-pointer">
                     <div class="flex items-center">
                         <h3 class="font-semibold text-gray-800">${formattedDate}</h3>
-                        <span class="ml-2 px-2 py-1 text-xs bg-primary text-white rounded-full">${noteCount} notes</span>
-                        ${isToday ? '<span class="ml-2 px-2 py-1 text-xs bg-green-500 text-white rounded-full">Today</span>' : ''}
+                        <span class="ml-2 px-2 py-1 text-xs bg-primary text-white rounded-full">${noteCount} 条笔记</span>
+                        ${isToday ? '<span class="ml-2 px-2 py-1 text-xs bg-green-500 text-white rounded-full">今日</span>' : ''}
                     </div>
                     <div class="flex items-center">
                         <i class="toggle-icon fa fa-chevron-down text-gray-500 transition-transform duration-300"></i>
@@ -472,7 +472,7 @@
                 </div>
             `;
             
-            // Bind date group click event
+            // 绑定日期组点击事件
             const dateHeader = dateGroupDiv.querySelector('.date-header');
             dateHeader.addEventListener('click', () => {
                 dateGroupDiv.classList.toggle('collapsed');
@@ -481,7 +481,7 @@
                 if (dateGroupDiv.classList.contains('collapsed')) {
                     toggleIcon.classList.remove('fa-chevron-down');
                     toggleIcon.classList.add('fa-chevron-right');
-                    // Hide all notes under this date group
+                    // 隐藏该日期组下的所有笔记
                     let nextElement = dateGroupDiv.nextElementSibling;
                     while (nextElement && !nextElement.classList.contains('date-group')) {
                         nextElement.classList.add('hidden');
@@ -490,7 +490,7 @@
                 } else {
                     toggleIcon.classList.remove('fa-chevron-right');
                     toggleIcon.classList.add('fa-chevron-down');
-                    // Show all notes under this date group
+                    // 显示该日期组下的所有笔记
                     let nextElement = dateGroupDiv.nextElementSibling;
                     while (nextElement && !nextElement.classList.contains('date-group')) {
                         nextElement.classList.remove('hidden');
@@ -502,50 +502,50 @@
             return dateGroupDiv;
         }
         
-        // Create Note Element
+        // 创建笔记元素
         function createNoteElement(note) {
             const noteDiv = document.createElement('div');
             noteDiv.className = `note-card animate-fade-in`;
             noteDiv.style.borderLeftColor = '#3b82f6';
             noteDiv.dataset.noteId = note.id;
             
-            // Format date (without year)
+            // 格式化日期（移除了年份）
             const date = new Date(note.date);
-            const formattedDate = date.toLocaleDateString('en-US', {
+            const formattedDate = date.toLocaleDateString('zh-CN', {
                 month: 'short',
                 day: 'numeric'
             });
             
             noteDiv.innerHTML = `
                 <div class="note-row-layout mb-2 items-center">
-                    <!-- 1. Date (Fixed) -->
+                    <!-- 1. 日期（固定） -->
                     <div class="col-span-3 md:col-span-2 text-center text-sm font-medium text-gray-500">
                         ${formattedDate}
                     </div>
                     
-                    <!-- 2. Time Interval -->
+                    <!-- 2. 时间间隔 -->
                     <div class="col-span-4 md:col-span-2 text-center text-sm">
                         ${note.timeStart} ~ ${note.timeEnd}
                     </div>
                     
-                    <!-- 3. Title Content -->
+                    <!-- 3. 标题内容 -->
                     <div class="col-span-3 md:col-span-4 truncate text-sm font-medium">
                         ${note.content}
                     </div>
                     
-                    <!-- 4. Tag Display -->
+                    <!-- 4. 标签显示 -->
                     <div class="col-span-1 md:col-span-2 flex justify-center">
                         ${note.tag ? `<span class="tag">${note.tag}</span>` : ''}
                     </div>
                     
-                    <!-- 5. Edit Details Button -->
+                    <!-- 5. 修改详情按钮 -->
                     <div class="col-span-1 flex justify-center">
                         <button class="text-xs text-primary hover:text-primary/80 edit-btn px-2 py-1 rounded hover:bg-primary/10 transition-colors">
-                            Edit Details
+                            修改详情
                         </button>
                     </div>
                     
-                    <!-- 6. Expand Button -->
+                    <!-- 6. 下拉展开按钮 -->
                     <div class="col-span-1 flex justify-center">
                         <button class="details-btn flex items-center justify-center p-1">
                             <i class="fa fa-chevron-down expand-btn text-lg ${note.expanded ? 'rotate-180' : ''}"></i>
@@ -553,20 +553,20 @@
                     </div>
                 </div>
                 
-                <!-- Expand Details Area -->
+                <!-- 展开详情区域 -->
                 <div class="note-details-expand mt-3 pt-3 border-t border-gray-200 ${note.expanded ? '' : 'hidden'}">
                     <div class="bg-gray-50 rounded-md p-3 mb-2">
-                        <h4 class="text-sm font-medium text-gray-700 mb-2">Details</h4>
+                        <h4 class="text-sm font-medium text-gray-700 mb-2">详细信息</h4>
                         <p class="text-sm text-gray-600 whitespace-pre-wrap break-words">
-                            ${note.details || 'No details available'}
+                            ${note.details || '无详细信息'}
                         </p>
                     </div>
                     
                     <div class="flex justify-between items-center text-xs text-gray-500">
-                        <span>Created ${formatRelativeTime(note.createdAt)}</span>
+                        <span>创建于 ${formatRelativeTime(note.createdAt)}</span>
                         <div class="flex items-center space-x-2">
-                            <button class="text-primary hover:underline edit-btn">Edit</button>
-                            <button class="text-red-500 hover:underline delete-btn">Delete</button>
+                            <button class="text-primary hover:underline edit-btn">编辑</button>
+                            <button class="text-red-500 hover:underline delete-btn">删除</button>
                         </div>
                     </div>
                 </div>
@@ -576,21 +576,21 @@
             return noteDiv;
         }
         
-        // Bind Note Card Events
+        // 绑定笔记卡片事件
         function bindNoteEvents(noteElement, note) {
-            // Double click to edit
+            // 双击编辑
             noteElement.addEventListener('dblclick', (e) => {
                 if (e.target.closest('button')) return;
                 openEditModal(note.id);
             });
             
-            // Right-click menu
+            // 右键菜单
             noteElement.addEventListener('contextmenu', (e) => {
                 e.preventDefault();
                 openContextMenu(e, note.id);
             });
             
-            // Details button click
+            // 详情按钮点击
             const detailsBtn = noteElement.querySelector('.details-btn');
             const expandIcon = detailsBtn.querySelector('i');
             
@@ -611,18 +611,18 @@
                 }
             });
             
-            // Edit button click
+            // 编辑按钮点击
             const editBtns = noteElement.querySelectorAll('.edit-btn');
             editBtns.forEach(btn => {
                 btn.addEventListener('click', () => openEditModal(note.id));
             });
             
-            // Delete button click
+            // 删除按钮点击
             const deleteBtn = noteElement.querySelector('.delete-btn');
             deleteBtn.addEventListener('click', () => openDeleteModal(note.id));
         }
         
-        // Quick Add Note
+        // 快速添加笔记
         function quickAddNote(e) {
             e.preventDefault();
             
@@ -633,7 +633,7 @@
             const tag = document.getElementById('quick-tag').value.trim();
             
             if (!timeStart || !timeEnd || !content) {
-                alert('Please fill in complete information');
+                alert('请填写完整信息');
                 return;
             }
             
@@ -654,7 +654,7 @@
             saveNotes();
             renderNotes();
             
-            // Record end time for next note's start time
+            // 记录结束时间，用于下一个笔记的开始时间
             const [hours, minutes] = timeEnd.split(':');
             const today = new Date();
             const endTime = new Date(today);
@@ -667,14 +667,14 @@
             document.getElementById('quick-content').focus();
         }
         
-        // Open Edit Note Modal
+        // 打开编辑笔记模态框
         function openEditModal(noteId) {
             const noteIndex = notes.findIndex(note => note.id === noteId);
             
             if (noteIndex !== -1) {
                 const note = notes[noteIndex];
                 
-                document.getElementById('modal-title').textContent = 'Edit Note';
+                document.getElementById('modal-title').textContent = '编辑笔记';
                 document.getElementById('note-date').value = note.date;
                 document.getElementById('note-time-start').value = note.timeStart;
                 document.getElementById('note-time-end').value = note.timeEnd;
@@ -687,23 +687,23 @@
             }
         }
         
-        // Close Note Modal
+        // 关闭笔记模态框
         function closeNoteModal() {
             noteModal.classList.add('hidden');
         }
         
-        // Open Delete Modal
+        // 打开删除模态框
         function openDeleteModal(noteId) {
             currentNoteId = noteId;
             deleteModal.classList.remove('hidden');
         }
         
-        // Close Delete Modal
+        // 关闭删除模态框
         function closeDeleteModal() {
             deleteModal.classList.add('hidden');
         }
         
-        // Open Right-click Menu
+        // 打开右键菜单
         function openContextMenu(event, noteId) {
             currentNoteId = noteId;
             contextMenu.style.top = `${event.clientY}px`;
@@ -711,12 +711,12 @@
             contextMenu.classList.remove('hidden');
         }
         
-        // Close Right-click Menu
+        // 关闭右键菜单
         function closeContextMenu() {
             contextMenu.classList.add('hidden');
         }
         
-        // Save Note
+        // 保存笔记
         function saveNote() {
             const date = document.getElementById('note-date').value;
             const timeStart = document.getElementById('note-time-start').value;
@@ -726,7 +726,7 @@
             const details = document.getElementById('note-details').value.trim();
             
             if (!date || !timeStart || !timeEnd || !content) {
-                alert('Please fill in all required fields');
+                alert('请填写所有必填字段');
                 return;
             }
             
@@ -756,7 +756,7 @@
             closeNoteModal();
         }
         
-        // Delete Note
+        // 删除笔记
         function deleteNote() {
             if (currentNoteId) {
                 const noteIndex = notes.findIndex(note => note.id === currentNoteId);
@@ -772,7 +772,7 @@
             }
         }
         
-        // Duplicate Note
+        // 复制笔记
         function duplicateNote() {
             if (currentNoteId) {
                 const noteIndex = notes.findIndex(note => note.id === currentNoteId);
@@ -783,7 +783,7 @@
                     const duplicatedNote = {
                         ...originalNote,
                         id: generateUUID(),
-                        content: originalNote.content + ' (Copy)',
+                        content: originalNote.content + ' (复制)',
                         createdAt: Date.now(),
                         updatedAt: Date.now()
                     };
@@ -797,7 +797,7 @@
             }
         }
         
-        // Get Current Date String (YYYY-MM-DD)
+        // 获取当前日期字符串 (YYYY-MM-DD)
         function getCurrentDateString() {
             const now = new Date();
             const year = now.getFullYear();
@@ -807,25 +807,25 @@
             return `${year}-${month}-${day}`;
         }
         
-        // Format Relative Time
+        // 格式化相对时间
         function formatRelativeTime(timestamp) {
             const now = Date.now();
             const diff = now - timestamp;
             
-            if (diff < 60000) return 'Just now';
-            if (diff < 3600000) return `${Math.floor(diff / 60000)} minutes ago`;
-            if (diff < 86400000) return `${Math.floor(diff / 3600000)} hours ago`;
-            if (diff < 2592000000) return `${Math.floor(diff / 86400000)} days ago`;
+            if (diff < 60000) return '刚刚';
+            if (diff < 3600000) return `${Math.floor(diff / 60000)}分钟前`;
+            if (diff < 86400000) return `${Math.floor(diff / 3600000)}小时前`;
+            if (diff < 2592000000) return `${Math.floor(diff / 86400000)}天前`;
             
             const date = new Date(timestamp);
-            return date.toLocaleDateString('en-US', {
+            return date.toLocaleDateString('zh-CN', {
                 year: 'numeric',
                 month: 'short',
                 day: 'numeric'
             });
         }
         
-        // Bind Event Listeners
+        // 绑定事件监听器
         function bindEventListeners() {
             quickAddForm.addEventListener('submit', quickAddNote);
             document.getElementById('save-note-btn').addEventListener('click', saveNote);

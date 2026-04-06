@@ -1,34 +1,510 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-  <%- partial('_partial/head') %>
-<meta name="generator" content="Hexo 7.3.0"></head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>项目总览</title>
+    <style>
+        /* CSS变量定义 - 主题系统 */
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --text-primary: #212529;
+            --text-secondary: #6c757d;
+            --card-bg: #ffffff;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1);
+            --card-hover-shadow: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+            --border-color: #e9ecef;
+            --accent-color: #4361ee;
+            --transition: all 0.3s ease;
+        }
+
+        /* 暗黑主题变量 */
+        [data-theme="dark"] {
+            --bg-primary: #121212;
+            --bg-secondary: #1e1e1e;
+            --text-primary: #f8f9fa;
+            --text-secondary: #adb5bd;
+            --card-bg: #1e1e1e;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.5);
+            --card-hover-shadow: 0 10px 15px rgba(0, 0, 0, 0.4), 0 4px 6px rgba(0, 0, 0, 0.3);
+            --border-color: #343a40;
+            --accent-color: #4cc9f0;
+        }
+
+        /* 基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: var(--transition);
+            min-height: 100vh;
+        }
+
+        /* 布局容器 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        /* 头部样式 */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-color), #7209b7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* 主题切换按钮 */
+        .theme-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            transition: var(--transition);
+            padding: 0.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--bg-secondary);
+        }
+
+        /* 项目网格布局 */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        /* 项目卡片样式 */
+        .project-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            transition: var(--transition);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--card-hover-shadow);
+        }
+
+        .project-card a {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .project-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background-color: var(--bg-secondary);
+        }
+
+        .project-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        .project-description {
+            color: var(--text-secondary);
+            flex-grow: 1;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+        }
+
+        .project-link {
+            margin-top: 1rem;
+            color: var(--accent-color);
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .project-link::after {
+            content: "→";
+            margin-left: 0.5rem;
+            transition: transform 0.2s ease;
+        }
+
+        .project-card:hover .project-link::after {
+            transform: translateX(3px);
+        }
+
+        /* 加载状态 */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+        }
+
+        .loading::after {
+            content: "";
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border-color);
+            border-top: 2px solid var(--accent-color);
+            border-radius: 50%;
+            margin-left: 10px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-secondary);
+        }
+
+        /* 错误状态 */
+        .error-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #e74c3c;
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (min-width: 1600px) {
+            .projects-grid {
+                grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            }
+        }
+    </style>
+</head>
 <body>
-  <%- partial('_partial/header') %>
-  
-  <main class="content">
-    <div class="projects-container">
-      <h1><%= page.title %></h1>
-      <p><%= page.content %></p>
-      
-      <div class="projects-grid">
-        <% site.pages.forEach(function(page) { %>
-          <% if (page.path.includes('projects/') && page.path !== 'projects/index.md' && page.layout === 'project') { %>
-            <div class="project-card">
-              <a href="<%= url_for(page.path) %>">
-                <% if (page.preview) { %>
-                  <img src="<%= page.preview %>" alt="<%= page.title %>" class="project-preview">
-                <% } %>
-                <h3><%= page.title %></h3>
-                <p><%= page.description || '' %></p>
-              </a>
+    <div class="container">
+        <header class="header">
+            <h1>项目总览</h1>
+            <button class="theme-toggle" id="themeToggle" aria-label="切换主题">
+                <span id="themeIcon">🌙</span>
+            </button>
+        </header>
+        
+        <main>
+            <div class="projects-grid" id="projectsGrid">
+                <div class="loading">正在扫描项目目录...</div>
             </div>
-          <% } %>
-        <% }) %>
-      </div>
+        </main>
     </div>
-  </main>
-  
-  <%- partial('_partial/footer') %>
+
+    <script>
+        // 主题管理
+        class ThemeManager {
+            constructor() {
+                this.themeToggle = document.getElementById('themeToggle');
+                this.themeIcon = document.getElementById('themeIcon');
+                this.currentTheme = localStorage.getItem('theme') || 
+                                   (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                
+                this.init();
+            }
+            
+            init() {
+                this.applyTheme(this.currentTheme);
+                
+                this.themeToggle.addEventListener('click', () => {
+                    this.toggleTheme();
+                });
+                
+                // 监听系统主题变化
+                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+                    if (!localStorage.getItem('theme')) {
+                        this.applyTheme(e.matches ? 'dark' : 'light');
+                    }
+                });
+            }
+            
+            applyTheme(theme) {
+                document.documentElement.setAttribute('data-theme', theme);
+                this.themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
+                localStorage.setItem('theme', theme);
+                this.currentTheme = theme;
+            }
+            
+            toggleTheme() {
+                const newTheme = this.currentTheme === 'light' ? 'dark' : 'light';
+                this.applyTheme(newTheme);
+            }
+        }
+
+        // Markdown 解析器（简化版）
+        class SimpleMarkdownParser {
+            static parse(markdown) {
+                if (!markdown) return '';
+                
+                // 处理标题
+                markdown = markdown.replace(/^### (.*$)/gim, '<h3>$1</h3>');
+                markdown = markdown.replace(/^## (.*$)/gim, '<h2>$1</h2>');
+                markdown = markdown.replace(/^# (.*$)/gim, '<h1>$1</h1>');
+                
+                // 处理粗体和斜体
+                markdown = markdown.replace(/\*\*(.*?)\*\*/gim, '<strong>$1</strong>');
+                markdown = markdown.replace(/\*(.*?)\*/gim, '<em>$1</em>');
+                
+                // 处理链接
+                markdown = markdown.replace(/\[([^\[]+)\]\(([^\)]+)\)/gim, '<a href="$2">$1</a>');
+                
+                // 处理图片
+                markdown = markdown.replace(/!\[([^\[]*)\]\(([^\)]+)\)/gim, '<img src="$2" alt="$1" class="markdown-image">');
+                
+                // 处理换行
+                markdown = markdown.replace(/\n/gim, '<br>');
+                
+                return markdown;
+            }
+        }
+
+        // 项目管理器
+        class ProjectManager {
+            constructor() {
+                this.projectsGrid = document.getElementById('projectsGrid');
+                this.projects = [];
+                
+                this.init();
+            }
+            
+            async init() {
+                await this.loadProjects();
+                this.renderProjects();
+            }
+            
+            // 动态扫描项目目录并加载 preview.txt
+            async loadProjects() {
+                try {
+                    // 获取当前路径
+                    const currentPath = window.location.pathname;
+                    const basePath = currentPath.substring(0, currentPath.lastIndexOf('/'));
+                    
+                    // 尝试获取项目列表
+                    const projects = await this.scanProjectDirectories(basePath);
+                    
+                    if (projects.length === 0) {
+                        console.warn('未找到任何项目目录');
+                        this.projects = [];
+                        return;
+                    }
+                    
+                    // 加载每个项目的 preview.txt
+                    const projectPromises = projects.map(async (projectName) => {
+                        try {
+                            const previewPath = `${basePath}/${projectName}/preview.txt`;
+                            const response = await fetch(previewPath);
+                            
+                            if (!response.ok) {
+                                throw new Error(`无法加载 ${previewPath}: ${response.status}`);
+                            }
+                            
+                            const previewContent = await response.text();
+                            
+                            return {
+                                name: this.formatProjectName(projectName),
+                                path: projectName,
+                                preview: previewContent
+                            };
+                        } catch (error) {
+                            console.error(`加载项目 ${projectName} 失败:`, error);
+                            return {
+                                name: this.formatProjectName(projectName),
+                                path: projectName,
+                                preview: `# ${this.formatProjectName(projectName)}\n\n暂无项目描述`
+                            };
+                        }
+                    });
+                    
+                    this.projects = await Promise.all(projectPromises);
+                    
+                } catch (error) {
+                    console.error('扫描项目目录失败:', error);
+                    this.showError('无法加载项目列表，请检查目录结构');
+                }
+            }
+            
+            // 扫描项目目录（模拟实现）
+            async scanProjectDirectories(basePath) {
+                // 在实际环境中，这里应该通过服务器API获取目录列表
+                // 由于浏览器安全限制，无法直接读取文件系统
+                
+                // 模拟实现：尝试预定义的项目名称
+                const possibleProjects = ['diansuo-sim', 'rfnoter'];
+                const foundProjects = [];
+                
+                // 检查哪些项目目录存在
+                for (const project of possibleProjects) {
+                    try {
+                        const previewPath = `${basePath}/${project}/preview.txt`;
+                        const response = await fetch(previewPath, { method: 'HEAD' });
+                        
+                        if (response.ok) {
+                            foundProjects.push(project);
+                        }
+                    } catch (error) {
+                        // 项目目录不存在，跳过
+                        console.log(`项目 ${project} 不存在，跳过`);
+                    }
+                }
+                
+                // 如果预定义项目都不存在，使用备用方案
+                if (foundProjects.length === 0) {
+                    console.warn('未找到预定义项目，使用备用方案');
+                    
+                    // 备用方案：尝试扫描当前目录下的所有子目录
+                    // 注意：这需要服务器支持目录列表功能
+                    try {
+                        const response = await fetch(basePath);
+                        if (response.ok) {
+                            const text = await response.text();
+                            // 解析HTML获取链接（简单实现）
+                            const parser = new DOMParser();
+                            const doc = parser.parseFromString(text, 'text/html');
+                            const links = doc.querySelectorAll('a[href]');
+                            
+                            links.forEach(link => {
+                                const href = link.getAttribute('href');
+                                // 检查是否是目录（以/结尾且不是上级目录）
+                                if (href.endsWith('/') && !href.startsWith('../') && href !== './') {
+                                    const dirName = href.replace(/\/$/, '');
+                                    if (dirName && dirName !== '..') {
+                                        foundProjects.push(dirName);
+                                    }
+                                }
+                            });
+                        }
+                    } catch (error) {
+                        console.error('备用扫描方案失败:', error);
+                    }
+                }
+                
+                return foundProjects;
+            }
+            
+            // 格式化项目名称（将 project-name 转换为 Project Name）
+            formatProjectName(name) {
+                return name
+                    .split('-')
+                    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                    .join(' ');
+            }
+            
+            // 显示错误信息
+            showError(message) {
+                this.projectsGrid.innerHTML = `
+                    <div class="error-state">
+                        <h3>加载失败</h3>
+                        <p>${message}</p>
+                        <p><small>请确保项目目录结构正确，且每个项目包含 preview.txt 文件</small></p>
+                    </div>
+                `;
+            }
+            
+            renderProjects() {
+                if (this.projects.length === 0) {
+                    this.projectsGrid.innerHTML = `
+                        <div class="empty-state">
+                            <h3>暂无项目</h3>
+                            <p>当前没有可展示的项目</p>
+                            <p><small>请确保在 /projects/ 目录下创建项目子目录，并在每个子目录中添加 preview.txt 文件</small></p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                this.projectsGrid.innerHTML = this.projects.map(project => {
+                    // 从预览内容中提取第一张图片
+                    const imageMatch = project.preview.match(/!\[.*?\]\((.*?)\)/);
+                    const imageUrl = imageMatch ? imageMatch[1] : '';
+                    
+                    // 解析Markdown内容，但移除图片部分
+                    let description = project.preview.replace(/!\[.*?\]\(.*?\)/g, '');
+                    description = SimpleMarkdownParser.parse(description);
+                    
+                    return `
+                        <div class="project-card">
+                            <a href="/projects/${project.path}/">
+                                ${imageUrl ? `<img src="${imageUrl}" alt="${project.name}" class="project-image">` : 
+                                  '<div class="project-image" style="display:flex;align-items:center;justify-content:center;color:var(--text-secondary);">暂无图片</div>'}
+                                <div class="project-content">
+                                    <h3 class="project-title">${project.name}</h3>
+                                    <div class="project-description">${description}</div>
+                                    <span class="project-link">查看项目</span>
+                                </div>
+                            </a>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        // 初始化应用
+        document.addEventListener('DOMContentLoaded', () => {
+            new ThemeManager();
+            new ProjectManager();
+        });
+    </script>
 </body>
 </html>

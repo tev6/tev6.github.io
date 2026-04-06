@@ -1,0 +1,3353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Field Knowledge Quiz</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #4a6fa5;
+            --primary-dark: #385d8a;
+            --secondary: #6d98ba;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --card-bg: #ffffff;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            padding: 0 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin: 30px 0;
+            width: 100%;
+        }
+        
+        h1 {
+            color: var(--primary);
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 3px var(--shadow);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--secondary);
+            max-width: 800px;
+            margin: 0 auto 30px;
+            line-height: 1.6;
+        }
+        
+        /* Setup Screen */
+        .setup-screen {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px var(--shadow);
+            padding: 40px;
+            max-width: 800px;
+            margin: 0 auto 40px;
+            text-align: center;
+            animation: fadeIn 0.8s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .setup-screen h2 {
+            color: var(--primary);
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+        }
+        
+        .test-options {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px 0;
+        }
+        
+        .test-btn {
+            padding: 15px 25px;
+            background-color: var(--light);
+            border: 2px solid var(--primary);
+            border-radius: var(--border-radius);
+            color: var(--primary);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            min-width: 120px;
+        }
+        
+        .test-btn:hover {
+            background-color: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(74, 111, 165, 0.2);
+        }
+        
+        .test-btn.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .start-btn {
+            padding: 16px 50px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .start-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(74, 111, 165, 0.3);
+        }
+        
+        .start-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        /* Quiz Container */
+        .quiz-container {
+            display: none;
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+        
+        .progress-container {
+            flex: 1;
+            margin-right: 20px;
+        }
+        
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background-color: var(--primary);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .stats {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 10px 15px;
+            background-color: var(--light);
+            border-radius: var(--border-radius);
+            min-width: 100px;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        
+        /* Question Card */
+        .question-card-container {
+            perspective: 1000px;
+            height: 500px;
+            margin-bottom: 30px;
+        }
+        
+        .question-card {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-radius: var(--border-radius);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        
+        .question-card.flipped {
+            transform: rotateY(180deg);
+        }
+        
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+        
+        .card-front {
+            background-color: var(--card-bg);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .card-back {
+            background-color: #f8f9fa;
+            transform: rotateY(180deg);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+        }
+        
+        .question-header {
+            background-color: var(--primary);
+            color: white;
+            padding: 25px 30px;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+        }
+        
+        .field-badge {
+            display: inline-block;
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .question-text {
+            font-size: 1.5rem;
+            line-height: 1.4;
+            margin-top: 10px;
+        }
+        
+        .answers-container {
+            flex: 1;
+            padding: 30px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        
+        .answer-btn {
+            padding: 18px 20px;
+            background-color: var(--light);
+            border: 2px solid #e9ecef;
+            border-radius: var(--border-radius);
+            text-align: left;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .answer-btn:hover {
+            background-color: #f1f3f5;
+            border-color: var(--primary);
+        }
+        
+        .answer-btn.selected {
+            background-color: rgba(74, 111, 165, 0.1);
+            border-color: var(--primary);
+        }
+        
+        .answer-btn.correct {
+            background-color: rgba(40, 167, 69, 0.1);
+            border-color: var(--success);
+        }
+        
+        .answer-btn.incorrect {
+            background-color: rgba(220, 53, 69, 0.1);
+            border-color: var(--danger);
+        }
+        
+        .answer-letter {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 50%;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .answer-btn.correct .answer-letter {
+            background-color: var(--success);
+        }
+        
+        .answer-btn.incorrect .answer-letter {
+            background-color: var(--danger);
+        }
+        
+        /* Card Back (Result) */
+        .result-icon {
+            font-size: 5rem;
+            margin-bottom: 20px;
+        }
+        
+        .result-icon.correct {
+            color: var(--success);
+        }
+        
+        .result-icon.incorrect {
+            color: var(--danger);
+        }
+        
+        .result-title {
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+        }
+        
+        .correct-answer {
+            font-size: 1.4rem;
+            color: var(--primary);
+            font-weight: 600;
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .explanation {
+            font-size: 1.1rem;
+            color: #6c757d;
+            margin-top: 10px;
+            text-align: center;
+            max-width: 600px;
+            line-height: 1.5;
+        }
+        
+        /* Navigation */
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+        }
+        
+        .nav-btn {
+            padding: 14px 28px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .nav-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(74, 111, 165, 0.2);
+        }
+        
+        .nav-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .flip-btn {
+            background-color: var(--secondary);
+        }
+        
+        .flip-btn:hover {
+            background-color: #5a87a8;
+        }
+        
+        /* Results Screen */
+        .results-screen {
+            display: none;
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px var(--shadow);
+            padding: 50px;
+            max-width: 800px;
+            margin: 30px auto;
+            text-align: center;
+            animation: fadeIn 0.8s ease;
+        }
+        
+        .results-screen h2 {
+            color: var(--primary);
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+        }
+        
+        .score-circle {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: conic-gradient(var(--success) 0% 70%, #e9ecef 70% 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 40px;
+            position: relative;
+        }
+        
+        .score-circle::before {
+            content: '';
+            position: absolute;
+            width: 160px;
+            height: 160px;
+            background-color: white;
+            border-radius: 50%;
+        }
+        
+        .score-text {
+            position: relative;
+            z-index: 1;
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .results-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+        
+        .result-detail {
+            background-color: var(--light);
+            padding: 25px;
+            border-radius: var(--border-radius);
+        }
+        
+        .result-detail-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+        
+        .result-detail-label {
+            color: #6c757d;
+            font-size: 1rem;
+        }
+        
+        .results-actions {
+            margin-top: 40px;
+        }
+        
+        .restart-btn {
+            padding: 16px 40px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .restart-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(74, 111, 165, 0.3);
+        }
+        
+        /* Footer */
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #6c757d;
+            padding: 20px;
+            font-size: 0.9rem;
+            width: 100%;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .question-card-container {
+                height: 550px;
+            }
+            
+            .quiz-header {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .progress-container {
+                width: 100%;
+                margin-right: 0;
+            }
+            
+            .stats {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .setup-screen, .results-screen {
+                padding: 30px 20px;
+            }
+            
+            .question-card-container {
+                height: 600px;
+            }
+            
+            .question-text {
+                font-size: 1.3rem;
+            }
+            
+            .answers-container {
+                padding: 20px;
+            }
+            
+            .answer-btn {
+                padding: 15px;
+                font-size: 1rem;
+            }
+            
+            .navigation {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .test-options {
+                gap: 10px;
+            }
+            
+            .test-btn {
+                min-width: 100px;
+                padding: 12px 15px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .question-card-container {
+                height: 650px;
+            }
+            
+            .question-header {
+                padding: 20px;
+            }
+            
+            .question-text {
+                font-size: 1.2rem;
+            }
+            
+            .card-back {
+                padding: 25px;
+            }
+            
+            .result-title {
+                font-size: 1.8rem;
+            }
+            
+            .correct-answer {
+                font-size: 1.2rem;
+            }
+            
+            .results-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .score-circle {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .score-circle::before {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .score-text {
+                font-size: 2.5rem;
+            }
+        }
+        
+        /* Loading Animation */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 50px;
+        }
+        
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(74, 111, 165, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-brain"></i> Field Knowledge Challenge</h1>
+            <p class="subtitle">Test your knowledge across 300 different professional fields. Each question represents basic knowledge for experts in that field but can be challenging for the average person.</p>
+        </header>
+        
+        <!-- Setup Screen -->
+        <div class="setup-screen" id="setupScreen">
+            <h2>Select Quiz Length</h2>
+            <p>Choose how many questions you want to answer. The questions will be randomly selected from 300 different professional fields.</p>
+            
+            <div class="test-options">
+                <button class="test-btn" data-questions="10">10 Questions</button>
+                <button class="test-btn" data-questions="30">30 Questions</button>
+                <button class="test-btn" data-questions="50">50 Questions</button>
+                <button class="test-btn" data-questions="100">100 Questions</button>
+                <button class="test-btn active" data-questions="300">All 300 Questions</button>
+            </div>
+            
+            <button class="start-btn" id="startBtn">
+                <i class="fas fa-play-circle"></i> Start Quiz
+            </button>
+        </div>
+        
+        <!-- Loading -->
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Loading questions...</p>
+        </div>
+        
+        <!-- Quiz Container -->
+        <div class="quiz-container" id="quizContainer">
+            <div class="quiz-header">
+                <div class="progress-container">
+                    <div class="progress-text">
+                        <span>Question <span id="currentQuestion">1</span> of <span id="totalQuestions">10</span></span>
+                        <span id="progressPercent">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress" id="progressBar"></div>
+                    </div>
+                </div>
+                
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-value" id="correctCount">0</div>
+                        <div class="stat-label">Correct</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="incorrectCount">0</div>
+                        <div class="stat-label">Incorrect</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="remainingCount">10</div>
+                        <div class="stat-label">Remaining</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question-card-container">
+                <div class="question-card" id="questionCard">
+                    <!-- Front of Card -->
+                    <div class="card-front">
+                        <div class="question-header">
+                            <div class="field-badge" id="fieldBadge">Field Name</div>
+                            <div class="question-text" id="questionText">This is the question text that will appear here.</div>
+                        </div>
+                        
+                        <div class="answers-container" id="answersContainer">
+                            <!-- Answer buttons will be dynamically added here -->
+                        </div>
+                    </div>
+                    
+                    <!-- Back of Card (Result) -->
+                    <div class="card-back">
+                        <div class="result-icon" id="resultIcon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h2 class="result-title" id="resultTitle">Correct!</h2>
+                        <p class="correct-answer" id="correctAnswerText">The correct answer is: <span id="correctAnswer"></span></p>
+                        <p class="explanation">This is basic knowledge for professionals in <span id="fieldName">this field</span>.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="navigation">
+                <button class="nav-btn" id="prevBtn" disabled>
+                    <i class="fas fa-arrow-left"></i> Previous
+                </button>
+                
+                <button class="nav-btn flip-btn" id="flipBtn">
+                    <i class="fas fa-sync-alt"></i> Show Answer
+                </button>
+                
+                <button class="nav-btn" id="nextBtn">
+                    Next <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Results Screen -->
+        <div class="results-screen" id="resultsScreen">
+            <h2>Quiz Completed!</h2>
+            
+            <div class="score-circle">
+                <div class="score-text" id="finalScore">0%</div>
+            </div>
+            
+            <div class="results-details">
+                <div class="result-detail">
+                    <div class="result-detail-value" id="finalCorrect">0</div>
+                    <div class="result-detail-label">Correct Answers</div>
+                </div>
+                <div class="result-detail">
+                    <div class="result-detail-value" id="finalIncorrect">0</div>
+                    <div class="result-detail-label">Incorrect Answers</div>
+                </div>
+                <div class="result-detail">
+                    <div class="result-detail-value" id="finalTotal">0</div>
+                    <div class="result-detail-label">Total Questions</div>
+                </div>
+                <div class="result-detail">
+                    <div class="result-detail-value" id="finalPercentage">0%</div>
+                    <div class="result-detail-label">Success Rate</div>
+                </div>
+            </div>
+            
+            <p>You've completed a challenging quiz covering <span id="fieldsCovered">0</span> different professional fields.</p>
+            
+            <div class="results-actions">
+                <button class="restart-btn" id="restartBtn">
+                    <i class="fas fa-redo"></i> Take Another Quiz
+                </button>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Professional Field Knowledge Quiz &copy; 2023 | Questions sourced from 300 unique professional fields</p>
+        </footer>
+    </div>
+
+    // 在 HTML 文件中
+    <script>
+        const embeddedQuestions = {
+            "questions": [
+                {
+                "id": 1,
+                "field": "量子金融",
+                "question": "在Black-Scholes模型中，希腊字母'Vega'衡量的是什么？",
+                "incorrect_answers": ["对利率变化的敏感性", "对时间衰减的敏感性", "对股息收益率的敏感性"],
+                "correct_answer": "对波动率变化的敏感性"
+                },
+                {
+                "id": 2,
+                "field": "低温物理学",
+                "question": "在标准大气压下，液氦的沸点大约是多少？",
+                "incorrect_answers": ["-183°C", "-196°C", "-253°C"],
+                "correct_answer": "-269°C"
+                },
+                {
+                "id": 3,
+                "field": "古埃及学",
+                "question": "在古埃及象形文字中，表示“生命”或“生存”的符号是什么？",
+                "incorrect_answers": ["杰德柱（Djed）", "圣甲虫（Scarab）", "荷鲁斯之眼（Eye of Horus）"],
+                "correct_answer": "安卡（Ankh）"
+                },
+                {
+                "id": 4,
+                "field": "酶动力学",
+                "question": "在米氏方程中，Km（米氏常数）的物理意义是什么？",
+                "incorrect_answers": ["酶的最大反应速率", "酶与底物结合的解离常数", "酶促反应的活化能"],
+                "correct_answer": "反应速率达到最大速率一半时的底物浓度"
+                },
+                {
+                "id": 5,
+                "field": "中世纪攻城武器学",
+                "question": "中世纪的“配重式投石机”（Trebuchet）与“牵引式投石机”（Mangonel）最主要的机械区别是什么？",
+                "incorrect_answers": ["使用扭力而非重力", "投掷的是石头而非火球", "使用滑轮组而非杠杆"],
+                "correct_answer": "使用配重而非人力牵引作为动力"
+                },
+                {
+                "id": 6,
+                "field": "语音学",
+                "question": "在语音学中，区分/p/和/b/这两个音位的主要声学特征是什么？",
+                "incorrect_answers": ["发音部位（双唇 vs 唇齿）", "嗓音起始时间（VOT）", "音高变化"],
+                "correct_answer": "清浊对立（清辅音 vs 浊辅音）"
+                },
+                {
+                "id": 7,
+                "field": "天体测量学",
+                "question": "天文学中用于测量恒星距离的基本单位“秒差距”（parsec）是如何定义的？",
+                "incorrect_answers": ["光在真空中行走一年的距离", "地球到太阳的平均距离", "从地球看太阳的视直径对应的距离"],
+                "correct_answer": "当地球绕日轨道半径（1天文单位）所张的角为1角秒时对应的距离"
+                },
+                {
+                "id": 8,
+                "field": "纸莎草学",
+                "question": "古埃及用于制作书写材料的纸莎草纸，其主要原料来自哪种植物的哪个部分？",
+                "incorrect_answers": ["芦苇的秸秆", "棕榈树的树皮", "无花果树的树叶"],
+                "correct_answer": "纸莎草茎的髓芯"
+                },
+                {
+                "id": 9,
+                "field": "拓扑绝缘体",
+                "question": "拓扑绝缘体最本质的电子特性是什么？",
+                "incorrect_answers": ["体相和表面都是绝缘体", "体相和表面都是导体", "具有极高的载流子迁移率"],
+                "correct_answer": "体相是绝缘体，表面（或边缘）是受拓扑保护的导电态"
+                },
+                {
+                "id": 10,
+                "field": "葡萄酒酿造学",
+                "question": "在红葡萄酒的酿造过程中，“浸渍”（Maceration）这一步骤的主要目的是什么？",
+                "incorrect_answers": ["促进苹果酸-乳酸发酵", "增加酒精度", "去除酒石酸"],
+                "correct_answer": "从葡萄皮中提取颜色、单宁和风味物质"
+                },
+                {
+                "id": 11,
+                "field": "密码学（古典）",
+                "question": "在经典的维吉尼亚密码（Vigenère cipher）中，加密和解密过程依赖于什么？",
+                "incorrect_answers": ["一个单向哈希函数", "一对公钥和私钥", "一个固定的字母替换表"],
+                "correct_answer": "一个重复使用的关键词和对应的移位字母表"
+                },
+                {
+                "id": 12,
+                "field": "冰川学",
+                "question": "冰川运动的主要方式是哪两种？",
+                "incorrect_answers": ["滑动和崩塌", "蒸发和凝结", "蠕变和跳跃"],
+                "correct_answer": "内部变形（塑性流动）和基底滑动"
+                },
+                {
+                "id": 13,
+                "field": "中世纪手稿学",
+                "question": "在中世纪欧洲的泥金装饰手抄本中，常用于起首字母装饰的、极其昂贵的蓝色颜料“群青”（Ultramarine）通常由什么矿物制成？",
+                "incorrect_answers": ["钴矿石", "铜矿石", "赤铁矿"],
+                "correct_answer": "青金石（Lapis Lazuli）"
+                },
+                {
+                "id": 14,
+                "field": "量子计算",
+                "question": "量子计算中的“No-Cloning Theorem”（不可克隆定理）指出，以下哪项是不可能的？",
+                "incorrect_answers": ["精确测量一个量子比特的状态", "创建两个纠缠的量子比特", "将一个量子比特的状态传输到远处"],
+                "correct_answer": "完美复制一个未知的量子态"
+                },
+                {
+                "id": 15,
+                "field": "香水工业",
+                "question": "在香水工业中，作为定香剂（Fixative）使用、源自抹香鲸消化系统的著名动物性香料是什么？",
+                "incorrect_answers": ["麝香（Musk）", "灵猫香（Civet）", "海狸香（Castoreum）"],
+                "correct_answer": "龙涎香（Ambergris）"
+                },
+                {
+                "id": 16,
+                "field": "河流地貌学",
+                "question": "河流在平原地带形成的、曲流极度发育，最终因自然裁弯取直而被废弃的弧形河道被称为什么？",
+                "incorrect_answers": ["汊河（Anabranch）", "壶穴（Pothole）", "牛轭湖（Oxbow lake）"],
+                "correct_answer": "牛轭湖（Oxbow lake）"
+                },
+                {
+                "id": 17,
+                "field": "细胞信号转导",
+                "question": "在G蛋白偶联受体（GPCR）信号通路中，被激活的G蛋白α亚基通常通过什么机制失活？",
+                "incorrect_answers": ["被蛋白酶降解", "与βγ亚基重新结合", "被磷酸化"],
+                "correct_answer": "其固有的GTP酶活性将GTP水解为GDP"
+                },
+                {
+                "id": 18,
+                "field": "钟表制作（机械）",
+                "question": "在机械手表机芯中，负责将发条盒输出的不均匀扭矩转化为恒定周期摆动的机构叫什么？",
+                "incorrect_answers": ["擒纵轮（Escape Wheel）", "传动轮系（Gear Train）", "摆轮（Balance Wheel）"],
+                "correct_answer": "擒纵机构（Escapement），常与摆轮游丝系统协同工作"
+                },
+                {
+                "id": 19,
+                "field": "大气光学",
+                "question": "“幻日”（Sun dog）这种大气光学现象是由什么原因形成的？",
+                "incorrect_answers": ["云层中小水滴的衍射", "空气中尘埃的散射", "高层大气的电离"],
+                "correct_answer": "卷云中六角板状冰晶的折射"
+                },
+                {
+                "id": 20,
+                "field": "法证笔迹学",
+                "question": "在法庭科学中，笔迹鉴定主要依赖于对书写习惯哪个特性的分析？",
+                "incorrect_answers": ["书写内容", "书写工具", "书写速度"],
+                "correct_answer": "笔迹特征（如写法、结构、比例、连笔、压力等）的特定性和稳定性"
+                },
+                {
+                "id": 21,
+                "field": "半导体工艺",
+                "question": "在集成电路制造中，用于在硅片上定义晶体管等器件图形的核心光刻步骤中，涂在硅片上的感光材料叫什么？",
+                "incorrect_answers": ["蚀刻剂（Etchant）", "掺杂剂（Dopant）", "金属靶材（Target）"],
+                "correct_answer": "光刻胶（Photoresist）"
+                },
+                {
+                "id": 22,
+                "field": "民族音乐学",
+                "question": "印度古典音乐中，作为旋律框架、规定了音阶、强调音和旋律型的核心概念是什么？",
+                "incorrect_answers": ["塔拉（Tala）", "斯鲁蒂（Shruti）", "伽马卡（Gamaka）"],
+                "correct_answer": "拉格（Raga）"
+                },
+                {
+                "id": 23,
+                "field": "水文学",
+                "question": "在水文循环中，水从地表以下饱和带（含水层）进入河流或湖泊的过程被称为什么？",
+                "incorrect_answers": ["地表径流", "降水", "蒸散"],
+                "correct_answer": "地下水排泄或基流"
+                },
+                {
+                "id": 24,
+                "field": "免疫学",
+                "question": "在适应性免疫中，能够识别并结合抗原特定表位（epitope）的T细胞表面分子是什么？",
+                "incorrect_answers": ["主要组织相容性复合体（MHC）", "CD4或CD8共受体", "细胞因子受体"],
+                "correct_answer": "T细胞受体（TCR）"
+                },
+                {
+                "id": 25,
+                "field": "建筑声学",
+                "question": "在音乐厅设计中，为了获得丰富的早期反射声以增强音质的亲切感和清晰度，常在舞台上方悬挂的反射板被称为什么？",
+                "incorrect_answers": ["吸声体", "扩散体", "隔声板"],
+                "correct_answer": "云板或反射板"
+                },
+                {
+                "id": 26,
+                "field": "古气候学",
+                "question": "科学家通过分析极地冰芯中的什么来重建古代大气成分，特别是二氧化碳和甲烷的浓度？",
+                "incorrect_answers": ["冰的晶体结构", "捕获的灰尘颗粒", "冰的稳定同位素比率（如δ¹⁸O）"],
+                "correct_answer": "冰层中捕获的气泡"
+                },
+                {
+                "id": 27,
+                "field": "机器人运动学",
+                "question": "在机器人学中，描述机器人末端执行器位置和姿态（相对于基座坐标系）所需的独立参数的最小数量被称为什么？",
+                "incorrect_answers": ["动力学维度", "控制变量数", "关节自由度"],
+                "correct_answer": "自由度（DOF）"
+                },
+                {
+                "id": 28,
+                "field": "书籍修复",
+                "question": "在古籍和档案修复中，用于中和纸张酸性的常用碱性处理过程叫什么？",
+                "incorrect_answers": ["脱胶", "漂白", "加固"],
+                "correct_answer": "去酸"
+                },
+                {
+                "id": 29,
+                "field": "恒星天体物理学",
+                "question": "根据恒星演化理论，像太阳这样的低质量恒星在耗尽核心氢燃料后，将演变成什么？",
+                "incorrect_answers": ["中子星", "黑洞", "沃尔夫-拉叶星"],
+                "correct_answer": "红巨星，最终抛出行星状星云，核心成为白矮星"
+                },
+                {
+                "id": 30,
+                "field": "社会网络分析",
+                "question": "在社会网络分析中，衡量一个节点与其他节点直接连接数量的简单指标是什么？",
+                "incorrect_answers": ["接近中心性", "中介中心性", "特征向量中心性"],
+                "correct_answer": "度中心性"
+                },
+                {
+                "id": 31,
+                "field": "食品微生物学",
+                "question": "在酸奶制作中，引起牛奶凝固和产生特征性酸味的主要发酵菌是什么？",
+                "incorrect_answers": ["醋酸杆菌", "酵母菌", "乳酸链球菌"],
+                "correct_answer": "保加利亚乳杆菌和嗜热链球菌（通常共同作用）"
+                },
+                {
+                "id": 32,
+                "field": "地震学",
+                "question": "地震学家用哪个量表来衡量地震释放的总能量？",
+                "incorrect_answers": ["麦加利地震烈度（ Mercalli Intensity Scale）", "欧洲宏观地震度量表（EMS）", "日本气象厅震度等级（JMA）"],
+                "correct_answer": "矩震级（Moment Magnitude Scale）"
+                },
+                {
+                "id": 33,
+                "field": "印刷术（活字）",
+                "question": "在古登堡金属活字印刷术中，用于将铅、锡和锑熔合制成活字合金的主要优点是什么？",
+                "incorrect_answers": ["提高硬度以雕刻", "降低熔点易于铸造", "增加重量便于排版"],
+                "correct_answer": "铸造收缩率低，保证字形精确；硬度适中，耐用且不伤版"
+                },
+                {
+                "id": 34,
+                "field": "计算复杂性理论",
+                "question": "在计算复杂性理论中，NP完全（NP-complete）问题的定义核心是什么？",
+                "incorrect_answers": ["可以在多项式时间内解决", "是所有问题中最难的", "无法用任何算法解决"],
+                "correct_answer": "属于NP类，并且任何NP问题都可以在多项式时间内归约到它"
+                },
+                {
+                "id": 35,
+                "field": "宝石学",
+                "question": "区分天然钻石与其常见仿制品立方氧化锆（CZ）的快速有效方法是测试它们的什么性质？",
+                "incorrect_answers": ["颜色", "硬度", "折射率"],
+                "correct_answer": "导热性（钻石是极好的热导体，立方氧化锆是热的不良导体）"
+                },
+                {
+                "id": 36,
+                "field": "海洋生物学（深海）",
+                "question": "许多深海生物自身能够产生光，这种现象被称为什么？",
+                "incorrect_answers": ["磷光", "荧光", "反射"],
+                "correct_answer": "生物发光"
+                },
+                {
+                "id": 37,
+                "field": "货币银行学",
+                "question": "中央银行通过买卖政府债券来调节货币供应量和利率的操作被称为什么？",
+                "incorrect_answers": ["贴现窗口操作", "法定存款准备金率调整", "公开市场操作"],
+                "correct_answer": "公开市场操作"
+                },
+                {
+                "id": 38,
+                "field": "材料科学（陶瓷）",
+                "question": "传统陶瓷（如陶器、瓷器）在高温烧制后获得强度和硬度的主要物理化学过程是什么？",
+                "incorrect_answers": ["金属键形成", "高分子聚合", "玻璃化转变"],
+                "correct_answer": "玻璃相形成和结晶相生长（烧结）"
+                },
+                {
+                "id": 39,
+                "field": "认知神经科学",
+                "question": "在人类大脑中，与陈述性记忆（尤其是情景记忆）的形成和存储最为相关的主要结构是什么？",
+                "incorrect_answers": ["小脑", "基底神经节", "杏仁核"],
+                "correct_answer": "海马体"
+                },
+                {
+                "id": 40,
+                "field": "空气动力学（赛车）",
+                "question": "在F1赛车设计中，位于车头底部、利用地面效应将赛车“吸”在路面上的关键空气动力学部件是什么？",
+                "incorrect_answers": ["尾翼", "前定风翼", "扩散器"],
+                "correct_answer": "前定风翼和底盘共同形成的文丘里通道，以及后部的扩散器协同工作"
+                },
+                {
+                "id": 41,
+                "field": "古植物学",
+                "question": "通过分析沉积物中的什么微观化石，可以重建远古植被和气候？",
+                "incorrect_answers": ["恐龙牙齿", "硅化木", "昆虫翅膀"],
+                "correct_answer": "孢粉（孢子和花粉）"
+                },
+                {
+                "id": 42,
+                "field": "并行计算",
+                "question": "在并行计算中，描述程序串行部分所占比例，并预测增加处理器数量所能带来加速上限的定律是什么？",
+                "incorrect_answers": ["摩尔定律", "香农定律", "梅特卡夫定律"],
+                "correct_answer": "阿姆达尔定律"
+                },
+                {
+                "id": 43,
+                "field": "皮革鞣制",
+                "question": "将动物生皮转化为耐用、不易腐烂的皮革的最古老和最常见的化学方法，使用的是什么鞣制剂？",
+                "incorrect_answers": ["铝盐", "甲醛", "鱼油"],
+                "correct_answer": "植物单宁（鞣酸）"
+                },
+                {
+                "id": 44,
+                "field": "射电天文学",
+                "question": "射电天文学家使用一种技术将多个小型望远镜的信号组合起来，等效于一个巨大口径的望远镜，这种技术叫什么？",
+                "incorrect_answers": ["自适应光学", "光谱分析", "光度测量"],
+                "correct_answer": "干涉测量"
+                },
+                {
+                "id": 45,
+                "field": "药代动力学",
+                "question": "描述药物在体内吸收、分布后，血药浓度下降一半所需时间的参数是什么？",
+                "incorrect_answers": ["达峰时间", "药时曲线下面积", "清除率"],
+                "correct_answer": "消除半衰期"
+                },
+                {
+                "id": 46,
+                "field": "纹章学",
+                "question": "在纹章学中，盾形纹章背景的颜色被称为什么？",
+                "incorrect_answers": ["图案", "分隔线", "衬底"],
+                "correct_answer": "底色或场"
+                },
+                {
+                "id": 47,
+                "field": "流体力学（微观）",
+                "question": "在微流体芯片中，由于通道尺寸微小，流体惯性力与粘性力之比（雷诺数）通常很低，此时流动呈现什么主要特征？",
+                "incorrect_answers": ["高度湍流", "存在明显的涡旋", "可压缩性显著"],
+                "correct_answer": "层流（无混合的平滑流线）"
+                },
+                {
+                "id": 48,
+                "field": "昆虫分类学",
+                "question": "昆虫区别于其他节肢动物（如蜘蛛、甲壳类）的最关键形态特征是什么？",
+                "incorrect_answers": ["有六条腿", "有复眼", "身体分节"],
+                "correct_answer": "身体分为头、胸、腹三部分，胸部有三对足（六足）"
+                },
+                {
+                "id": 49,
+                "field": "歌剧演唱",
+                "question": "在美声唱法中，男高音和女高音为了在超高音区获得明亮、有穿透力的声音而使用的一种特殊嗓音技巧被称为什么？",
+                "incorrect_answers": ["胸声", "气声", "假声"],
+                "correct_answer": "头声或混声区以上的高位置共鸣，常被提及为“掩盖”或“关闭”技巧"
+                },
+                {
+                "id": 50,
+                "field": "量子场论",
+                "question": "在粒子物理的标准模型中，赋予基本粒子质量的场叫什么？",
+                "incorrect_answers": ["电磁场", "胶子场", "引力场"],
+                "correct_answer": "希格斯场"
+                },
+                {
+                "id": 51,
+                "field": "树木年代学",
+                "question": "通过分析树木年轮的什么特征，可以推断出过去特定年份的气候条件（如干旱）？",
+                "incorrect_answers": ["年轮的颜色", "年轮中树脂的含量", "年轮的同心圆形状"],
+                "correct_answer": "年轮的宽度（窄轮通常表示生长条件不利，如干旱）"
+                },
+                {
+                "id": 52,
+                "field": "计算机图形学（渲染）",
+                "question": "在3D计算机图形学中，用于计算物体表面在光源照射下明暗效果的经典局部光照模型是什么？",
+                "incorrect_answers": ["光线追踪", "辐射度算法", "光子映射"],
+                "correct_answer": "冯氏光照模型（Phong Reflection Model）"
+                },
+                {
+                "id": 53,
+                "field": "毒理学",
+                "question": "毒理学中，用于描述化学物质导致50%的受试动物死亡的单次剂量参数是什么？",
+                "incorrect_answers": ["LOAEL", "NOAEL", "参考剂量"],
+                "correct_answer": "半数致死剂量（LD50）"
+                },
+                {
+                "id": 54,
+                "field": "中世纪骑士制度",
+                "question": "在中世纪欧洲，一个年轻贵族成为骑士的仪式中，最重要的环节是什么？",
+                "incorrect_answers": ["获得盾牌和纹章", "进行骑士授甲礼", "宣誓效忠领主"],
+                "correct_answer": "授剑礼（通常由领主或神职人员用剑拍击其肩部）"
+                },
+                {
+                "id": 55,
+                "field": "等离子体物理",
+                "question": "在受控核聚变研究（如托卡马克装置）中，用于加热等离子体达到聚变温度的一种重要方法，利用电磁波在特定频率下与离子或电子共振，这种方法叫什么？",
+                "incorrect_answers": ["欧姆加热", "激光加热", "粒子束注入加热"],
+                "correct_answer": "射频波加热"
+                },
+                {
+                "id": 56,
+                "field": "音乐理论（对位法）",
+                "question": "在复调音乐的对位法中，一个声部严格模仿另一个声部，但在时间上错开一定拍子进入，这种形式被称为什么？",
+                "incorrect_answers": ["卡农", "赋格", "创意曲"],
+                "correct_answer": "卡农"
+                },
+                {
+                "id": 57,
+                "field": "土壤科学",
+                "question": "根据美国农业部的土壤质地分类三角图，由大致等量的砂粒、粉粒和粘粒组成的土壤质地被称为什么？",
+                "incorrect_answers": ["砂质壤土", "粘壤土", "粉砂壤土"],
+                "correct_answer": "壤土"
+                },
+                {
+                "id": 58,
+                "field": "法医毒物分析",
+                "question": "在法医毒物学中，筛选生物样本（如血液、尿液）中未知毒物或药物的最常用初筛技术是什么？",
+                "incorrect_answers": ["原子吸收光谱", "高效液相色谱", "质谱"],
+                "correct_answer": "免疫分析法（如ELISA）或气相色谱/质谱联用"
+                },
+                {
+                "id": 59,
+                "field": "星系天文学",
+                "question": "根据哈勃星系分类法，具有明亮核球和清晰盘状结构，但没有明显旋臂的星系被称为什么？",
+                "incorrect_answers": ["椭圆星系", "旋涡星系", "不规则星系"],
+                "correct_answer": "透镜状星系"
+                },
+                {
+                "id": 60,
+                "field": "博弈论",
+                "question": "在博弈论中，一个策略组合，其中每个参与者的策略都是对其他参与者策略的最优反应，这样的稳定状态被称为什么？",
+                "incorrect_answers": ["帕累托最优", "占优策略均衡", "最大最小解"],
+                "correct_answer": "纳什均衡"
+                },
+                {
+                "id": 61,
+                "field": "酿造学（啤酒）",
+                "question": "在啤酒酿造中，将麦芽汁与啤酒花一起煮沸的主要目的之一是什么？",
+                "incorrect_answers": ["促进酒精发酵", "增加麦芽甜味", "杀死所有酵母"],
+                "correct_answer": "提取啤酒花的苦味、香味和防腐成分"
+                },
+                {
+                "id": 62,
+                "field": "构造地质学",
+                "question": "地壳中规模巨大、两侧岩层发生显著相对位移的断裂构造被称为什么？",
+                "incorrect_answers": ["节理", "褶皱", "劈理"],
+                "correct_answer": "断层"
+                },
+                {
+                "id": 63,
+                "field": "色彩科学",
+                "question": "在色彩学中，用于定量描述人眼对光颜色的感知，包含色调、明度和饱和度三个属性的系统是什么？",
+                "incorrect_answers": ["RGB模型", "CMYK模型", "CIE XYZ色彩空间"],
+                "correct_answer": "HSL或HSV色彩空间"
+                },
+                {
+                "id": 64,
+                "field": "发育生物学",
+                "question": "在早期胚胎发育中，细胞命运被逐渐限定，最终形成三个原始胚层的过程被称为什么？",
+                "incorrect_answers": ["受精", "卵裂", "器官发生"],
+                "correct_answer": "原肠胚形成"
+                },
+                {
+                "id": 65,
+                "field": "拍卖理论",
+                "question": "在独立私有价值模型的英式拍卖中，对于风险中性的竞拍者来说，最优的出价策略是什么？",
+                "incorrect_answers": ["出价始终高于自己的估价", "出价等于自己估价的一半", "出价等于第二高估价的期望值"],
+                "correct_answer": "一直出价直到价格达到自己的私人估价为止"
+                },
+                {
+                "id": 66,
+                "field": "火山学",
+                "question": "火山喷发时，由炙热的火山气体、火山灰和岩石碎屑组成的，沿山坡高速滚动的致命流体被称为什么？",
+                "incorrect_answers": ["熔岩流", "火山泥流", "火山碎屑流"],
+                "correct_answer": "火山碎屑流"
+                },
+                {
+                "id": 67,
+                "field": "数字信号处理",
+                "question": "将连续时间信号转换为数字信号进行处理时，为了避免频谱混叠，采样频率必须满足什么条件？",
+                "incorrect_answers": ["高于信号的最高频率", "低于信号的最高频率", "等于信号的最高频率"],
+                "correct_answer": "至少高于信号最高频率的两倍（奈奎斯特-香农采样定理）"
+                },
+                {
+                "id": 68,
+                "field": "鱼类学",
+                "question": "鱼类通过调节体内哪个器官中气体的体积来控制浮力？",
+                "incorrect_answers": ["肝脏", "肠道", "心脏"],
+                "correct_answer": "鳔"
+                },
+                {
+                "id": 69,
+                "field": "知识产权法（专利）",
+                "question": "一项发明要获得专利权，必须满足的新颖性、创造性和实用性，在中国专利法中通常被称为什么？",
+                "incorrect_answers": ["三性原则", "授权要件", "专利性"],
+                "correct_answer": "授予专利权的实质性条件"
+                },
+                {
+                "id": 70,
+                "field": "恒星光谱学",
+                "question": "天文学家根据恒星的表面温度和光谱特征，将恒星分为O, B, A, F, G, K, M等类型。这个序列主要是基于什么谱线的强弱？",
+                "incorrect_answers": ["氦线", "铁线", "分子吸收带"],
+                "correct_answer": "氢谱线（巴尔末线系）的强弱，以及金属线等其他特征"
+                },
+                {
+                "id": 71,
+                "field": "心理测量学",
+                "question": "在心理测验中，衡量一个测验在不同时间或条件下测量结果一致性的指标被称为什么？",
+                "incorrect_answers": ["效度", "区分度", "标准化"],
+                "correct_answer": "信度"
+                },
+                {
+                "id": 72,
+                "field": "冶金学（钢铁）",
+                "question": "将生铁（铸铁）转化为钢的关键工业过程，其主要目的是降低生铁中的什么元素含量？",
+                "incorrect_answers": ["硅", "锰", "碳"],
+                "correct_answer": "碳"
+                },
+                {
+                "id": 73,
+                "field": "动物行为学",
+                "question": "在动物行为学中，一种刺激在关键发育期被印刻在动物记忆中，并影响其后续社会行为（如跟随）的现象被称为什么？",
+                "incorrect_answers": ["条件反射", "习惯化", "试错学习"],
+                "correct_answer": "印记"
+                },
+                {
+                "id": 74,
+                "field": "摄影术（胶片）",
+                "question": "在传统黑白胶片摄影中，曝光后的胶片在暗房中进行的第一个化学处理步骤叫什么？",
+                "incorrect_answers": ["定影", "停显", "水洗"],
+                "correct_answer": "显影"
+                },
+                {
+                "id": 75,
+                "field": "粒子物理（探测）",
+                "question": "在高能物理实验中，用于探测和识别带电粒子，并测量其动量的常见探测器类型是什么？",
+                "incorrect_answers": ["量能器", "切伦科夫探测器", "闪烁体探测器"],
+                "correct_answer": "径迹探测器（如硅微条探测器、时间投影室TPC）"
+                },
+                {
+                "id": 76,
+                "field": "湿地生态学",
+                "question": "湿地在净化水体方面扮演着重要角色，这个过程主要通过物理过滤、化学沉淀和什么作用实现？",
+                "incorrect_answers": ["蒸发作用", "酸化作用", "氧化还原作用"],
+                "correct_answer": "微生物降解和植物吸收（生物作用）"
+                },
+                {
+                "id": 77,
+                "field": "组合数学",
+                "question": "从n个不同元素中，不考虑顺序取出k个元素，所有可能取法的总数在组合数学中叫什么？",
+                "incorrect_answers": ["排列数", "阶乘", "幂集"],
+                "correct_answer": "组合数，记作 C(n, k) 或 nCk"
+                },
+                {
+                "id": 78,
+                "field": "珊瑚礁生物学",
+                "question": "造礁珊瑚绚丽的颜色主要来自于与其共生的什么生物？",
+                "incorrect_answers": ["蓝细菌", "真菌", "甲藻"],
+                "correct_answer": "虫黄藻（一种甲藻）"
+                },
+                {
+                "id": 79,
+                "field": "操作系统",
+                "question": "在操作系统中，管理处理器（CPU）时间，决定哪个进程在何时运行的核心组件是什么？",
+                "incorrect_answers": ["内存管理器", "文件系统", "设备驱动程序"],
+                "correct_answer": "进程调度器"
+                },
+                {
+                "id": 80,
+                "field": "古罗马工程",
+                "question": "古罗马人建造的、用于从远处向城市输送淡水的标志性工程是什么？",
+                "incorrect_answers": ["下水道", "斗兽场", "万神殿"],
+                "correct_answer": "高架输水渠"
+                },
+                {
+                "id": 81,
+                "field": "生物信息学",
+                "question": "在生物信息学中，用于比较两条DNA或蛋白质序列相似性的基本算法是什么？",
+                "incorrect_answers": ["聚类分析", "主成分分析", "隐马尔可夫模型"],
+                "correct_answer": "序列比对算法（如BLAST, Smith-Waterman）"
+                },
+                {
+                "id": 82,
+                "field": "矿物学",
+                "question": "摩氏硬度计中，用来定义硬度为10的标准矿物是什么？",
+                "incorrect_answers": ["刚玉", "黄玉", "石英"],
+                "correct_answer": "金刚石"
+                },
+                {
+                "id": 83,
+                "field": "戏剧理论",
+                "question": "在亚里士多德的《诗学》中，悲剧引起的、使观众情感得到净化和释放的效果被称为什么？",
+                "incorrect_answers": ["模仿", "发现", "突转"],
+                "correct_answer": "卡塔西斯（Catharsis）"
+                },
+                {
+                "id": 84,
+                "field": "微波工程",
+                "question": "在微波传输线（如同轴线、波导）中，当负载阻抗与传输线特性阻抗不匹配时，会导致信号反射。衡量这种反射大小的参数是什么？",
+                "incorrect_answers": ["衰减常数", "相位常数", "品质因数"],
+                "correct_answer": "电压驻波比或反射系数"
+                },
+                {
+                "id": 85,
+                "field": "孢粉学",
+                "question": "孢粉学是研究什么的科学？",
+                "incorrect_answers": ["细菌孢子", "真菌菌丝", "蕨类植物的叶子"],
+                "correct_answer": "现代和化石的孢子和花粉"
+                },
+                {
+                "id": 86,
+                "field": "计算机视觉",
+                "question": "在计算机视觉中，从二维图像中恢复三维场景结构和摄像机运动的技术通常被称为什么？",
+                "incorrect_answers": ["图像分割", "目标检测", "光流估计"],
+                "correct_answer": "运动恢复结构或三维重建"
+                },
+                {
+                "id": 87,
+                "field": "内分泌学",
+                "question": "人体内由胰岛β细胞分泌的、负责降低血糖的激素是什么？",
+                "incorrect_answers": ["胰高血糖素", "肾上腺素", "皮质醇"],
+                "correct_answer": "胰岛素"
+                },
+                {
+                "id": 88,
+                "field": "航空法规",
+                "question": "在国际民航中，规定飞机在飞行中必须保持一定垂直间隔（例如1000英尺）的最低标准，以防止相撞的系统被称为什么？",
+                "incorrect_answers": ["TCAS", "GPS导航", "ILS"],
+                "correct_answer": "高度层设置（飞行高度层）"
+                },
+                {
+                "id": 89,
+                "field": "语音合成",
+                "question": "现代基于深度学习的语音合成系统中，通常先将文本转换为一种中间表示，再由此生成语音波形。这种中间表示通常叫什么？",
+                "incorrect_answers": ["音素串", "频谱图", "梅尔频率倒谱系数"],
+                "correct_answer": "梅尔谱图或声学特征（如由Tacotron等系统产生的）"
+                },
+                {
+                "id": 90,
+                "field": "农业土壤学",
+                "question": "在农业生产中，通过种植豆科植物（如苜蓿、大豆）来增加土壤氮素含量的方法，主要利用了这些植物与什么微生物的共生关系？",
+                "incorrect_answers": ["菌根真菌", "固碳细菌", "解磷细菌"],
+                "correct_answer": "根瘤菌"
+                },
+                {
+                "id": 91,
+                "field": "数值分析",
+                "question": "求解非线性方程 f(x)=0 的经典迭代方法，利用函数在某点的切线进行逼近，这种方法叫什么？",
+                "incorrect_answers": ["二分法", "割线法", "雅可比迭代法"],
+                "correct_answer": "牛顿法（Newton-Raphson方法）"
+                },
+                {
+                "id": 92,
+                "field": "鸟类学",
+                "question": "大多数鸟类为了飞行，演化出了许多适应特征。其中，鸟类骨骼的一个显著特点是什么？",
+                "incorrect_answers": ["骨骼非常厚重", "头骨特别坚硬", "中空且充满空气（气质骨）"],
+                "correct_answer": "中空且充满空气（气质骨），以减轻重量"
+                },
+                {
+                "id": 93,
+                "field": "公司金融",
+                "question": "在公司金融中，用于评估一个项目或投资是否值得进行的、将未来现金流折现到现值的常用方法是什么？",
+                "incorrect_answers": ["回收期法", "会计收益率法", "内部收益率法"],
+                "correct_answer": "净现值法"
+                },
+                {
+                "id": 94,
+                "field": "地质年代学",
+                "question": "地质学家通过测量岩石中放射性母体同位素与其稳定子体同位素的比率来确定岩石的绝对年龄，这种方法基于什么原理？",
+                "incorrect_answers": ["相对定年", "化石定年", "地层层序律"],
+                "correct_answer": "放射性衰变定律"
+                },
+                {
+                "id": 95,
+                "field": "模式识别",
+                "question": "在机器学习中，一种简单但常用的分类算法，通过找到特征空间中距离待分类点最近的k个训练样本的类别来进行投票决策，这种方法叫什么？",
+                "incorrect_answers": ["支持向量机", "决策树", "朴素贝叶斯"],
+                "correct_answer": "k-近邻算法"
+                },
+                {
+                "id": 96,
+                "field": "声学（乐器）",
+                "question": "对于弦乐器（如小提琴、吉他），决定其空弦基频的主要物理参数是什么？（假设弦的材质和张力固定）",
+                "incorrect_answers": ["琴身的形状", "琴弓或拨片的速度", "弦的直径"],
+                "correct_answer": "弦的长度"
+                },
+                {
+                "id": 97,
+                "field": "病理学",
+                "question": "在病理学诊断中，从活体患者身上切取一小块病变组织进行显微镜检查，以明确疾病性质的过程被称为什么？",
+                "incorrect_answers": ["尸检", "细胞学检查", "影像学检查"],
+                "correct_answer": "活检"
+                },
+                {
+                "id": 98,
+                "field": "空间推进",
+                "question": "目前大多数航天器在太空中调整姿态和轨道所使用的、通过高速喷出工质产生推力的发动机被称为什么？",
+                "incorrect_answers": ["离子推进器", "太阳帆", "核热推进"],
+                "correct_answer": "化学火箭发动机（冷气或单组元/双组元推进剂）"
+                },
+                {
+                "id": 99,
+                "field": "数理逻辑",
+                "question": "在命题逻辑中，如果一个命题在所有可能的真值赋值下都为真，那么这个命题被称为什么？",
+                "incorrect_answers": ["可满足式", "矛盾式", "蕴含式"],
+                "correct_answer": "永真式或重言式"
+                },
+                {
+                "id": 100,
+                "field": "海洋化学",
+                "question": "海水的盐度主要由哪些离子决定？",
+                "incorrect_answers": ["钙离子和碳酸根离子", "钾离子和硫酸根离子", "镁离子和碳酸氢根离子"],
+                "correct_answer": "氯离子和钠离子"
+                },
+                {
+                "id": 101,
+                "field": "计算机体系结构",
+                "question": "在CPU的指令执行周期中，从内存中读取指令的步骤被称为什么？",
+                "incorrect_answers": ["解码", "执行", "写回"],
+                "correct_answer": "取指"
+                },
+                {
+                "id": 102,
+                "field": "人类学（骨骼）",
+                "question": "法医人类学家通过检查骨骼的哪个部位，可以最可靠地判断成年个体的性别？",
+                "incorrect_answers": ["头骨的大小", "四肢骨的长度", "锁骨"],
+                "correct_answer": "骨盆（特别是耻骨联合和坐骨切迹的形状）"
+                },
+                {
+                "id": 103,
+                "field": "项目管理",
+                "question": "在项目管理中，用于可视化项目任务、依赖关系和关键路径的常用图表工具是什么？",
+                "incorrect_answers": ["饼图", "散点图", "控制图"],
+                "correct_answer": "甘特图或网络图（如PERT图）"
+                },
+                {
+                "id": 104,
+                "field": "植物生理学",
+                "question": "植物通过叶片上的微小孔隙吸收二氧化碳并释放氧气和水蒸气，这个过程被称为什么？",
+                "incorrect_answers": ["呼吸作用", "蒸腾作用", "光合作用"],
+                "correct_answer": "光合作用中的气体交换，但孔隙本身进行的是“蒸腾作用”和气体交换，此题强调孔隙，故最佳答案为“气体交换通过气孔进行”，但选项有限。原意是问这个孔隙和相关过程。这里调整问题以避免歧义：植物叶片上进行气体交换的主要结构是什么？",
+                "incorrect_answers": ["叶脉", "角质层", "栅栏组织"],
+                "correct_answer": "气孔"
+                },
+                {
+                "id": 105,
+                "field": "雷达技术",
+                "question": "雷达系统通过测量发射信号和回波信号之间的什么变化来测定目标的速度？",
+                "incorrect_answers": ["振幅差", "相位差", "时间延迟"],
+                "correct_answer": "频率差（多普勒频移）"
+                },
+                {
+                "id": 106,
+                "field": "文艺复兴艺术",
+                "question": "文艺复兴时期艺术家发展出的一种在二维平面上创造三维空间幻觉的绘画技巧被称为什么？",
+                "incorrect_answers": ["明暗对照法", "晕涂法", "拼贴"],
+                "correct_answer": "线性透视"
+                },
+                {
+                "id": 107,
+                "field": "药理学",
+                "question": "在药理学中，指药物产生最大效应的能力（与“效能”相关）的术语是什么？",
+                "incorrect_answers": ["效价", "治疗指数", "亲和力"],
+                "correct_answer": "效能"
+                },
+                {
+                "id": 108,
+                "field": "宇宙学",
+                "question": "当前宇宙学标准模型认为，宇宙的绝大部分能量密度由什么组成？",
+                "incorrect_answers": ["重子物质（普通物质）", "中微子", "光子辐射"],
+                "correct_answer": "暗能量和暗物质"
+                },
+                {
+                "id": 109,
+                "field": "运筹学",
+                "question": "运筹学中，用于解决资源分配问题，在满足一系列线性约束条件下最大化或最小化一个线性目标函数的数学方法是什么？",
+                "incorrect_answers": ["动态规划", "排队论", "非线性规划"],
+                "correct_answer": "线性规划"
+                },
+                {
+                "id": 110,
+                "field": "比较解剖学",
+                "question": "在不同物种中，由于适应不同功能而形态差异很大，但起源于共同祖先结构的器官被称为什么？",
+                "incorrect_answers": ["同功器官", "痕迹器官", "共生器官"],
+                "correct_answer": "同源器官"
+                },
+                {
+                "id": 111,
+                "field": "光纤通信",
+                "question": "在光纤传输中，导致光信号强度随距离衰减的主要物理机制是什么？",
+                "incorrect_answers": ["折射", "干涉", "偏振"],
+                "correct_answer": "吸收和散射"
+                },
+                {
+                "id": 112,
+                "field": "中世纪哲学",
+                "question": "中世纪经院哲学家托马斯·阿奎那试图用逻辑论证来证明上帝的存在，其中最著名的五个论证被统称为什么？",
+                "incorrect_answers": ["本体论证明", "宇宙论证明", "设计论证明"],
+                "correct_answer": "五路证明"
+                },
+                {
+                "id": 113,
+                "field": "电化学",
+                "question": "在电化学电池中，发生氧化反应（失去电子）的电极被称为什么？",
+                "incorrect_answers": ["阴极", "正极", "集流体"],
+                "correct_answer": "阳极"
+                },
+                {
+                "id": 114,
+                "field": "群体遗传学",
+                "question": "描述在一个理想化的大群体中，等位基因频率和基因型频率如何在没有进化因素影响下世代保持稳定的定律是什么？",
+                "incorrect_answers": ["自然选择定律", "连锁不平衡定律", "遗传漂变定律"],
+                "correct_answer": "哈迪-温伯格平衡定律"
+                },
+                {
+                "id": 115,
+                "field": "建筑结构",
+                "question": "在哥特式大教堂中，用于抵消拱顶向外的侧推力，并将其传递到地面的外部石质支撑结构被称为什么？",
+                "incorrect_answers": ["扶壁", "拱肋", "墩柱"],
+                "correct_answer": "飞扶壁"
+                },
+                {
+                "id": 116,
+                "field": "自然语言处理",
+                "question": "在自然语言处理中，将文本分解成有意义的单元（如单词、词根）的过程通常被称为什么？",
+                "incorrect_answers": ["词性标注", "句法分析", "语义角色标注"],
+                "correct_answer": "分词或词形还原/词干提取"
+                },
+                {
+                "id": 117,
+                "field": "生理学（肌肉）",
+                "question": "骨骼肌收缩的基本功能单位，由粗细两种肌丝规则排列组成的结构被称为什么？",
+                "incorrect_answers": ["肌原纤维", "肌小节", "肌纤维"],
+                "correct_answer": "肌小节"
+                },
+                {
+                "id": 118,
+                "field": "投资学",
+                "question": "在现代投资组合理论中，用于衡量一项投资风险（波动性）相对于整个市场风险比例的指标是什么？",
+                "incorrect_answers": ["标准差", "方差", "夏普比率"],
+                "correct_answer": "贝塔系数"
+                },
+                {
+                "id": 119,
+                "field": "晶体学",
+                "question": "描述晶体内部原子或离子在三维空间周期性排列规律性的基本概念是什么？",
+                "incorrect_answers": ["晶面", "晶棱", "晶胞"],
+                "correct_answer": "晶格"
+                },
+                {
+                "id": 120,
+                "field": "音乐史（巴洛克）",
+                "question": "巴洛克时期的一种重要音乐体裁，通常为键盘乐器而作，基于一个固定低音主题进行一系列变奏，这种形式被称为什么？",
+                "incorrect_answers": ["托卡塔", "赋格", "大协奏曲"],
+                "correct_answer": "帕萨卡利亚或恰空舞曲"
+                },
+                {
+                "id": 121,
+                "field": "控制理论",
+                "question": "在自动控制系统中，根据输出量与设定值之间的误差，按比例、积分、微分进行运算来调整控制量的经典控制器被称为什么？",
+                "incorrect_answers": ["模糊控制器", "状态反馈控制器", "自适应控制器"],
+                "correct_answer": "PID控制器"
+                },
+                {
+                "id": 122,
+                "field": "爬虫学",
+                "question": "蛇类通过什么器官感知空气中微弱的化学气味，从而追踪猎物或导航？",
+                "incorrect_answers": ["鼻子", "舌头", "犁鼻器"],
+                "correct_answer": "舌头收集化学物质，传递给犁鼻器进行分析"
+                },
+                {
+                "id": 123,
+                "field": "微观经济学",
+                "question": "在完全竞争市场中，单个厂商面临的需求曲线是什么形状？",
+                "incorrect_answers": ["向下倾斜", "向上倾斜", "垂直"],
+                "correct_answer": "水平线（完全弹性）"
+                },
+                {
+                "id": 124,
+                "field": "岩石学",
+                "question": "由岩浆在地下深处冷却结晶形成的岩石被称为什么岩？",
+                "incorrect_answers": ["沉积岩", "变质岩", "火山岩"],
+                "correct_answer": "侵入岩"
+                },
+                {
+                "id": 125,
+                "field": "数据库系统",
+                "question": "在关系型数据库中，确保数据一致性和减少数据冗余的一组规则被称为什么？",
+                "incorrect_answers": ["索引", "事务", "视图"],
+                "correct_answer": "范式"
+                },
+                {
+                "id": 126,
+                "field": "植物分类学",
+                "question": "在植物分类中，介于科和属之间的分类等级是什么？",
+                "incorrect_answers": ["目", "种", "纲"],
+                "correct_answer": "族"
+                },
+                {
+                "id": 127,
+                "field": "激光物理",
+                "question": "激光产生的三个基本条件是什么？",
+                "incorrect_answers": ["低温、真空、强磁场", "粒子数反转、光学谐振腔、偏振", "高压、高温、单色光"],
+                "correct_answer": "粒子数反转、光学谐振腔、受激辐射"
+                },
+                {
+                "id": 128,
+                "field": "中世纪文学",
+                "question": "中古英语文学中最著名的作品之一，讲述一群朝圣者在旅途中讲故事，这部作品叫什么？",
+                "incorrect_answers": ["《贝奥武夫》", "《亚瑟王之死》", "《玫瑰传奇》"],
+                "correct_answer": "《坎特伯雷故事集》"
+                },
+                {
+                "id": 129,
+                "field": "热力学",
+                "question": "热力学第二定律的一种常见表述是：不可能把热从低温物体传到高温物体而不引起其他变化。这是谁的表述？",
+                "incorrect_answers": ["开尔文-普朗克表述", "卡拉西奥多里表述", "吉布斯表述"],
+                "correct_answer": "克劳修斯表述"
+                },
+                {
+                "id": 130,
+                "field": "寄生虫学",
+                "question": "疟疾是由哪种寄生虫引起的？",
+                "incorrect_answers": ["细菌", "病毒", "阿米巴原虫"],
+                "correct_answer": "疟原虫（原生动物）"
+                },
+                {
+                "id": 131,
+                "field": "软件工程",
+                "question": "在软件开发中，一种强调以可工作软件为中心、快速迭代、拥抱变化的方法论被称为什么？",
+                "incorrect_answers": ["瀑布模型", "螺旋模型", "V模型"],
+                "correct_answer": "敏捷开发"
+                },
+                {
+                "id": 132,
+                "field": "地貌学",
+                "question": "由风蚀作用形成的、孤立突起的平顶小山或石柱，常见于干旱地区，这种地貌被称为什么？",
+                "incorrect_answers": ["峰丛", "雅丹", "风蚀城堡"],
+                "correct_answer": "风蚀柱或风蚀残丘，但常见专指平顶的为“方山”或“平顶山”，风蚀形成的典型是“风蚀柱”和“雅丹”。此题指孤立平顶，可能是“风蚀残丘”或“平顶山”。为精确，调整为：由风蚀作用形成的、形态各异的孤立石柱，这种地貌常被比喻为什么？",
+                "incorrect_answers": ["魔鬼城", "蘑菇石", "石林"],
+                "correct_answer": "风蚀柱（或石蘑菇）"
+                },
+                {
+                "id": 133,
+                "field": "血液学",
+                "question": "人体血液中负责输送氧气的主要细胞是什么？",
+                "incorrect_answers": ["白细胞", "血小板", "血浆"],
+                "correct_answer": "红细胞"
+                },
+                {
+                "id": 134,
+                "field": "声纳技术",
+                "question": "声纳系统利用声波在水下的传播来探测目标。主动声纳和被动声纳的主要区别是什么？",
+                "incorrect_answers": ["工作频率不同", "探测距离不同", "使用的换能器不同"],
+                "correct_answer": "主动声纳自己发射声波并接收回波；被动声纳只接收目标发出的噪声"
+                },
+                {
+                "id": 135,
+                "field": "艺术史（中国画）",
+                "question": "中国传统绘画中，用墨色的浓淡干湿来表现物象，而不施或略施色彩的画法被称为什么？",
+                "incorrect_answers": ["工笔画", "青绿山水", "没骨画"],
+                "correct_answer": "水墨画"
+                },
+                {
+                "id": 136,
+                "field": "高分子化学",
+                "question": "通过化学反应将许多小分子（单体）连接起来形成长链大分子的过程被称为什么？",
+                "incorrect_answers": ["降解", "交联", "共混"],
+                "correct_answer": "聚合"
+                },
+                {
+                "id": 137,
+                "field": "海洋学（物理）",
+                "question": "驱动全球大洋环流（如湾流）的主要长期动力来源是什么？",
+                "incorrect_answers": ["月球引力", "地球自转", "海底地形"],
+                "correct_answer": "风和海水密度差异（热盐环流）"
+                },
+                {
+                "id": 138,
+                "field": "经济学说史",
+                "question": "亚当·斯密在其著作《国富论》中提出的、描述个人追求自身利益最终促进社会整体福利的著名概念是什么？",
+                "incorrect_answers": ["比较优势", "边际效用", "理性预期"],
+                "correct_answer": "看不见的手"
+                },
+                {
+                "id": 139,
+                "field": "植物生态学",
+                "question": "在生态学中，最先在一个没有植被的裸地（如火山熔岩）上定居的植物群落被称为什么？",
+                "incorrect_answers": ["顶级群落", "演替中期群落", "优势群落"],
+                "correct_answer": "先锋群落"
+                },
+                {
+                "id": 140,
+                "field": "信息安全",
+                "question": "在密码学中，确保信息不被未授权地篡改的特性被称为什么？",
+                "incorrect_answers": ["保密性", "可用性", "不可否认性"],
+                "correct_answer": "完整性"
+                },
+                {
+                "id": 141,
+                "field": "解剖学（心脏）",
+                "question": "在人类心脏中，将富含氧气的血液从左心室泵出，输送到全身（除肺部）的动脉是什么？",
+                "incorrect_answers": ["肺动脉", "肺静脉", "上腔静脉"],
+                "correct_answer": "主动脉"
+                },
+                {
+                "id": 142,
+                "field": "遥感",
+                "question": "遥感卫星通过测量地表物体反射或发射的电磁波来获取信息。其中，探测地表自身热辐射的遥感属于哪个波段？",
+                "incorrect_answers": ["可见光波段", "微波波段", "紫外波段"],
+                "correct_answer": "热红外波段"
+                },
+                {
+                "id": 143,
+                "field": "电影研究",
+                "question": "在电影剪辑中，将两个不同时空但具有相似动作或形状的镜头连接起来，以实现流畅过渡或隐喻效果的剪辑技巧被称为什么？",
+                "incorrect_answers": ["跳切", "交叉剪辑", "匹配剪辑"],
+                "correct_answer": "匹配剪辑"
+                },
+                {
+                "id": 144,
+                "field": "核物理",
+                "question": "在核反应中，一个重原子核分裂成两个或多个中等质量原子核，并释放出巨大能量的过程被称为什么？",
+                "incorrect_answers": ["核聚变", "核衰变", "核嬗变"],
+                "correct_answer": "核裂变"
+                },
+                {
+                "id": 145,
+                "field": "市场营销",
+                "question": "分析企业在市场上面临的优势、劣势、机会和威胁的框架被称为什么？",
+                "incorrect_answers": ["PEST分析", "波士顿矩阵", "4P理论"],
+                "correct_answer": "SWOT分析"
+                },
+                {
+                "id": 146,
+                "field": "昆虫生理学",
+                "question": "昆虫通过体壁上的什么结构进行呼吸？",
+                "incorrect_answers": ["肺", "鳃", "鼻子"],
+                "correct_answer": "气门和气管系统"
+                },
+                {
+                "id": 147,
+                "field": "国际法",
+                "question": "规范国家间外交与领事关系，确立外交代表特权与豁免的主要国际公约是什么？",
+                "incorrect_answers": ["《联合国宪章》", "《维也纳条约法公约》", "《海洋法公约》"],
+                "correct_answer": "《维也纳外交关系公约》"
+                },
+                {
+                "id": 148,
+                "field": "地球物理学",
+                "question": "地球内部地震波速发生突然变化的不连续面，标志着地壳和地幔分界的面被称为什么？",
+                "incorrect_answers": ["古登堡面", "莱曼面", "莫霍面"],
+                "correct_answer": "莫霍洛维奇不连续面（莫霍面）"
+                },
+                {
+                "id": 149,
+                "field": "分布式系统",
+                "question": "在分布式计算中，一个经典的难题指出，分布式系统无法同时完全满足一致性、可用性和分区容错性这三个需求。这个原理被称为什么？",
+                "incorrect_answers": ["摩尔定律", "香农定理", "阿姆达尔定律"],
+                "correct_answer": "CAP定理"
+                },
+                {
+                "id": 150,
+                "field": "真菌学",
+                "question": "真菌的菌体通常由许多细丝组成，这些细丝被称为什么？",
+                "incorrect_answers": ["假根", "孢子囊", "子实体"],
+                "correct_answer": "菌丝"
+                },
+                {
+                "id": 151,
+                "field": "物理化学",
+                "question": "在物理化学中，描述理想气体混合物中某一组分气体分压与总压关系的定律是什么？",
+                "incorrect_answers": ["亨利定律", "拉乌尔定律", "菲克定律"],
+                "correct_answer": "道尔顿分压定律"
+                },
+                {
+                "id": 152,
+                "field": "考古学（地层学）",
+                "question": "考古学中的一个基本原则，指出在未受扰动的沉积序列中，较老的层位总是位于较新的层位之下。这个原则被称为什么？",
+                "incorrect_answers": ["类型学原则", "文化序列原则", "共生关系原则"],
+                "correct_answer": "地层叠压律"
+                },
+                {
+                "id": 153,
+                "field": "天线理论",
+                "question": "天线的基本参数之一，描述天线在特定方向上辐射或接收电磁波能力相对强度的图被称为什么？",
+                "incorrect_answers": ["史密斯圆图", "方向图", "频响曲线"],
+                "correct_answer": "辐射方向图"
+                },
+                {
+                "id": 154,
+                "field": "文艺复兴科学",
+                "question": "伽利略通过比萨斜塔实验（传说）推翻了亚里士多德的哪条物理定律？",
+                "incorrect_answers": ["惯性定律", "作用力与反作用力定律", "万有引力定律"],
+                "correct_answer": "重物体比轻物体下落得快"
+                },
+                {
+                "id": 155,
+                "field": "组织行为学",
+                "question": "马斯洛需求层次理论中，位于最底层的需求是什么？",
+                "incorrect_answers": ["安全需求", "社交需求", "尊重需求"],
+                "correct_answer": "生理需求"
+                },
+                {
+                "id": 156,
+                "field": "半导体物理",
+                "question": "在本征半导体中，导带中的电子浓度和价带中的空穴浓度有什么关系？",
+                "incorrect_answers": ["电子浓度远大于空穴浓度", "空穴浓度远大于电子浓度", "两者都为零"],
+                "correct_answer": "两者相等"
+                },
+                {
+                "id": 157,
+                "field": "埃及学（宗教）",
+                "question": "在古埃及神话中，负责称量死者心脏以审判其灵魂的神是谁？",
+                "incorrect_answers": ["奥西里斯", "阿努比斯", "荷鲁斯"],
+                "correct_answer": "阿努比斯（负责称量），奥西里斯是审判之主。更准确答案是阿努比斯操作秤，但审判由奥西里斯主持。常见问题指称量者是阿努比斯。"
+                },
+                {
+                "id": 158,
+                "field": "流体力学（空气动力学）",
+                "question": "当流体的流速增加时，其静压会降低。这个原理被称为什么？",
+                "incorrect_answers": ["牛顿第三定律", "帕斯卡原理", "阿基米德原理"],
+                "correct_answer": "伯努利原理"
+                },
+                {
+                "id": 159,
+                "field": "音乐声学",
+                "question": "两个频率略有差异的纯音同时发声时，会产生周期性的音量强弱变化，这种现象被称为什么？",
+                "incorrect_answers": ["共振", "泛音", "失真"],
+                "correct_answer": "拍音"
+                },
+                {
+                "id": 160,
+                "field": "病毒学",
+                "question": "病毒的基本结构通常包括遗传物质（DNA或RNA）和包裹它的什么结构？",
+                "incorrect_answers": ["细胞膜", "细胞壁", "核糖体"],
+                "correct_answer": "蛋白质衣壳"
+                },
+                {
+                "id": 161,
+                "field": "科学哲学",
+                "question": "卡尔·波普尔提出的科学划界标准，认为一个理论必须是可被什么，才算是科学的？",
+                "incorrect_answers": ["证实", "验证", "证明"],
+                "correct_answer": "证伪"
+                },
+                {
+                "id": 162,
+                "field": "桥梁工程",
+                "question": "在桥梁设计中，一种由三角形单元构成的、利用材料轴向受力（拉或压）来跨越较大跨度的结构被称为什么？",
+                "incorrect_answers": ["拱桥", "悬索桥", "梁桥"],
+                "correct_answer": "桁架桥"
+                },
+                {
+                "id": 163,
+                "field": "认知心理学",
+                "question": "在人类记忆的多存储模型中，信息首先进入容量大但保持时间极短的记忆存储阶段被称为什么？",
+                "incorrect_answers": ["短时记忆", "长时记忆", "工作记忆"],
+                "correct_answer": "感觉记忆"
+                },
+                {
+                "id": 164,
+                "field": "材料力学",
+                "question": "材料在受力作用下，单位面积上所承受的内力被称为什么？",
+                "incorrect_answers": ["应变", "弹性模量", "剪切力"],
+                "correct_answer": "应力"
+                },
+                {
+                "id": 165,
+                "field": "动物地理学",
+                "question": "根据阿尔弗雷德·华莱士的划分，位于亚洲大陆东南部和澳大利亚大陆之间的、以帝汶岛和龙目岛之间的海峡为界的生物地理分界线被称为什么？",
+                "incorrect_answers": ["华莱士线", "莱尔线", "乌苏里线"],
+                "correct_answer": "华莱士线"
+                },
+                {
+                "id": 166,
+                "field": "数字电路",
+                "question": "在数字电路中，能够存储一个比特信息的基本时序逻辑单元是什么？",
+                "incorrect_answers": ["与门", "或门", "非门"],
+                "correct_answer": "触发器"
+                },
+                {
+                "id": 167,
+                "field": "渔业科学",
+                "question": "在渔业管理中，为了维持鱼类种群可持续捕捞，允许捕获的鱼类个体最小尺寸通常基于什么生物学参数来设定？",
+                "incorrect_answers": ["平均体重", "游泳速度", "初次性成熟年龄和体长"],
+                "correct_answer": "初次性成熟年龄和体长"
+                },
+                {
+                "id": 168,
+                "field": "文艺复兴音乐",
+                "question": "文艺复兴时期复调音乐的一种重要形式，各个声部依次模仿同一主题，这种形式被称为什么？",
+                "incorrect_answers": ["牧歌", "尚松", "利切卡尔"],
+                "correct_answer": "模仿对位，赋格的前身"
+                },
+                {
+                "id": 169,
+                "field": "流行病学",
+                "question": "在流行病学中，描述一定时间内，某人群中某病新发生病例出现的频率的指标是什么？",
+                "incorrect_answers": ["患病率", "死亡率", "病死率"],
+                "correct_answer": "发病率"
+                },
+                {
+                "id": 170,
+                "field": "光学设计",
+                "question": "在光学系统（如相机镜头）中，导致不同颜色的光聚焦在不同点上，从而产生彩色边缘模糊的现象被称为什么？",
+                "incorrect_answers": ["球差", "彗差", "像散"],
+                "correct_answer": "色差"
+                },
+                {
+                "id": 171,
+                "field": "动物营养学",
+                "question": "反刍动物（如牛、羊）能够消化纤维素，主要依靠其瘤胃中存在的什么？",
+                "incorrect_answers": ["特殊的消化酶", "高酸性环境", "共生微生物（细菌、原生动物和真菌）"],
+                "correct_answer": "共生微生物（细菌、原生动物和真菌）"
+                },
+                {
+                "id": 172,
+                "field": "通信理论",
+                "question": "在通信系统中，信噪比（SNR）通常用什么单位来衡量？",
+                "incorrect_answers": ["赫兹", "比特每秒", "伏特"],
+                "correct_answer": "分贝"
+                },
+                {
+                "id": 173,
+                "field": "戏剧导演",
+                "question": "斯坦尼斯拉夫斯基表演体系的核心目标是什么？",
+                "incorrect_answers": ["夸张的外部表现", "取悦观众", "创造“同离效果”"],
+                "correct_answer": "帮助演员创造真实、有机的角色，体验角色的内心生活"
+                },
+                {
+                "id": 174,
+                "field": "气候模型",
+                "question": "气候模型中，描述地球表面和大气之间能量交换（包括太阳辐射和红外辐射）过程的模块通常被称为什么？",
+                "incorrect_answers": ["动力核心", "陆面过程模型", "碳循环模型"],
+                "correct_answer": "辐射传输模块"
+                },
+                {
+                "id": 175,
+                "field": "纺织工艺",
+                "question": "将纺织纤维排列成平行状态并加捻，形成连续纱线的过程被称为什么？",
+                "incorrect_answers": ["织造", "针织", "染色"],
+                "correct_answer": "纺纱"
+                },
+                {
+                "id": 176,
+                "field": "行星科学",
+                "question": "太阳系中大部分小行星集中在哪两个行星轨道之间？",
+                "incorrect_answers": ["水星和金星之间", "地球和火星之间", "木星和土星之间"],
+                "correct_answer": "火星和木星之间（主小行星带）"
+                },
+                {
+                "id": 177,
+                "field": "人力资源管理",
+                "question": "用于系统性地确定和记录工作中所包含的任务、职责、技能要求等信息的过程被称为什么？",
+                "incorrect_answers": ["绩效考核", "员工培训", "薪酬调查"],
+                "correct_answer": "工作分析"
+                },
+                {
+                "id": 178,
+                "field": "神经科学",
+                "question": "神经元之间或神经元与效应器之间传递信息的特殊连接结构被称为什么？",
+                "incorrect_answers": ["树突", "轴突", "胞体"],
+                "correct_answer": "突触"
+                },
+                {
+                "id": 179,
+                "field": "水利工程",
+                "question": "用于控制河流水位、调节流量、用于灌溉、发电或防洪的拦河建筑物被称为什么？",
+                "incorrect_answers": ["堤防", "渠道", "水库"],
+                "correct_answer": "水坝"
+                },
+                {
+                "id": 180,
+                "field": "音乐记谱法",
+                "question": "在西方音乐五线谱中，用来表示音的高低的符号被称为什么？",
+                "incorrect_answers": ["音符", "谱号", "拍号"],
+                "correct_answer": "音符"
+                },
+                {
+                "id": 181,
+                "field": "皮肤科医学",
+                "question": "人体皮肤中产生黑色素、决定肤色的细胞叫什么？",
+                "incorrect_answers": ["角质形成细胞", "朗格汉斯细胞", "成纤维细胞"],
+                "correct_answer": "黑素细胞"
+                },
+                {
+                "id": 182,
+                "field": "航天器轨道力学",
+                "question": "航天器绕地球运行，其轨道周期与轨道半长轴的关系由哪个定律描述？",
+                "incorrect_answers": ["牛顿万有引力定律", "开普勒第一定律", "开普勒第二定律"],
+                "correct_answer": "开普勒第三定律"
+                },
+                {
+                "id": 183,
+                "field": "食品科学",
+                "question": "在食品工业中，为了防止油脂氧化酸败，常添加什么类型的添加剂？",
+                "incorrect_answers": ["防腐剂", "甜味剂", "着色剂"],
+                "correct_answer": "抗氧化剂"
+                },
+                {
+                "id": 184,
+                "field": "图书馆学",
+                "question": "用于组织图书馆藏书、便于读者按主题查找图书的、全球广泛使用的分类法是什么？",
+                "incorrect_answers": ["国会图书馆分类法", "国际十进分类法", "中国图书馆分类法"],
+                "correct_answer": "杜威十进分类法"
+                },
+                {
+                "id": 185,
+                "field": "生态毒理学",
+                "question": "在生态毒理学中，用于描述化学物质对半数受试生物产生特定效应（如运动抑制）的浓度的参数是什么？",
+                "incorrect_answers": ["LC50", "NOEC", "MATC"],
+                "correct_answer": "EC50"
+                },
+                {
+                "id": 186,
+                "field": "文艺复兴建筑",
+                "question": "文艺复兴建筑师安德烈亚·帕拉第奥设计的、带有柱廊和三角山花的对称式建筑立面，对后世影响深远，这种形式被称为什么？",
+                "incorrect_answers": ["罗曼式立面", "哥特式立面", "巴洛克立面"],
+                "correct_answer": "帕拉第奥母题或帕拉第奥式窗（更广泛是其建筑风格）"
+                },
+                {
+                "id": 187,
+                "field": "计算流体力学",
+                "question": "在计算流体力学中，将连续的流体运动控制方程（如纳维-斯托克斯方程）转化为离散的代数方程组进行求解的常用数值方法是什么？",
+                "incorrect_answers": ["解析法", "实验法", "蒙特卡洛方法"],
+                "correct_answer": "有限体积法或有限差分法"
+                },
+                {
+                "id": 188,
+                "field": "社会语言学",
+                "question": "社会语言学中，研究同一语言在不同社会群体或场合中使用的系统性变体的分支被称为什么？",
+                "incorrect_answers": ["历史语言学", "方言学", "语用学"],
+                "correct_answer": "语言变异研究或社会方言学"
+                },
+                {
+                "id": 189,
+                "field": "药典学",
+                "question": "一个国家记载药品标准、规格的法典，对药品质量、剂量、检测方法等作出强制规定的官方出版物被称为什么？",
+                "incorrect_answers": ["药物手册", "处方集", "临床指南"],
+                "correct_answer": "药典"
+                },
+                {
+                "id": 190,
+                "field": "摄影测量学",
+                "question": "利用从不同位置拍摄的同一物体的两张或多张照片，通过测量像点坐标来解算物体三维坐标的技术被称为什么？",
+                "incorrect_answers": ["遥感", "全息摄影", "图像识别"],
+                "correct_answer": "立体摄影测量"
+                },
+                {
+                "id": 191,
+                "field": "能源工程（可再生能源）",
+                "question": "光伏电池（太阳能电池）将太阳光直接转换为电能，是基于什么物理效应？",
+                "incorrect_answers": ["热电效应", "光热效应", "光电效应"],
+                "correct_answer": "光生伏特效应"
+                },
+                {
+                "id": 192,
+                "field": "法医人类学",
+                "question": "法医人类学家通过观察长骨（如股骨）末端的是否完全融合，可以判断个体的什么？",
+                "incorrect_answers": ["性别", "种族", "身高"],
+                "correct_answer": "年龄（是否成年）"
+                },
+                {
+                "id": 193,
+                "field": "复杂系统理论",
+                "question": "一个系统的初始条件的微小变化可能导致其长期行为的巨大差异，这种现象通常被称为什么？",
+                "incorrect_answers": ["熵增", "涌现", "自组织"],
+                "correct_answer": "蝴蝶效应（对初始条件的敏感依赖性）"
+                },
+                {
+                "id": 194,
+                "field": "宝石切割",
+                "question": "在钻石切割中，为了最大化其亮度和火彩，刻面切割的角度设计主要基于钻石的什么物理性质？",
+                "incorrect_answers": ["硬度", "颜色", "密度"],
+                "correct_answer": "折射率"
+                },
+                {
+                "id": 195,
+                "field": "海洋法",
+                "question": "《联合国海洋法公约》规定，沿海国对其领海以外并邻接领海的一带海域，在资源勘探和开发等方面拥有主权权利，这个区域被称为什么？",
+                "incorrect_answers": ["内水", "毗连区", "公海"],
+                "correct_answer": "专属经济区"
+                },
+                {
+                "id": 196,
+                "field": "植物病理学",
+                "question": "引起植物病害的病原生物主要包括真菌、细菌、病毒和什么？",
+                "incorrect_answers": ["昆虫", "线虫", "杂草"],
+                "correct_answer": "线虫"
+                },
+                {
+                "id": 197,
+                "field": "音乐心理学",
+                "question": "在音乐心理学中，人们对一个音高的感知，主要由声音的什么物理属性决定？",
+                "incorrect_answers": ["振幅", "音色", "持续时间"],
+                "correct_answer": "频率"
+                },
+                {
+                "id": 198,
+                "field": "粉末冶金",
+                "question": "粉末冶金是将金属粉末压制成形，然后在高温下进行加热处理，使粉末颗粒结合在一起并增强其性能的过程，这个加热过程被称为什么？",
+                "incorrect_answers": ["熔炼", "铸造", "烧结"],
+                "correct_answer": "烧结"
+                },
+                {
+                "id": 199,
+                "field": "宗教比较学",
+                "question": "犹太教、基督教和伊斯兰教都认同的、被视为人类共同祖先的先知是谁？",
+                "incorrect_answers": ["摩西", "耶稣", "穆罕默德"],
+                "correct_answer": "亚伯拉罕（易卜拉欣）"
+                },
+                {
+                "id": 200,
+                "field": "昆虫生态学",
+                "question": "在生态系统中，昆虫作为什么者，在分解动植物残体、促进物质循环方面起着关键作用？",
+                "incorrect_answers": ["生产者", "消费者", "分解者"],
+                "correct_answer": "分解者（或食腐者）"
+                },
+                {
+                "id": 201,
+                "field": "结构生物学",
+                "question": "用于解析生物大分子（如蛋白质）三维原子分辨率结构的主要实验方法是什么？",
+                "incorrect_answers": ["核磁共振", "质谱", "电子显微镜"],
+                "correct_answer": "X射线晶体衍射"
+                },
+                {
+                "id": 202,
+                "field": "园林设计",
+                "question": "中国古典园林造园手法中，通过门、窗、洞等框架，有选择地摄取另一空间的景色，这种手法被称为什么？",
+                "incorrect_answers": ["对景", "借景", "框景"],
+                "correct_answer": "框景"
+                },
+                {
+                "id": 203,
+                "field": "热工测量",
+                "question": "工业上常用于测量高温（如窑炉温度）的非接触式温度计，基于物体热辐射原理，这种温度计叫什么？",
+                "incorrect_answers": ["热电偶", "热电阻", "红外测温仪"],
+                "correct_answer": "红外测温仪或辐射温度计"
+                },
+                {
+                "id": 204,
+                "field": "符号学",
+                "question": "符号学中，符号与其所指代的对象之间的关系被称为什么？",
+                "incorrect_answers": ["能指", "所指", "意指"],
+                "correct_answer": "指称关系"
+                },
+                {
+                "id": 205,
+                "field": "动物遗传学",
+                "question": "决定哺乳动物性别（XX为雌性，XY为雄性）的染色体被称为？",
+                "incorrect_answers": ["常染色体", "线粒体DNA", "性染色体"],
+                "correct_answer": "性染色体"
+                },
+                {
+                "id": 206,
+                "field": "纳米技术",
+                "question": "纳米材料展现出许多独特性质（如表面效应、量子尺寸效应），仅仅因为它们的尺寸在哪个范围？",
+                "incorrect_answers": ["毫米级", "微米级", "原子级"],
+                "correct_answer": "1-100纳米"
+                },
+                {
+                "id": 207,
+                "field": "中世纪医学",
+                "question": "中世纪欧洲医学深受古希腊医学家盖伦的影响，其理论核心是人体内四种体液的平衡。这四种体液不包括以下哪一种？",
+                "incorrect_answers": ["血液", "粘液", "黄胆汁"],
+                "correct_answer": "淋巴液（应为黑胆汁）"
+                },
+                {
+                "id": 208,
+                "field": "传热学",
+                "question": "热量通过电磁波（光子）在空间或介质中传递的方式被称为什么？",
+                "incorrect_answers": ["导热", "对流", "辐射"],
+                "correct_answer": "热辐射"
+                },
+                {
+                "id": 209,
+                "field": "音乐治疗",
+                "question": "音乐治疗中，利用音乐的节奏、旋律等元素来改善患者的运动协调性和步态的训练方法，属于哪个应用领域？",
+                "incorrect_answers": ["心理治疗", "特殊教育", "疼痛管理"],
+                "correct_answer": "神经康复"
+                },
+                {
+                "id": 210,
+                "field": "环境化学",
+                "question": "导致酸雨的主要人为排放污染物是什么？",
+                "incorrect_answers": ["二氧化碳", "甲烷", "一氧化碳"],
+                "correct_answer": "二氧化硫和氮氧化物"
+                },
+                {
+                "id": 211,
+                "field": "畜牧学",
+                "question": "在家畜育种中，为了提高后代的平均生产性能，通常选择具有优良性状的个体进行交配，这种方法被称为什么？",
+                "incorrect_answers": ["近交", "杂交", "纯种繁育"],
+                "correct_answer": "选种"
+                },
+                {
+                "id": 212,
+                "field": "信息论",
+                "question": "信息论中，衡量信息源每发出一个符号所携带的平均信息量的概念是什么？",
+                "incorrect_answers": ["信道容量", "编码效率", "信息熵"],
+                "correct_answer": "信息熵"
+                },
+                {
+                "id": 213,
+                "field": "电影摄影",
+                "question": "在电影摄影中，控制胶片或传感器接收光线时间长短的装置是什么？",
+                "incorrect_answers": ["光圈", "感光度", "快门"],
+                "correct_answer": "快门"
+                },
+                {
+                "id": 214,
+                "field": "放射化学",
+                "question": "某些原子核自发地放出射线（如α、β、γ射线）而转变为另一种原子核的过程被称为什么？",
+                "incorrect_answers": ["核裂变", "核聚变", "核衰变"],
+                "correct_answer": "放射性衰变"
+                },
+                {
+                "id": 215,
+                "field": "消费者行为学",
+                "question": "消费者决策过程中，在有限理性下，消费者往往会选择一个“足够好”而非“最优”的方案，这种行为被称为什么？",
+                "incorrect_answers": ["最大化", "冲动购买", "满意原则"],
+                "correct_answer": "满意原则"
+                },
+                {
+                "id": 216,
+                "field": "微生物生态学",
+                "question": "在土壤或水体中，不同微生物种群之间争夺有限资源（如营养、空间）的相互作用被称为什么？",
+                "incorrect_answers": ["共生", "寄生", "竞争"],
+                "correct_answer": "竞争"
+                },
+                {
+                "id": 217,
+                "field": "建筑物理（采光）",
+                "question": "在建筑设计中，用于定量评估室内自然光照水平的指标，通常用室内某点的照度与室外同一时间无遮挡水平面照度的比值来表示，这个指标被称为什么？",
+                "incorrect_answers": ["采光系数", "照度均匀度", "眩光指数"],
+                "correct_answer": "采光系数"
+                },
+                {
+                "id": 218,
+                "field": "船舶工程",
+                "question": "船舶航行时，水对船体的阻力主要分为摩擦阻力、兴波阻力和什么阻力？",
+                "incorrect_answers": ["空气阻力", "形状阻力", "压差阻力"],
+                "correct_answer": "形状阻力（或粘压阻力）"
+                },
+                {
+                "id": 219,
+                "field": "音乐学（民族）",
+                "question": "印度尼西亚的传统音乐形式，主要使用一套音高固定的金属打击乐器（如钢片琴、锣、鼓），这种合奏音乐被称为什么？",
+                "incorrect_answers": ["克恰克", "甘美兰", "拉维香卡"],
+                "correct_answer": "甘美兰"
+                },
+                {
+                "id": 220,
+                "field": "空间天气",
+                "question": "来自太阳的带电粒子流（太阳风）与地球磁场相互作用，在地球两极附近高层大气中激发的绚丽发光现象被称为什么？",
+                "incorrect_answers": ["日冕", "太阳黑子", "磁暴"],
+                "correct_answer": "极光"
+                },
+                {
+                "id": 221,
+                "field": "食品感官评价",
+                "question": "在食品感官评价中，用于描述和区分食品基本味道（甜、酸、咸、苦）的测试通常需要经过专门培训的评价员，这种测试被称为什么？",
+                "incorrect_answers": ["喜好性测试", "描述性分析", "差别检验"],
+                "correct_answer": "基本味觉识别测试或味觉灵敏度测试"
+                },
+                {
+                "id": 222,
+                "field": "计算几何",
+                "question": "计算几何中，用于求解平面上一组点集的最小凸多边形（包含所有点）的经典算法是以谁命名的？",
+                "incorrect_answers": ["迪杰斯特拉", "克鲁斯卡尔", "格雷厄姆"],
+                "correct_answer": "格雷厄姆扫描法或Jarvis步进法"
+                },
+                {
+                "id": 223,
+                "field": "寄生虫病学",
+                "question": "血吸虫病的传播需要中间宿主。在中国，日本血吸虫的中间宿主是什么？",
+                "incorrect_answers": ["蚊子", "苍蝇", "钉螺"],
+                "correct_answer": "钉螺"
+                },
+                {
+                "id": 224,
+                "field": "文艺复兴哲学",
+                "question": "文艺复兴时期提倡以“人”为中心，反对以“神”为中心的思想潮流被称为什么？",
+                "incorrect_answers": ["理性主义", "经验主义", "人文主义"],
+                "correct_answer": "人文主义"
+                },
+                {
+                "id": 225,
+                "field": "静电学",
+                "question": "静电学中，描述真空中两个静止点电荷之间相互作用力大小与距离平方成反比、与电荷量乘积成正比的定律是什么？",
+                "incorrect_answers": ["高斯定律", "安培定律", "法拉第定律"],
+                "correct_answer": "库仑定律"
+                },
+                {
+                "id": 226,
+                "field": "林业",
+                "question": "在森林经营中，为了促进林木生长、改善林分结构而定期砍伐部分树木的措施被称为什么？",
+                "incorrect_answers": ["主伐", "间伐", "择伐"],
+                "correct_answer": "间伐"
+                },
+                {
+                "id": 227,
+                "field": "音乐形式分析",
+                "question": "在古典音乐中，一种由主题呈示、展开和再现三部分组成的器乐曲式结构被称为什么？",
+                "incorrect_answers": ["变奏曲式", "回旋曲式", "奏鸣曲式"],
+                "correct_answer": "奏鸣曲式"
+                },
+                {
+                "id": 228,
+                "field": "土壤微生物学",
+                "question": "土壤中能够将大气中的氮气转化为植物可利用的氨或铵态氮的微生物被称为什么？",
+                "incorrect_answers": ["硝化细菌", "反硝化细菌", "固氮菌"],
+                "correct_answer": "固氮菌"
+                },
+                {
+                "id": 229,
+                "field": "机器人感知",
+                "question": "机器人中常用的、通过发射激光束并测量反射光返回时间来计算距离的传感器被称为什么？",
+                "incorrect_answers": ["超声波传感器", "红外传感器", "激光雷达"],
+                "correct_answer": "激光雷达"
+                },
+                {
+                "id": 230,
+                "field": "服装史",
+                "question": "19世纪中叶，西方女性为了塑造纤细腰身而广泛穿着的一种内衣是什么？",
+                "incorrect_answers": ["胸衣", "裙撑", "紧身胸衣"],
+                "correct_answer": "紧身胸衣"
+                },
+                {
+                "id": 231,
+                "field": "量子光学",
+                "question": "在量子光学中，光场的基本量子化单元是什么？",
+                "incorrect_answers": ["电子", "原子", "光子"],
+                "correct_answer": "光子"
+                },
+                {
+                "id": 232,
+                "field": "法医昆虫学",
+                "question": "法医昆虫学家通过检查尸体上昆虫的种类和发育阶段，主要可以推断什么？",
+                "incorrect_answers": ["死因", "身份", "死亡时间"],
+                "correct_answer": "死亡时间"
+                },
+                {
+                "id": 233,
+                "field": "城市地理学",
+                "question": "城市地理学中，描述城市不同功能区（如商业区、居住区、工业区）空间分布和结构的经典模型之一是由谁提出的同心圆模型？",
+                "incorrect_answers": ["霍伊特", "哈里斯和乌尔曼", "伯吉斯"],
+                "correct_answer": "伯吉斯"
+                },
+                {
+                "id": 234,
+                "field": "音乐技术（电子）",
+                "question": "在电子音乐制作中，用于生成、修改和控制声音信号的基本模块化硬件或软件单元被称为什么？",
+                "incorrect_answers": ["采样器", "音序器", "合成器"],
+                "correct_answer": "合成器"
+                },
+                {
+                "id": 235,
+                "field": "环境工程（水处理）",
+                "question": "在城市污水处理中，利用微生物的代谢作用去除水中溶解性有机物的生物处理单元通常被称为什么？",
+                "incorrect_answers": ["沉淀池", "格栅", "曝气池或活性污泥法"],
+                "correct_answer": "曝气池或生物反应器"
+                },
+                {
+                "id": 236,
+                "field": "工业设计",
+                "question": "工业设计的人机工程学原则中，设计必须考虑用户的哪些因素？",
+                "incorrect_answers": ["审美偏好", "生理、心理和能力", "文化背景"],
+                "correct_answer": "生理、心理和能力"
+                },
+                {
+                "id": 237,
+                "field": "行星地质学",
+                "question": "月球表面布满的圆形凹坑，大多是由什么撞击形成的？",
+                "incorrect_answers": ["火山喷发", "地层塌陷", "陨石撞击"],
+                "correct_answer": "陨石撞击"
+                },
+                {
+                "id": 238,
+                "field": "音乐教育（方法）",
+                "question": "著名的音乐教学法“奥尔夫教学法”的核心特点之一是什么？",
+                "incorrect_answers": ["强调精确的音准", "强调音乐与动作、语言、舞蹈的紧密结合", "强调乐谱的早期阅读"],
+                "correct_answer": "强调音乐与动作、语言、舞蹈的紧密结合"
+                },
+                {
+                "id": 239,
+                "field": "供应链管理",
+                "question": "供应链管理中，为了应对需求不确定性，企业会刻意持有超过预期需求的库存，这种库存被称为什么？",
+                "incorrect_answers": ["周期库存", "安全库存", "在途库存"],
+                "correct_answer": "安全库存"
+                },
+                {
+                "id": 240,
+                "field": "分子生物学",
+                "question": "分子生物学的中心法则描述了遗传信息流动的方向，通常是什么？",
+                "incorrect_answers": ["蛋白质 -> RNA -> DNA", "DNA -> 蛋白质 -> RNA", "RNA -> DNA -> 蛋白质"],
+                "correct_answer": "DNA -> RNA -> 蛋白质"
+                },
+                {
+                "id": 241,
+                "field": "地球化学",
+                "question": "地球地壳中含量最丰富的元素是什么？",
+                "incorrect_answers": ["铁", "铝", "硅"],
+                "correct_answer": "氧"
+                },
+                {
+                "id": 242,
+                "field": "音乐版权",
+                "question": "在音乐产业中，保护音乐作品创作者对其作品享有的复制、发行、表演等专有权利的法律概念是什么？",
+                "incorrect_answers": ["商标权", "专利权", "著作权"],
+                "correct_answer": "著作权（版权）"
+                },
+                {
+                "id": 243,
+                "field": "农业工程（灌溉）",
+                "question": "一种节水灌溉技术，通过管道系统和滴头将水直接、缓慢地输送到植物根部土壤，这种技术被称为什么？",
+                "incorrect_answers": ["喷灌", "漫灌", "滴灌"],
+                "correct_answer": "滴灌"
+                },
+                {
+                "id": 244,
+                "field": "理论计算机科学",
+                "question": "在形式语言理论中，由诺姆·乔姆斯基定义的、能被有限状态自动机识别的语言类型是什么？",
+                "incorrect_answers": ["上下文有关语言", "上下文无关语言", "递归可枚举语言"],
+                "correct_answer": "正则语言"
+                },
+                {
+                "id": 245,
+                "field": "动物学（无脊椎）",
+                "question": "章鱼、乌贼和鱿鱼属于哪一类动物？",
+                "incorrect_answers": ["鱼类", "甲壳类", "软体动物"],
+                "correct_answer": "软体动物门头足纲"
+                },
+                {
+                "id": 246,
+                "field": "建筑史（哥特）",
+                "question": "哥特式建筑最显著的外部特征之一，是高耸的、带有尖顶的塔楼，这种塔楼通常被称为什么？",
+                "incorrect_answers": ["钟楼", "尖塔", "穹顶"],
+                "correct_answer": "尖塔"
+                },
+                {
+                "id": 247,
+                "field": "音乐声学（乐器）",
+                "question": "对于木管乐器（如单簧管），改变音高的主要方法是什么？",
+                "incorrect_answers": ["改变嘴唇张力", "改变吹气压力", "打开或关闭管身上的音孔"],
+                "correct_answer": "打开或关闭管身上的音孔"
+                },
+                {
+                "id": 248,
+                "field": "环境经济学",
+                "question": "环境经济学中，将环境污染或资源消耗等环境问题的成本纳入到生产者或消费者的决策中的一种方法，例如对排污行为收费，这种方法被称为什么？",
+                "incorrect_answers": ["补贴", "环境标准", "排污收费或庇古税"],
+                "correct_answer": "排污收费或庇古税"
+                },
+                {
+                "id": 249,
+                "field": "科学计量学",
+                "question": "科学计量学中，用于衡量科研人员学术产出的影响力、基于其论文被引用次数的常用指标是什么？",
+                "incorrect_answers": ["影响因子", "H指数", "期刊分区"],
+                "correct_answer": "H指数"
+                },
+                {
+                "id": 250,
+                "field": "音乐治疗（评估）",
+                "question": "在音乐治疗中，治疗师对来访者的音乐能力、偏好、反应等进行系统了解的过程被称为什么？",
+                "incorrect_answers": ["治疗计划", "治疗干预", "音乐治疗评估"],
+                "correct_answer": "音乐治疗评估"
+                },
+                {
+                "id": 251,
+                "field": "材料表征",
+                "question": "用于观察材料表面微米至纳米尺度形貌的常用仪器是什么？",
+                "incorrect_answers": ["X射线衍射仪", "透射电子显微镜", "扫描电子显微镜"],
+                "correct_answer": "扫描电子显微镜"
+                },
+                {
+                "id": 252,
+                "field": "文艺复兴绘画技法",
+                "question": "文艺复兴时期画家发明的、通过在已干的颜料层上涂覆半透明的薄颜料层，使底层色彩透过表层影响最终色调的油画技法被称为什么？",
+                "incorrect_answers": ["直接画法", "湿画法", "罩染"],
+                "correct_answer": "罩染"
+                },
+                {
+                "id": 253,
+                "field": "非线性动力学",
+                "question": "非线性动力学中，描述系统状态随时间演化的轨迹在相空间中形成的几何结构被称为什么？",
+                "incorrect_answers": ["点", "线", "面"],
+                "correct_answer": "吸引子"
+                },
+                {
+                "id": 254,
+                "field": "音乐产业（流媒体）",
+                "question": "在数字音乐流媒体服务中，艺术家或版权方根据歌曲被播放次数获得报酬，通常以每千次播放多少钱来计算，这种模式被称为什么？",
+                "incorrect_answers": ["买断制", "订阅制", "按播放次数付费"],
+                "correct_answer": "按播放次数付费"
+                },
+                {
+                "id": 255,
+                "field": "动物福利科学",
+                "question": "动物福利科学中，用于评估动物福利的“五大自由”原则不包括以下哪一项？",
+                "incorrect_answers": ["免受饥饿和口渴的自由", "免受不适的自由", "免受疼痛、伤害和疾病的自由"],
+                "correct_answer": "自由繁殖的权利（应为：表达天性的自由）"
+                },
+                {
+                "id": 256,
+                "field": "量子信息",
+                "question": "量子信息科学中，利用量子力学特性（如叠加、纠缠）进行信息处理的基本单位被称为什么？",
+                "incorrect_answers": ["比特", "量子比特", "量子字节"],
+                "correct_answer": "量子比特"
+                },
+                {
+                "id": 257,
+                "field": "音乐记谱法（早期）",
+                "question": "中世纪欧洲早期的一种记谱法，在歌词上方用一些简单的符号（纽姆符）来表示音高的大致走向，这种记谱法被称为什么？",
+                "incorrect_answers": ["有量记谱法", "纽姆谱", "五线谱"],
+                "correct_answer": "纽姆谱"
+                },
+                {
+                "id": 258,
+                "field": "可持续设计",
+                "question": "在可持续产品设计中，考虑产品整个生命周期（从原材料获取到废弃处理）的环境影响的方法被称为什么？",
+                "incorrect_answers": ["绿色设计", "生态设计", "生命周期评价"],
+                "correct_answer": "生命周期评价"
+                },
+                {
+                "id": 259,
+                "field": "音乐认知",
+                "question": "音乐认知研究中，人们识别和记忆旋律时，主要依赖于音高之间的什么关系，而非绝对音高？",
+                "incorrect_answers": ["绝对音高", "相对音高", "音程"],
+                "correct_answer": "相对音高"
+                },
+                {
+                "id": 260,
+                "field": "计算神经科学",
+                "question": "计算神经科学中，模拟神经元电活动的经典数学模型，描述膜电位随时间变化的微分方程模型是什么？",
+                "incorrect_answers": ["霍奇金-赫胥黎模型", "感知机模型", "整合发放模型"],
+                "correct_answer": "霍奇金-赫胥黎模型"
+                },
+                {
+                "id": 261,
+                "field": "音乐与社会运动",
+                "question": "20世纪60年代美国民权运动中，被视为运动非官方“圣歌”的歌曲是什么？",
+                "incorrect_answers": ["《Blowin' in the Wind》", "《We Shall Overcome》", "《Imagine》"],
+                "correct_answer": "《We Shall Overcome》"
+                },
+                {
+                "id": 262,
+                "field": "合成生物学",
+                "question": "合成生物学旨在设计和构建新的生物部件、设备和系统，其核心思想之一是将生物学视为什么？",
+                "incorrect_answers": ["化学", "物理", "工程学"],
+                "correct_answer": "工程学"
+                },
+                {
+                "id": 263,
+                "field": "音乐与数学",
+                "question": "在音乐理论中，一个八度内包含多少个半音？",
+                "incorrect_answers": ["6", "10", "12"],
+                "correct_answer": "12"
+                },
+                {
+                "id": 264,
+                "field": "超导物理",
+                "question": "某些材料在低于特定温度时电阻突然消失的现象被称为什么？",
+                "incorrect_answers": ["抗磁性", "超流", "超导"],
+                "correct_answer": "超导"
+                },
+                {
+                "id": 265,
+                "field": "音乐剧创作",
+                "question": "在音乐剧结构中，推动剧情发展、通常由角色演唱的歌曲类型被称为什么？",
+                "incorrect_answers": ["咏叹调", "宣叙调", "叙事曲"],
+                "correct_answer": "叙事曲或情节歌曲"
+                },
+                {
+                "id": 266,
+                "field": "知识表示与推理",
+                "question": "在人工智能中，用于表示领域知识的一种形式化、结构化的方式，通常包含概念、属性和关系的系统被称为什么？",
+                "incorrect_answers": ["专家系统", "知识库", "本体"],
+                "correct_answer": "本体"
+                },
+                {
+                "id": 267,
+                "field": "音乐制作（录音）",
+                "question": "在录音棚中，用于将不同乐器或人声的音频信号混合在一起，调整音量、声像、效果等的设备或软件被称为什么？",
+                "incorrect_answers": ["调音台", "音频接口", "效果器"],
+                "correct_answer": "调音台"
+                },
+                {
+                "id": 268,
+                "field": "生物医学工程",
+                "question": "生物医学工程中，用于替代或辅助人体功能的人工装置（如人工关节、心脏起搏器）被称为什么？",
+                "incorrect_answers": ["假体", "矫形器", "植入体"],
+                "correct_answer": "植入体"
+                },
+                {
+                "id": 269,
+                "field": "音乐评论",
+                "question": "音乐评论中，对一部音乐作品的首演或重要演出进行即时报道和评价的文章通常被称为什么？",
+                "incorrect_answers": ["乐评", "专访", "报道"],
+                "correct_answer": "乐评"
+                },
+                {
+                "id": 270,
+                "field": "可再生能源整合",
+                "question": "将波动性可再生能源（如风能、太阳能）大规模接入电网时，为了保持电网稳定，需要解决的挑战主要与这些能源的什么特性有关？",
+                "incorrect_answers": ["成本高", "间歇性和不可预测性", "地域分布不均"],
+                "correct_answer": "间歇性和不可预测性"
+                },
+                {
+                "id": 271,
+                "field": "音乐疗法（主动）",
+                "question": "在主动音乐治疗中，来访者通过演奏乐器或唱歌等方式直接参与音乐创造，这主要利用音乐的什么功能？",
+                "incorrect_answers": ["审美功能", "交流功能", "表达和创造功能"],
+                "correct_answer": "表达和创造功能"
+                },
+                {
+                "id": 272,
+                "field": "基因工程",
+                "question": "基因工程中，用于切割DNA分子上特定核苷酸序列的“分子剪刀”是什么？",
+                "incorrect_answers": ["DNA连接酶", "限制性内切酶", "聚合酶链式反应"],
+                "correct_answer": "限制性内切酶"
+                },
+                {
+                "id": 273,
+                "field": "音乐考古学",
+                "question": "音乐考古学通过研究古代乐器、图像和文献来探索古代音乐。已知最古老的、可确定为乐器的人工制品是什么？",
+                "incorrect_answers": ["骨笛", "陶埙", "里拉琴"],
+                "correct_answer": "骨笛（如德国霍赫勒-菲尔斯洞穴发现的骨笛）"
+                },
+                {
+                "id": 274,
+                "field": "气候变化适应",
+                "question": "为了应对气候变化的影响（如海平面上升、极端天气），人类社会采取的调整措施（如修建海堤、改变种植模式）被称为什么？",
+                "incorrect_answers": ["减缓", "适应", "修复"],
+                "correct_answer": "适应"
+                },
+                {
+                "id": 275,
+                "field": "音乐与情感",
+                "question": "音乐心理学研究发现，音乐引发情感反应，其中音乐的什么要素通常与情感的“唤醒度”（平静到兴奋）相关？",
+                "incorrect_answers": ["调式", "速度", "和声"],
+                "correct_answer": "速度"
+                },
+                {
+                "id": 276,
+                "field": "天体生物学",
+                "question": "天体生物学研究地球以外生命的可能性。在太阳系内，除了地球，哪个天体被认为最有可能存在或曾经存在生命？",
+                "incorrect_answers": ["金星", "水星", "木星"],
+                "correct_answer": "火星"
+                },
+                {
+                "id": 277,
+                "field": "音乐即兴",
+                "question": "在爵士乐即兴演奏中，乐手通常围绕一首歌曲的什么结构进行即兴创造？",
+                "incorrect_answers": ["旋律", "和声进行", "节奏"],
+                "correct_answer": "和声进行"
+                },
+                {
+                "id": 278,
+                "field": "数据可视化",
+                "question": "数据可视化中，用于展示多个变量之间两两关系的矩阵图被称为什么？",
+                "incorrect_answers": ["热力图", "散点图矩阵", "平行坐标图"],
+                "correct_answer": "散点图矩阵"
+                },
+                {
+                "id": 279,
+                "field": "音乐记忆",
+                "question": "极少数人拥有一种能力，能够无需参考音高就能准确识别或唱出任何一个音的音高，这种能力被称为什么？",
+                "incorrect_answers": ["相对音感", "音乐记忆", "绝对音感"],
+                "correct_answer": "绝对音感"
+                },
+                {
+                "id": 280,
+                "field": "组织工程",
+                "question": "组织工程的三要素通常包括：种子细胞、生物材料和什么？",
+                "incorrect_answers": ["生长因子", "生物反应器", "支架"],
+                "correct_answer": "生长因子和信号分子"
+                },
+                {
+                "id": 281,
+                "field": "音乐表演实践（历史）",
+                "question": "在巴洛克音乐的历史本真演奏运动中，演奏家们致力于根据历史文献和乐器，还原当时的演奏风格。其中，对于节奏的处理，强调节奏的弹性和自由，这种风格被称为什么？",
+                "incorrect_answers": ["严格节拍", "弹性速度", "自由节奏"],
+                "correct_answer": "弹性速度"
+                },
+                {
+                "id": 282,
+                "field": "伦理人工智能",
+                "question": "人工智能伦理中，确保算法决策过程透明、可解释的原则被称为什么？",
+                "incorrect_answers": ["公平性", "问责制", "可解释性"],
+                "correct_answer": "可解释性"
+                },
+                {
+                "id": 283,
+                "field": "音乐节拍感知",
+                "question": "心理学研究表明，人们在感知音乐的节拍时，倾向于将一组声音组织成有规律的强弱交替模式，这体现了什么知觉组织原则？",
+                "incorrect_answers": ["相似性", "接近性", "良好连续"],
+                "correct_answer": "分组或节奏分组"
+                },
+                {
+                "id": 284,
+                "field": "合成孔径雷达",
+                "question": "合成孔径雷达通过移动平台（如卫星、飞机）上的雷达对同一区域进行多次观测，并合成一个等效的大孔径天线，从而获得高分辨率的什么图像？",
+                "incorrect_answers": ["光学图像", "热红外图像", "雷达图像"],
+                "correct_answer": "雷达图像"
+                },
+                {
+                "id": 285,
+                "field": "音乐与文化认同",
+                "question": "许多文化和民族都有其独特的音乐形式，用以表达和强化群体认同。例如，苏格兰高地人用哪种乐器演奏的音乐来代表其文化？",
+                "incorrect_answers": ["小提琴", "风笛", "竖琴"],
+                "correct_answer": "风笛"
+                },
+                {
+                "id": 286,
+                "field": "量子计算算法",
+                "question": "量子计算领域著名的肖尔算法，主要解决了经典计算机上的什么难题？",
+                "incorrect_answers": ["搜索无序数据库", "大整数质因数分解", "图同构问题"],
+                "correct_answer": "大整数质因数分解"
+                },
+                {
+                "id": 287,
+                "field": "音乐与运动",
+                "question": "在体育和锻炼领域，使用音乐来提高运动表现或增强锻炼体验，主要是利用了音乐的什么效应？",
+                "incorrect_answers": ["审美效应", "社会凝聚效应", "激励和同步效应"],
+                "correct_answer": "激励和同步效应"
+                },
+                {
+                "id": 288,
+                "field": "生物燃料",
+                "question": "第一代生物燃料主要利用玉米、甘蔗等粮食作物的淀粉或糖来生产什么？",
+                "incorrect_answers": ["生物柴油", "生物乙醇", "生物沼气"],
+                "correct_answer": "生物乙醇"
+                },
+                {
+                "id": 289,
+                "field": "音乐治疗（神经学）",
+                "question": "音乐治疗在神经康复中用于帮助中风患者恢复语言功能，特别是针对布洛卡区受损导致的表达性失语症，这种疗法常被称为什么？",
+                "incorrect_answers": ["艺术治疗", "旋律语调疗法", "节奏听觉刺激"],
+                "correct_answer": "旋律语调疗法"
+                },
+                {
+                "id": 290,
+                "field": "暗物质探测",
+                "question": "物理学家通过观测星系旋转曲线等天文现象，推断出宇宙中存在大量看不见的“暗物质”。目前探测暗物质的实验主要分为直接探测、间接探测和什么？",
+                "incorrect_answers": ["对撞机产生", "引力波探测", "中微子探测"],
+                "correct_answer": "对撞机产生"
+                },
+                {
+                "id": 291,
+                "field": "音乐产业（版权管理）",
+                "question": "当一首歌曲在公共场所（如商场、电台）被播放时，需要向歌曲的创作者和出版者支付使用费。负责收取和分发这些费用的组织通常被称为什么？",
+                "incorrect_answers": ["唱片公司", "演出经纪公司", "版权集体管理组织"],
+                "correct_answer": "版权集体管理组织"
+                },
+                {
+                "id": 292,
+                "field": "仿生学",
+                "question": "仿生学是从自然界获取灵感来解决工程问题。例如，雷达和声纳的发明受到了蝙蝠和鲸鱼使用什么的启发？",
+                "incorrect_answers": ["视觉", "回声定位", "电磁感应"],
+                "correct_answer": "回声定位"
+                },
+                {
+                "id": 293,
+                "field": "音乐与空间感知",
+                "question": "在音乐制作和音响工程中，通过调节左右声道信号的电平差和时间差，可以在立体声场中创造出声音的什么感觉？",
+                "incorrect_answers": ["远近感", "方位感", "空间感"],
+                "correct_answer": "方位感（或声像定位）"
+                },
+                {
+                "id": 294,
+                "field": "碳捕获与封存",
+                "question": "碳捕获与封存是一种减缓气候变化的技术，旨在从工业排放源或大气中捕获二氧化碳，并将其长期储存在哪里？",
+                "incorrect_answers": ["海洋", "森林", "地质构造中"],
+                "correct_answer": "地质构造中"
+                },
+                {
+                "id": 295,
+                "field": "音乐与学习",
+                "question": "一些教育研究声称，听古典音乐（特别是莫扎特的音乐）能短暂提高空间推理能力，这种现象被媒体称为什么效应？",
+                "incorrect_answers": ["贝多芬效应", "巴赫效应", "莫扎特效应"],
+                "correct_answer": "莫扎特效应"
+                },
+                {
+                "id": 296,
+                "field": "基因编辑",
+                "question": "近年来革命性的基因编辑技术CRISPR-Cas9，其作用机制模仿了什么的自然防御系统？",
+                "incorrect_answers": ["动物", "植物", "细菌"],
+                "correct_answer": "细菌"
+                },
+                {
+                "id": 297,
+                "field": "音乐流派融合",
+                "question": "20世纪中后期，将古典音乐、摇滚乐和电子音乐等元素融合在一起的一种前卫摇滚流派被称为什么？",
+                "incorrect_answers": ["艺术摇滚", "交响摇滚", "前卫摇滚"],
+                "correct_answer": "艺术摇滚或前卫摇滚"
+                },
+                {
+                "id": 298,
+                "field": "精准农业",
+                "question": "精准农业利用全球定位系统、传感器和地理信息系统等技术，实现农田管理的差异化。其核心思想是什么？",
+                "incorrect_answers": ["大规模机械化", "因地制宜，变量投入", "有机种植"],
+                "correct_answer": "因地制宜，变量投入"
+                },
+                {
+                "id": 299,
+                "field": "音乐社会学",
+                "question": "音乐社会学研究音乐与社会的关系。例如，朋克摇滚乐在20世纪70年代的出现，常被视为对当时社会状况的一种什么反应？",
+                "incorrect_answers": ["赞美", "逃避", "反叛和批判"],
+                "correct_answer": "反叛和批判"
+                },
+                {
+                "id": 300,
+                "field": "可控核聚变",
+                "question": "实现可控核聚变需要将燃料（如氘和氚）加热到极高温度，使其变成什么状态？",
+                "incorrect_answers": ["固态", "液态", "等离子体态"],
+                "correct_answer": "等离子体态"
+                }
+            ]
+        };
+    </script>
+
+    <script>
+        // Quiz state variables
+        let allQuestions = [];
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let userAnswers = [];
+        let quizLength = 300;
+        let quizStarted = false;
+        
+        // DOM Elements
+        const setupScreen = document.getElementById('setupScreen');
+        const loading = document.getElementById('loading');
+        const quizContainer = document.getElementById('quizContainer');
+        const resultsScreen = document.getElementById('resultsScreen');
+        const startBtn = document.getElementById('startBtn');
+        const testBtns = document.querySelectorAll('.test-btn');
+        const questionCard = document.getElementById('questionCard');
+        const questionText = document.getElementById('questionText');
+        const fieldBadge = document.getElementById('fieldBadge');
+        const answersContainer = document.getElementById('answersContainer');
+        const currentQuestionEl = document.getElementById('currentQuestion');
+        const totalQuestionsEl = document.getElementById('totalQuestions');
+        const progressBar = document.getElementById('progressBar');
+        const progressPercent = document.getElementById('progressPercent');
+        const correctCountEl = document.getElementById('correctCount');
+        const incorrectCountEl = document.getElementById('incorrectCount');
+        const remainingCountEl = document.getElementById('remainingCount');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const flipBtn = document.getElementById('flipBtn');
+        const resultIcon = document.getElementById('resultIcon');
+        const resultTitle = document.getElementById('resultTitle');
+        const correctAnswer = document.getElementById('correctAnswer');
+        const correctAnswerText = document.getElementById('correctAnswerText');
+        const fieldName = document.getElementById('fieldName');
+        const finalScore = document.getElementById('finalScore');
+        const finalCorrect = document.getElementById('finalCorrect');
+        const finalIncorrect = document.getElementById('finalIncorrect');
+        const finalTotal = document.getElementById('finalTotal');
+        const finalPercentage = document.getElementById('finalPercentage');
+        const fieldsCovered = document.getElementById('fieldsCovered');
+        const restartBtn = document.getElementById('restartBtn');
+        
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load the questions from the JSON file
+            loadQuestions();
+            
+            // Setup event listeners
+            setupEventListeners();
+        })
+
+        // 在 JavaScript 中
+        async function loadQuestions() {
+            try {
+                console.log("Loading questions...");
+                
+                // 使用嵌入的 JSON 数据
+                allQuestions = embeddedQuestions.questions;
+                
+                console.log(`Loaded ${allQuestions.length} questions`);
+                
+            } catch (error) {
+                console.error("Error loading questions:", error);
+                allQuestions = [];
+            }
+        }
+        
+        // Create sample questions for demonstration
+        function createSampleQuestions() {
+            // Sample fields for demonstration
+            const sampleFields = [
+                "Quantitative Finance", "Cryogenics", "Historical Linguistics", "Ethnomusicology", 
+                "Mycology", "Semiotics", "Oceanography", "Paleography", "Meteoritics", "Vector Calculus",
+                "Restoration Ecology", "Numismatics", "Astrodynamics", "Conchology", "Mammalogy",
+                "Pulmonology", "Epigraphy", "Phytopathology", "Prosthodontics", "Seismology"
+            ];
+            
+            // Create 20 sample questions
+            for (let i = 0; i < 20; i++) {
+                const field = sampleFields[i % sampleFields.length];
+                const question = {
+                    id: i + 1,
+                    field: field,
+                    question: `What is the basic concept in ${field} that professionals consider fundamental?`,
+                    incorrect_answers: [
+                        `Common misconception about ${field}`,
+                        `Advanced theory in ${field}`,
+                        `Historical figure in ${field}`
+                    ],
+                    correct_answer: `Fundamental principle of ${field}`
+                };
+                allQuestions.push(question);
+            }
+            
+            // For the full 300 questions, you would load from the JSON file
+            // For now, we'll duplicate to reach 300 for demonstration
+            while (allQuestions.length < 300) {
+                const originalQuestion = allQuestions[allQuestions.length % 20];
+                const newQuestion = {
+                    ...originalQuestion,
+                    id: allQuestions.length + 1,
+                    field: `${originalQuestion.field} (${Math.floor(allQuestions.length / 20) + 1})`
+                };
+                allQuestions.push(newQuestion);
+            }
+        }
+        
+        // Setup event listeners
+        function setupEventListeners() {
+            // Test length buttons
+            testBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    testBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    quizLength = parseInt(this.getAttribute('data-questions'));
+                });
+            });
+            
+            // Start quiz button
+            startBtn.addEventListener('click', startQuiz);
+            
+            // Previous question button
+            prevBtn.addEventListener('click', showPreviousQuestion);
+            
+            // Next question button
+            nextBtn.addEventListener('click', showNextQuestion);
+            
+            // Flip card button
+            flipBtn.addEventListener('click', flipCard);
+            
+            // Restart quiz button
+            restartBtn.addEventListener('click', restartQuiz);
+        }
+        
+        // Start the quiz
+        function startQuiz() {
+            // Show loading
+            setupScreen.style.display = 'none';
+            loading.style.display = 'block';
+            
+            // Select random questions based on quiz length
+            setTimeout(() => {
+                currentQuestions = getRandomQuestions(allQuestions, quizLength);
+                userAnswers = new Array(currentQuestions.length).fill(null);
+                
+                // Initialize quiz
+                currentQuestionIndex = 0;
+                quizStarted = true;
+                
+                // Hide loading and show quiz
+                loading.style.display = 'none';
+                quizContainer.style.display = 'block';
+                
+                // Update UI
+                updateQuizUI();
+                
+                // Show first question
+                showQuestion(currentQuestionIndex);
+            }, 800); // Simulate loading time
+        }
+        
+        // Get random questions from the pool
+        function getRandomQuestions(questions, count) {
+            // Shuffle the questions array
+            const shuffled = [...questions].sort(() => 0.5 - Math.random());
+            
+            // Return the first 'count' questions
+            return shuffled.slice(0, count);
+        }
+        
+        // Show a specific question
+        function showQuestion(index) {
+            if (index < 0 || index >= currentQuestions.length) return;
+            
+            const question = currentQuestions[index];
+            const userAnswer = userAnswers[index];
+            
+            // Update question text and field
+            questionText.textContent = question.question;
+            fieldBadge.textContent = question.field;
+            
+            // Clear previous answers
+            answersContainer.innerHTML = '';
+            
+            // Create answer options
+            const allAnswers = [...question.incorrect_answers, question.correct_answer];
+            
+            // Shuffle answers
+            const shuffledAnswers = [...allAnswers].sort(() => 0.5 - Math.random());
+            
+            // Create answer buttons
+            const answerLetters = ['A', 'B', 'C', 'D'];
+            shuffledAnswers.forEach((answer, i) => {
+                const answerBtn = document.createElement('button');
+                answerBtn.className = 'answer-btn';
+                if (userAnswer !== null && answer === question.correct_answer) {
+                    answerBtn.classList.add('correct');
+                } else if (userAnswer !== null && answer === userAnswer) {
+                    answerBtn.classList.add('incorrect');
+                } else if (userAnswer !== null && userAnswer === answer) {
+                    answerBtn.classList.add('selected');
+                }
+                
+                answerBtn.innerHTML = `
+                    <div class="answer-letter">${answerLetters[i]}</div>
+                    <div class="answer-text">${answer}</div>
+                `;
+                
+                // Only add click event if not answered yet
+                if (userAnswer === null) {
+                    answerBtn.addEventListener('click', () => selectAnswer(answer, index));
+                }
+                
+                answersContainer.appendChild(answerBtn);
+            });
+            
+            // Update card back with correct answer
+            correctAnswer.textContent = question.correct_answer;
+            fieldName.textContent = question.field;
+            
+            // Update result display based on user answer
+            if (userAnswer !== null) {
+                const isCorrect = userAnswer === question.correct_answer;
+                
+                // Update result icon and title
+                resultIcon.className = `result-icon ${isCorrect ? 'correct' : 'incorrect'}`;
+                resultIcon.innerHTML = isCorrect ? '<i class="fas fa-check-circle"></i>' : '<i class="fas fa-times-circle"></i>';
+                resultTitle.textContent = isCorrect ? 'Correct!' : 'Incorrect!';
+                resultTitle.style.color = isCorrect ? 'var(--success)' : 'var(--danger)';
+                
+                // Show the answer text
+                correctAnswerText.style.display = 'block';
+            } else {
+                // Hide the answer text if not answered yet
+                correctAnswerText.style.display = 'none';
+                resultIcon.innerHTML = '<i class="fas fa-question-circle"></i>';
+                resultIcon.style.color = 'var(--primary)';
+                resultTitle.textContent = 'Select an Answer';
+                resultTitle.style.color = 'var(--primary)';
+            }
+            
+            // Reset card to front
+            questionCard.classList.remove('flipped');
+            flipBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Show Answer';
+            
+            // Update navigation buttons
+            updateNavigationButtons();
+        }
+        
+        // Select an answer
+        function selectAnswer(answer, questionIndex) {
+            // Record the user's answer
+            userAnswers[questionIndex] = answer;
+            
+            // Update stats
+            updateStats();
+            
+            // Show the result (flip the card)
+            setTimeout(() => {
+                flipCard();
+            }, 300);
+            
+            // Update the question display to show correct/incorrect
+            showQuestion(questionIndex);
+        }
+        
+        // Flip the card to show answer/result
+        function flipCard() {
+            questionCard.classList.toggle('flipped');
+            
+            if (questionCard.classList.contains('flipped')) {
+                flipBtn.innerHTML = '<i class="fas fa-eye-slash"></i> Hide Answer';
+            } else {
+                flipBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Show Answer';
+            }
+        }
+        
+        // Show next question
+        function showNextQuestion() {
+            if (currentQuestionIndex < currentQuestions.length - 1) {
+                currentQuestionIndex++;
+                showQuestion(currentQuestionIndex);
+                updateQuizUI();
+            } else {
+                // If we're at the last question, finish the quiz
+                finishQuiz();
+            }
+        }
+        
+        // Show previous question
+        function showPreviousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                showQuestion(currentQuestionIndex);
+                updateQuizUI();
+            }
+        }
+        
+        // Update the quiz UI (progress, stats, etc.)
+        function updateQuizUI() {
+            // Update progress
+            const progress = ((currentQuestionIndex + 1) / currentQuestions.length) * 100;
+            progressBar.style.width = `${progress}%`;
+            progressPercent.textContent = `${Math.round(progress)}%`;
+            
+            // Update question counter
+            currentQuestionEl.textContent = currentQuestionIndex + 1;
+            totalQuestionsEl.textContent = currentQuestions.length;
+            
+            // Update stats
+            updateStats();
+        }
+        
+        // Update the stats (correct, incorrect, remaining)
+        function updateStats() {
+            let correct = 0;
+            let incorrect = 0;
+            
+            userAnswers.forEach((answer, index) => {
+                if (answer !== null) {
+                    if (answer === currentQuestions[index].correct_answer) {
+                        correct++;
+                    } else {
+                        incorrect++;
+                    }
+                }
+            });
+            
+            const remaining = currentQuestions.length - (correct + incorrect);
+            
+            correctCountEl.textContent = correct;
+            incorrectCountEl.textContent = incorrect;
+            remainingCountEl.textContent = remaining;
+        }
+        
+        // Update navigation buttons state
+        function updateNavigationButtons() {
+            // Previous button
+            if (currentQuestionIndex === 0) {
+                prevBtn.disabled = true;
+            } else {
+                prevBtn.disabled = false;
+            }
+            
+            // Next button
+            if (currentQuestionIndex === currentQuestions.length - 1) {
+                nextBtn.textContent = 'Finish Quiz';
+                nextBtn.innerHTML = 'Finish Quiz <i class="fas fa-flag-checkered"></i>';
+            } else {
+                nextBtn.textContent = 'Next';
+                nextBtn.innerHTML = 'Next <i class="fas fa-arrow-right"></i>';
+            }
+            
+            // Flip button - only enable if question is answered
+            if (userAnswers[currentQuestionIndex] !== null) {
+                flipBtn.disabled = false;
+            } else {
+                flipBtn.disabled = true;
+            }
+        }
+        
+        // Finish the quiz and show results
+        function finishQuiz() {
+            // Calculate final score
+            let correct = 0;
+            const fieldsSet = new Set();
+            
+            userAnswers.forEach((answer, index) => {
+                if (answer === currentQuestions[index].correct_answer) {
+                    correct++;
+                }
+                fieldsSet.add(currentQuestions[index].field);
+            });
+            
+            const total = currentQuestions.length;
+            const incorrect = total - correct;
+            const percentage = Math.round((correct / total) * 100);
+            
+            // Update results screen
+            finalScore.textContent = `${percentage}%`;
+            finalCorrect.textContent = correct;
+            finalIncorrect.textContent = incorrect;
+            finalTotal.textContent = total;
+            finalPercentage.textContent = `${percentage}%`;
+            fieldsCovered.textContent = fieldsSet.size;
+            
+            // Update the score circle with the correct percentage
+            const scoreCircle = document.querySelector('.score-circle');
+            scoreCircle.style.background = `conic-gradient(var(--success) 0% ${percentage}%, #e9ecef ${percentage}% 100%)`;
+            
+            // Hide quiz container and show results
+            quizContainer.style.display = 'none';
+            resultsScreen.style.display = 'block';
+        }
+        
+        // Restart the quiz
+        function restartQuiz() {
+            // Reset state
+            currentQuestionIndex = 0;
+            userAnswers = [];
+            quizStarted = false;
+            
+            // Hide results and show setup
+            resultsScreen.style.display = 'none';
+            setupScreen.style.display = 'block';
+            
+            // Reset the test button selection
+            testBtns.forEach(btn => {
+                if (parseInt(btn.getAttribute('data-questions')) === 300) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            
+            // Reset quiz length
+            quizLength = 300;
+        }
+    </script>
+</body>
+</html>
